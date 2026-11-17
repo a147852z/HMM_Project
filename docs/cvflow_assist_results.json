@@ -1,0 +1,231 @@
+{
+ "case_id": "CVFLOW",
+ "model_version_id": "CVFLOW-M005",
+ "method": "pattern_library x hmm_bigram_mix",
+ "test_episodes": 31,
+ "train_episodes": 124,
+ "steps": 130,
+ "coverage": 0.7461538461538462,
+ "mean_candidates": 61.83076923076923,
+ "invalid_candidates_dropped": 0,
+ "pattern_library": {
+  "patterns": 121,
+  "templates": 25,
+  "unsupported_training_events": 1
+ },
+ "methods": {
+  "assist": {
+   "hit1": 0.17692307692307693,
+   "hit3": 0.23076923076923078,
+   "hit5": 0.2692307692307692,
+   "mrr": 0.24541712067173696
+  },
+  "bigram": {
+   "hit1": 0.16923076923076924,
+   "hit3": 0.2153846153846154,
+   "hit5": 0.2692307692307692,
+   "mrr": 0.23566693640577105
+  },
+  "frequency": {
+   "hit1": 0.13846153846153847,
+   "hit3": 0.19230769230769232,
+   "hit5": 0.26153846153846155,
+   "mrr": 0.20983526779986095
+  }
+ },
+ "by_operation": {
+  "add_step": {
+   "steps": 41,
+   "covered": 34,
+   "hit3": 4,
+   "coverage": 0.8292682926829268,
+   "assist_hit3": 0.0975609756097561
+  },
+  "param_tune": {
+   "steps": 40,
+   "covered": 40,
+   "hit3": 25,
+   "coverage": 1.0,
+   "assist_hit3": 0.625
+  },
+  "remove_step": {
+   "steps": 15,
+   "covered": 13,
+   "hit3": 0,
+   "coverage": 0.8666666666666667,
+   "assist_hit3": 0.0
+  },
+  "replace_step": {
+   "steps": 19,
+   "covered": 8,
+   "hit3": 0,
+   "coverage": 0.42105263157894735,
+   "assist_hit3": 0.0
+  },
+  "strategy_switch": {
+   "steps": 15,
+   "covered": 2,
+   "hit3": 1,
+   "coverage": 0.13333333333333333,
+   "assist_hit3": 0.06666666666666667
+  }
+ },
+ "episodes": [
+  {
+   "episode_id": "CVFLOW-haiku-t-v2_haze01_carpark_cars-b3a4f9",
+   "events": 1,
+   "assist_hit3": 1.0
+  },
+  {
+   "episode_id": "CVFLOW-haiku-t-v2_ln02_candlelight_dinner_t-86d6fa",
+   "events": 6,
+   "assist_hit3": 0.16666666666666666
+  },
+  {
+   "episode_id": "CVFLOW-haiku-t-v2_ln05_capers_candlelight-7d9c59",
+   "events": 9,
+   "assist_hit3": 0.3333333333333333
+  },
+  {
+   "episode_id": "CVFLOW-haiku-t-v2_ln06_walnuts_candlelight-d42f0e",
+   "events": 6,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-haiku-t-watershed_human_mitosis_skim-2b41c5",
+   "events": 2,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-haiku-t-coco_vehicle_166391-6cc5ff",
+   "events": 3,
+   "assist_hit3": 0.3333333333333333
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-v2_haze01_carpark_cars-e07ef8",
+   "events": 1,
+   "assist_hit3": 1.0
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890",
+   "events": 9,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd",
+   "events": 9,
+   "assist_hit3": 0.1111111111111111
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3",
+   "events": 9,
+   "assist_hit3": 0.3333333333333333
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-watershed_human_mitosis_skim-63138a",
+   "events": 3,
+   "assist_hit3": 0.6666666666666666
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-coco_vehicle_166391-d5d1cb",
+   "events": 3,
+   "assist_hit3": 0.6666666666666666
+  },
+  {
+   "episode_id": "CVFLOW-opus-r-coco_car_111086-7145d9",
+   "events": 7,
+   "assist_hit3": 0.14285714285714285
+  },
+  {
+   "episode_id": "CVFLOW-codex-r-coco_car_111086-ad2032",
+   "events": 9,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-opus-r-coco_car_166391-f72e07",
+   "events": 3,
+   "assist_hit3": 0.3333333333333333
+  },
+  {
+   "episode_id": "CVFLOW-opus-r-coco_motorcycle_203389-27682c",
+   "events": 1,
+   "assist_hit3": 1.0
+  },
+  {
+   "episode_id": "CVFLOW-opus-r-coco_truck_293324-a43723",
+   "events": 2,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-opus-r-watershed_human_mitosis_skim-7c918c",
+   "events": 2,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-sonnet-r-coco_truck_293324-248c09",
+   "events": 4,
+   "assist_hit3": 0.25
+  },
+  {
+   "episode_id": "CVFLOW-sonnet-r-watershed_human_mitosis_skim-ea1ab5",
+   "events": 1,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-haiku-r-coco_car_111086-96cd89",
+   "events": 3,
+   "assist_hit3": 1.0
+  },
+  {
+   "episode_id": "CVFLOW-haiku-r-coco_car_166391-218750",
+   "events": 2,
+   "assist_hit3": 0.5
+  },
+  {
+   "episode_id": "CVFLOW-haiku-r-coco_motorcycle_203389-2e7dcb",
+   "events": 3,
+   "assist_hit3": 1.0
+  },
+  {
+   "episode_id": "CVFLOW-haiku-r-coco_truck_293324-a771b2",
+   "events": 2,
+   "assist_hit3": 1.0
+  },
+  {
+   "episode_id": "CVFLOW-codex-r-coco_car_166391-4db536",
+   "events": 2,
+   "assist_hit3": 0.5
+  },
+  {
+   "episode_id": "CVFLOW-codex-r-coco_truck_293324-36777e",
+   "events": 7,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-gemini-r-coco_car_111086-a351c0",
+   "events": 9,
+   "assist_hit3": 0.1111111111111111
+  },
+  {
+   "episode_id": "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552",
+   "events": 9,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-gemini-r-coco_motorcycle_203389-d8b467",
+   "events": 1,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-gemini-r-coco_truck_293324-f20418",
+   "events": 1,
+   "assist_hit3": 0.0
+  },
+  {
+   "episode_id": "CVFLOW-gemini-r-watershed_human_mitosis_skim-94b255",
+   "events": 1,
+   "assist_hit3": 0.0
+  }
+ ],
+ "notes": "未命中包含兩種情況：實際修改不在候選中（coverage 的缺口），或排名在門檻之外。"
+}

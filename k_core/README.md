@@ -37,6 +37,7 @@ npm run dev
   - **隱藏狀態**：每個狀態最可能產生的觀測與實際修改組成，以及依分組屬性（例如 CVflow 的 `teacher`）與最後成敗的狀態比例。
   - **序列重播**：選一條序列逐步檢視，左邊是這次修改後的流程圖與修改理由，右邊是只看前面修改時的路線判斷、各方法的預測與實際修改的排名。
 
+- **生成協助測試**：AoV 生成協助的離線測試。上方是保留測試序列上的整體成績；下方可以選一條測試序列、拖動「已知前幾次修改」，查看系統提出的候選修改、分數的組成、套用後的流程圖，以及實際修改排在第幾名。網址 `#case/<案例代號>/assist` 可直接開啟。
 - **轉換設定（提示詞）**：設定本地 LLM 的網址、模型與這個案例的提示詞；可以測試連線。每次修改都會建立新版本。
 - **原始文件**：上傳文字檔，並檢視原文內容。
 - **轉換與審核**：選擇文件與設定後開始轉換。點選任一筆轉換即可進入審核畫面：
@@ -137,6 +138,9 @@ Invoke-RestMethod "$api/conversions/$($c.conversion_id)"   # 看 status、valida
 | POST／GET | `/cases/{case_id}/training-runs`、`.../{run_id}` | 訓練與查詢結果 |
 | GET | `/cases/{case_id}/models`、`.../{model_version_id}` | 模型清單；單一模型含參數、每個狀態的主要觀測、平穩分布 |
 | POST | `.../models/{model_version_id}/activate` | 切換使用中的版本 |
+| POST | `/cases/{case_id}/aov/assist` | 對某條序列的第 N 步提出候選修改（候選 → HMM 評分 → DAG 驗證），並與實際的下一次修改比對 |
+| GET | `/cases/{case_id}/aov/assist-evaluation` | 在模型保留的測試序列上評估候選排名 |
+| POST | `/cases/{case_id}/aov/validate` | 檢查一張流程是否為合法的有向無環圖 |
 | POST | `.../models/{model_version_id\|active}/replay` | 序列重播：每一步的路線判斷、各方法的預測與實際修改的排名 |
 | GET | `.../models/{model_version_id\|active}/analysis?group_by=` | 解碼全部序列，描述每個隱藏狀態與各組比例 |
 | POST | `.../models/{model_version_id\|active}/infer` | 前綴推論：每步信念、維特比路徑、下一觀測 Top-k；`method` 可為 `auto`（預設，HMM 與上一次修改各半平均）、`hmm`、`hmm_bigram_mix`、`hmm_route_bigram` |

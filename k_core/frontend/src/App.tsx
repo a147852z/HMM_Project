@@ -6,6 +6,7 @@ import {
 import { useCallback, useEffect, useState } from 'react'
 import { api, errorText } from './api'
 import { DOMAIN_LABEL } from './labels'
+import { AssistPage } from './pages/AssistPage'
 import { ConversionsPage } from './pages/ConversionsPage'
 import { DocumentsPage } from './pages/DocumentsPage'
 import { ProfilesPage } from './pages/ProfilesPage'
@@ -13,7 +14,7 @@ import { ResearchPage } from './pages/ResearchPage'
 import { ReviewView } from './pages/ReviewView'
 import type { CaseInfo } from './types'
 
-export type Page = 'research' | 'conversions' | 'documents' | 'profiles'
+export type Page = 'research' | 'assist' | 'conversions' | 'documents' | 'profiles'
 
 const CASE_KEY = 'kcore.caseId'
 
@@ -55,7 +56,9 @@ export function App() {
       // 從網址開啟的轉換代號以「案例代號-C」開頭，據此選擇對應案例
       const fromHash = readHash()
       // #case/<案例代號> 直接開啟該案例；#review/<轉換代號> 依轉換代號推得案例
-      const caseHash = /^#case\/(.+)$/.exec(window.location.hash)
+      // #case/<案例代號>/<分頁> 也可以直接開啟指定分頁，例如 #case/CVFLOW/assist
+      const caseHash = /^#case\/([^/]+)(?:\/(research|assist|conversions|documents|profiles))?$/.exec(window.location.hash)
+      if (caseHash?.[2]) setPage(caseHash[2] as Page)
       const hashCase = caseHash
         ? list.find((item) => item.case_id === decodeURIComponent(caseHash[1]))?.case_id
         : fromHash ? list.find((item) => fromHash.startsWith(`${item.case_id}-C`))?.case_id : undefined
@@ -98,6 +101,7 @@ export function App() {
         {caseId && !openConversion && (
           <Tabs value={page} onChange={(_, value: Page) => setPage(value)} sx={{ px: 2 }}>
             <Tab value="research" label="模型研究" />
+            <Tab value="assist" label="生成協助測試" />
             <Tab value="conversions" label="轉換與審核" />
             <Tab value="documents" label="原始文件" />
             <Tab value="profiles" label="轉換設定（提示詞）" />
@@ -119,6 +123,7 @@ export function App() {
           <ConversionsPage caseId={caseId} onOpen={setOpenConversion} onNavigate={setPage} />
         )}
         {caseId && !openConversion && page === 'research' && <ResearchPage caseId={caseId} />}
+        {caseId && !openConversion && page === 'assist' && <AssistPage caseId={caseId} />}
         {caseId && !openConversion && page === 'documents' && <DocumentsPage caseId={caseId} />}
         {caseId && !openConversion && page === 'profiles' && <ProfilesPage caseId={caseId} />}
       </Box>

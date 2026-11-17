@@ -8,6 +8,7 @@ from fastapi import APIRouter, BackgroundTasks, FastAPI, Request, UploadFile
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+from .assist import AssistService
 from .conversion import ConversionService
 from .conversion.service import ClientFactory
 from .database import make_session_factory
@@ -124,6 +125,37 @@ class ReviewIn(BaseModel):
 class ReplayIn(BaseModel):
     episode_id: str
     top_k: int = Field(default=5, ge=1, le=20)
+
+
+class AssistIn(BaseModel):
+    episode_id: str
+    prefix_length: int = Field(ge=0)
+    top_k: int = Field(default=10, ge=1, le=50)
+    model_version_id: str = "active"
+
+
+class WorkflowCheckIn(BaseModel):
+    nodes: list[dict[str, Any]]
+    edges: list[dict[str, Any]]
+
+
+def build_assist_router(assist: AssistService) -> APIRouter:
+    router = APIRouter(prefix="/api/v1/cases/{case_id}")
+
+    @router.post("/aov/assist")
+    def assist_step(case_id: str, body: AssistIn) -> dict[str, Any]:
+        return assist.assist(case_id, body.episode_id, body.prefix_length, body.top_k, body.model_version_id)
+
+    @router.post("/aov/validate")
+    def validate(case_id: str, body: WorkflowCheckIn) -> dict[str, Any]:
+        assist.core.get_case(case_id)
+        return assist.validate(body.nodes, body.edges)
+
+    @router.get("/aov/assist-evaluation")
+    def evaluation(case_id: str, model_version_id: str = "active") -> dict[str, Any]:
+        return assist.evaluate(case_id, model_version_id)
+
+    return router
 
 
 def build_conversion_router(conversions: ConversionService) -> APIRouter:
@@ -292,4 +324,5 @@ def create_app(database_url: str | None = None, llm_client_factory: ClientFactor
 
     app.include_router(build_router(service))
     app.include_router(build_conversion_router(conversions))
+    app.include_router(build_assist_router(AssistService(service)))
     return app

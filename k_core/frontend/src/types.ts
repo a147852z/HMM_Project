@@ -247,3 +247,53 @@ export interface ModelAnalysis {
   training: { selected_k: number | null; candidates: { k: number; log_likelihood: number; bic: number; converged: boolean }[] }
   feature_schema: { version: string; fields: string[] }
 }
+
+// ---- 生成協助（離線測試）----
+export interface AssistCandidate {
+  rank: number
+  operation_type: string
+  activity_type: string
+  token: string
+  score: number
+  token_probability: number
+  pattern_prior: number
+  training_count: number
+  detail: Record<string, unknown>
+  validation: { valid: boolean; problems: string[] }
+  proposed_workflow: { nodes: AoVNode[]; edges: AoVEdge[] }
+  change: Change
+}
+
+export interface AssistResult {
+  episode_id: string
+  prefix_length: number
+  total_events: number
+  model_version_id: string
+  method: string
+  status: 'ok' | 'no_valid_candidates'
+  in_training_set: boolean
+  current_workflow: { version_id: string; nodes: AoVNode[]; edges: AoVEdge[] }
+  candidate_stats: { patterns: number; infeasible: number; invalid: number; valid_candidates: number }
+  candidates: AssistCandidate[]
+  actual: null | {
+    operation_type: string
+    activity_type: string
+    in_candidates: boolean
+    ranks: Record<'assist' | 'bigram' | 'frequency', number | null>
+  }
+}
+
+export interface AssistEvaluation {
+  model_version_id: string
+  method: string
+  test_episodes: number
+  train_episodes: number
+  steps: number
+  coverage: number
+  mean_candidates: number
+  invalid_candidates_dropped: number
+  pattern_library: { patterns: number; templates: number; unsupported_training_events: number }
+  methods: Record<'assist' | 'bigram' | 'frequency', { hit1: number; hit3: number; hit5: number; mrr: number }>
+  by_operation: Record<string, { steps: number; covered: number; hit3: number; coverage: number; assist_hit3: number }>
+  episodes: { episode_id: string; events: number; assist_hit3: number | null }[]
+}
