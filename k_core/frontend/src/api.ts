@@ -60,9 +60,10 @@ export const api = {
       json('POST', { episode_id: episodeId, top_k: 5 })),
 
   assistEvaluation: (caseId: string) => request<AssistEvaluation>(`${c(caseId)}/aov/assist-evaluation`),
-  assist: (caseId: string, episodeId: string, prefixLength: number) =>
-    request<AssistResult>(`${c(caseId)}/aov/assist`,
-      json('POST', { episode_id: episodeId, prefix_length: prefixLength, top_k: 10 })),
+  assist: (caseId: string, episodeId: string, prefixLength: number, usePreviousResult = false) =>
+    request<AssistResult>(`${c(caseId)}/aov/assist`, json('POST', {
+      episode_id: episodeId, prefix_length: prefixLength, top_k: 10, use_previous_result: usePreviousResult,
+    })),
 
   listProfiles: (caseId: string) => request<Profile[]>(`${c(caseId)}/llm-profiles`),
   createProfile: (caseId: string, data: ProfileInput) =>

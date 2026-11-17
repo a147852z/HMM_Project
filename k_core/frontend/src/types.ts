@@ -271,6 +271,8 @@ export interface AssistResult {
   model_version_id: string
   method: string
   status: 'ok' | 'no_valid_candidates'
+  use_previous_result: boolean
+  previous_result: 'pass' | 'fail' | 'error' | null
   in_training_set: boolean
   current_workflow: { version_id: string; nodes: AoVNode[]; edges: AoVEdge[] }
   candidate_stats: { patterns: number; infeasible: number; invalid: number; valid_candidates: number }
@@ -279,7 +281,7 @@ export interface AssistResult {
     operation_type: string
     activity_type: string
     in_candidates: boolean
-    ranks: Record<'assist' | 'bigram' | 'frequency', number | null>
+    ranks: Record<'assist' | 'assist_result' | 'bigram' | 'frequency', number | null>
   }
 }
 
@@ -293,7 +295,9 @@ export interface AssistEvaluation {
   mean_candidates: number
   invalid_candidates_dropped: number
   pattern_library: { patterns: number; templates: number; unsupported_training_events: number }
-  methods: Record<'assist' | 'bigram' | 'frequency', { hit1: number; hit3: number; hit5: number; mrr: number }>
+  methods: Record<'assist' | 'assist_result' | 'bigram' | 'frequency', { hit1: number; hit3: number; hit5: number; mrr: number }>
+  by_previous_result: Record<string, { steps: number; assist_hit3: number; assist_result_hit3: number }>
+  changed_steps: { episode_id: string; prefix_length: number; previous_result: string | null; assist_rank: number | null; assist_result_rank: number | null }[]
   by_operation: Record<string, { steps: number; covered: number; hit3: number; coverage: number; assist_hit3: number }>
   episodes: { episode_id: string; events: number; assist_hit3: number | null }[]
 }

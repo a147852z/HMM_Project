@@ -13,6 +13,11 @@
 - 分數是模型機率，不是成功率。
 
 對照排法（使用相同的候選與驗證）：frequency = 只看樣式在訓練資料的次數；bigram = 只看上一次修改 × 第二項。
+
+實驗選項 assist_result（預設關閉）：納入「上一版的執行結果」（通過／未通過／無法執行）。
+- 這個結果在提出下一次修改之前就已經知道，所以不算偷看答案。
+- 第一項乘上 P(符號 | 結果) / P(符號)；第二項改用「相同結果下」的樣式次數（次數少時退回整體比例）。
+- 序列沒有記錄執行結果時，等同於一般的 assist。
 """
 from __future__ import annotations
 
@@ -24,7 +29,7 @@ from typing import Any
 from sqlalchemy import select
 
 from .aov import derive_change_features, diff_workflows, is_empty_change, validate_workflow
-from .database import TrainingRunRecord, WorkflowSnapshotRecord
+from .database import EpisodeRecord, TrainingRunRecord, WorkflowSnapshotRecord
 from .encoding import UNKNOWN, FeatureSchema, event_token
 from .evaluation import FrequencyBaselines
 from .hmm.hybrid import DEFAULT_PREDICTOR
@@ -38,6 +43,7 @@ REPLACE_OPS = {"replace_step"}
 SWITCH_OPS = {"strategy_switch"}
 SUPPORTED_OPS = ADD_OPS | REMOVE_OPS | TUNE_OPS | REPLACE_OPS | SWITCH_OPS
 PRIOR_SMOOTHING = 0.5
+RESULT_BACKOFF = 2.0  # 相同結果下的次數不足時，退回整體比例的強度（固定值）
 Key = tuple[str, str]
 
 
@@ -52,6 +58,26 @@ class PatternLibrary:
     train_episode_ids: set[str] = field(default_factory=set)
     test_episode_ids: list[str] = field(default_factory=list)
     unsupported_events: int = 0
+    # 實驗選項（上一版執行結果）用的統計
+    keys_by_result: dict[str, Counter] = field(default_factory=lambda: defaultdict(Counter))
+    tokens_by_result: dict[str, Counter] = field(default_factory=lambda: defaultdict(Counter))
+    token_count: Counter = field(default_factory=Counter)
+
+
+def result_label(result: Any) -> str | None:
+    """一個流程版本的執行結果：pass／fail／error；沒有記錄時為 None。"""
+    if not isinstance(result, dict) or (result.get("executable") is None and result.get("passed") is None):
+        return None
+    if result.get("executable") is False:
+        return "error"
+    return "pass" if result.get("passed") is True else "fail"
+
+
+def previous_results(episode: Any, events: list[Any]) -> list[str | None]:
+    """labels[t] = 第 t 次修改之前那個版本的執行結果；長度為 len(events) + 1（最後一個是最終版本的結果）。"""
+    labels = [result_label((episode.provenance or {}).get("first_version_result"))]
+    labels += [result_label((event.attributes or {}).get("result")) for event in events]
+    return labels
 
 
 def _types(nodes: list[dict]) -> list[str]:
@@ -93,6 +119,7 @@ class AssistService:
                 continue
             snapshots = self._snapshots(session, episode.episode_id)
             tokens = []
+            previous = previous_results(episode, events)
             for snapshot in snapshots:
                 type_of = {n["node_id"]: n["activity_type"] for n in snapshot.nodes}
                 for edge in snapshot.edges:
@@ -101,11 +128,16 @@ class AssistService:
                 features = event.features or {}
                 token = event_token(event.operation_type, features, schema)
                 tokens.append(token if token in model.observations else UNKNOWN)
+                library.token_count[tokens[-1]] += 1
+                if previous[index] is not None:
+                    library.tokens_by_result[previous[index]][tokens[-1]] += 1
                 op, primary = event.operation_type, str(features.get("activity_type", "none"))
                 if op not in SUPPORTED_OPS:
                     library.unsupported_events += 1
                     continue
                 library.keys[(op, primary)] += 1
+                if previous[index] is not None:
+                    library.keys_by_result[previous[index]][(op, primary)] += 1
                 before, after = snapshots[index], snapshots[index + 1]
                 if op in TUNE_OPS:
                     for update in event.change.get("updated_node_attributes", []):
@@ -238,17 +270,19 @@ class AssistService:
 
     # ------------------------------------------------------------------ 評分
     @staticmethod
-    def _rank(candidates: list[dict], token_probability: dict[str, float] | None) -> list[dict]:
-        """token_probability 為 None 時只用樣式次數（frequency 對照）。"""
+    def _rank(candidates: list[dict], token_probability: dict[str, float] | None,
+              weights: dict[Key, float] | None = None) -> list[dict]:
+        """token_probability 為 None 時只用樣式次數（frequency 對照）。weights 可取代預設的樣式次數。"""
+        weight_of = (lambda c: weights[c["key"]]) if weights is not None else (lambda c: c["weight"])
         by_token: dict[str, float] = defaultdict(float)
         for c in candidates:
-            by_token[c["token"]] += c["weight"] + PRIOR_SMOOTHING
+            by_token[c["token"]] += weight_of(c) + PRIOR_SMOOTHING
         total = sum(by_token.values()) or 1.0
         ranked = []
         for c in candidates:
-            prior = (c["weight"] + PRIOR_SMOOTHING) / by_token[c["token"]]
+            prior = (weight_of(c) + PRIOR_SMOOTHING) / by_token[c["token"]]
             if token_probability is None:
-                score, token_p = (c["weight"] + PRIOR_SMOOTHING) / total, None
+                score, token_p = (weight_of(c) + PRIOR_SMOOTHING) / total, None
             else:
                 token_p = token_probability.get(c["token"], 0.0)
                 score = token_p * prior
@@ -266,15 +300,35 @@ class AssistService:
         bigram = FrequencyBaselines(library.train_tokens, model.observations, 0.1).predict_bigram
         return record, schema, model, library, predictors[method], method, bigram
 
-    def _step(self, nodes, edges, prefix_tokens, schema, model, library, predict, bigram) -> dict[str, Any]:
+    def _step(self, nodes, edges, prefix_tokens, schema, model, library, predict, bigram,
+              previous_result: str | None = None) -> dict[str, Any]:
         candidates, stats = self._candidates(nodes, edges, library)
         for c in candidates:
             token = event_token(c["operation_type"], {"activity_type": c["activity_type"]}, schema)
             c["token"] = token if token in model.observations else UNKNOWN
         as_map = lambda dist: dict(zip(model.observations, (float(p) for p in dist), strict=True))  # noqa: E731
+        token_p = as_map(predict(prefix_tokens))
+        assist = self._rank(candidates, token_p)
+        # 實驗選項：以上一版執行結果調整。沒有該結果的訓練統計時，等同一般的 assist。
+        context_tokens = library.tokens_by_result.get(previous_result) if previous_result else None
+        if context_tokens:
+            n_all, n_ctx = sum(library.token_count.values()), sum(context_tokens.values())
+            adjusted = {}
+            for token, p in token_p.items():
+                base = (library.token_count[token] + PRIOR_SMOOTHING) / (n_all + PRIOR_SMOOTHING * len(token_p))
+                adjusted[token] = p * ((context_tokens[token] + RESULT_BACKOFF * base) / (n_ctx + RESULT_BACKOFF)) / base
+            norm = sum(adjusted.values()) or 1.0
+            adjusted = {token: p / norm for token, p in adjusted.items()}
+            context_keys, total_keys = library.keys_by_result[previous_result], max(1, sum(library.keys.values()))
+            weights = {c["key"]: context_keys[c["key"]] + RESULT_BACKOFF * library.keys[c["key"]] / total_keys
+                       for c in candidates}
+            assist_result = self._rank(candidates, adjusted, weights)
+        else:
+            assist_result = assist
         return {
             "stats": stats,
-            "assist": self._rank(candidates, as_map(predict(prefix_tokens))),
+            "assist": assist,
+            "assist_result": assist_result,
             "bigram": self._rank(candidates, as_map(bigram(prefix_tokens))),
             "frequency": self._rank(candidates, None),
         }
@@ -284,7 +338,7 @@ class AssistService:
         return next((i + 1 for i, c in enumerate(ranked) if c["key"] == key), None)
 
     def assist(self, case_id: str, episode_id: str, prefix_length: int, top_k: int = 10,
-               model_version_id: str = "active") -> dict[str, Any]:
+               model_version_id: str = "active", use_previous_result: bool = False) -> dict[str, Any]:
         """對某條序列的第 prefix_length 步提出候選修改。只使用該步之前的流程與修改。"""
         with self.core.session_factory() as session:
             record, schema, model, library, predict, method, bigram = self._context(session, case_id, model_version_id)
@@ -298,12 +352,15 @@ class AssistService:
             current = snapshots[prefix_length]
             tokens = [event_token(e.operation_type, e.features or {}, schema) for e in events[:prefix_length]]
             tokens = [t if t in model.observations else UNKNOWN for t in tokens]
-            step = self._step(current.nodes, current.edges, tokens, schema, model, library, predict, bigram)
-            ranked = step["assist"]
+            previous = previous_results(episode, events)[prefix_length]
+            step = self._step(current.nodes, current.edges, tokens, schema, model, library, predict, bigram, previous)
+            ranked = step["assist_result" if use_previous_result else "assist"]
             result: dict[str, Any] = {
                 "case_id": case_id, "episode_id": episode_id, "prefix_length": prefix_length,
                 "total_events": len(events), "model_version_id": record.model_version_id,
-                "method": f"pattern_library x {method}", "status": "ok" if ranked else "no_valid_candidates",
+                "method": f"pattern_library x {method}" + (" x previous_result" if use_previous_result else ""),
+                "use_previous_result": use_previous_result, "previous_result": previous,
+                "status": "ok" if ranked else "no_valid_candidates",
                 "used_hmm": True, "in_training_set": episode_id in library.train_episode_ids,
                 "current_workflow": {"version_id": current.version_id, "nodes": current.nodes, "edges": current.edges},
                 "candidate_stats": {**step["stats"], "valid_candidates": len(ranked)},
@@ -321,7 +378,8 @@ class AssistService:
                 key = (actual.operation_type, str((actual.features or {}).get("activity_type", "none")))
                 result["actual"] = {
                     "operation_type": key[0], "activity_type": key[1], "event_id": actual.event_id,
-                    "ranks": {name: self._rank_of(step[name], key) for name in ("assist", "bigram", "frequency")},
+                    "ranks": {name: self._rank_of(step[name], key)
+                              for name in ("assist", "assist_result", "bigram", "frequency")},
                     "in_candidates": self._rank_of(ranked, key) is not None,
                 }
             return result
@@ -330,20 +388,24 @@ class AssistService:
         """在模型保留的測試序列上逐步評估：實際的下一次修改排在候選的第幾名。"""
         with self.core.session_factory() as session:
             record, schema, model, library, predict, method, bigram = self._context(session, case_id, model_version_id)
-            names = ("assist", "bigram", "frequency")
+            names = ("assist", "assist_result", "bigram", "frequency")
+            by_previous: dict[str, dict[str, int]] = defaultdict(lambda: {"steps": 0, "assist_hit3": 0,
+                                                                          "assist_result_hit3": 0})
             totals = {n: {"hit1": 0, "hit3": 0, "hit5": 0, "rr": 0.0} for n in names}
             steps = covered = candidate_total = invalid = 0
             by_operation: dict[str, dict[str, int]] = defaultdict(lambda: {"steps": 0, "covered": 0, "hit3": 0})
             per_episode = []
+            changed_steps = []
             for episode_id in library.test_episode_ids:
                 events = self.core._events(session, episode_id)
                 snapshots = self._snapshots(session, episode_id)
                 tokens = [event_token(e.operation_type, e.features or {}, schema) for e in events]
                 tokens = [t if t in model.observations else UNKNOWN for t in tokens]
                 episode_hit3 = 0
+                previous = previous_results(session.get(EpisodeRecord, episode_id), events)
                 for t, event in enumerate(events):
                     step = self._step(snapshots[t].nodes, snapshots[t].edges, tokens[:t], schema, model, library,
-                                      predict, bigram)
+                                      predict, bigram, previous[t])
                     key = (event.operation_type, str((event.features or {}).get("activity_type", "none")))
                     steps += 1
                     candidate_total += len(step["assist"])
@@ -364,6 +426,14 @@ class AssistService:
                     if ranks["assist"] is not None and ranks["assist"] <= 3:
                         episode_hit3 += 1
                         op_stats["hit3"] += 1
+                    if ranks["assist"] != ranks["assist_result"]:
+                        changed_steps.append({"episode_id": episode_id, "prefix_length": t,
+                                              "previous_result": previous[t], "assist_rank": ranks["assist"],
+                                              "assist_result_rank": ranks["assist_result"]})
+                    prev_stats = by_previous[previous[t] or "unknown"]
+                    prev_stats["steps"] += 1
+                    for name in ("assist", "assist_result"):
+                        prev_stats[f"{name}_hit3"] += ranks[name] is not None and ranks[name] <= 3
                 per_episode.append({"episode_id": episode_id, "events": len(events),
                                     "assist_hit3": episode_hit3 / len(events) if events else None})
             n = steps or 1
@@ -378,6 +448,10 @@ class AssistService:
                                    "mrr": v["rr"] / n} for name, v in totals.items()},
                 "by_operation": {op: {**v, "coverage": v["covered"] / v["steps"], "assist_hit3": v["hit3"] / v["steps"]}
                                  for op, v in sorted(by_operation.items())},
+                "by_previous_result": {label: {"steps": v["steps"], "assist_hit3": v["assist_hit3"] / v["steps"],
+                                               "assist_result_hit3": v["assist_result_hit3"] / v["steps"]}
+                                       for label, v in sorted(by_previous.items())},
+                "changed_steps": changed_steps,
                 "episodes": per_episode,
                 "notes": "未命中包含兩種情況：實際修改不在候選中（coverage 的缺口），或排名在門檻之外。",
             }

@@ -138,7 +138,7 @@ Invoke-RestMethod "$api/conversions/$($c.conversion_id)"   # 看 status、valida
 | POST／GET | `/cases/{case_id}/training-runs`、`.../{run_id}` | 訓練與查詢結果 |
 | GET | `/cases/{case_id}/models`、`.../{model_version_id}` | 模型清單；單一模型含參數、每個狀態的主要觀測、平穩分布 |
 | POST | `.../models/{model_version_id}/activate` | 切換使用中的版本 |
-| POST | `/cases/{case_id}/aov/assist` | 對某條序列的第 N 步提出候選修改（候選 → HMM 評分 → DAG 驗證），並與實際的下一次修改比對 |
+| POST | `/cases/{case_id}/aov/assist` | 對某條序列的第 N 步提出候選修改（候選 → HMM 評分 → DAG 驗證），並與實際的下一次修改比對。實驗選項 `use_previous_result: true` 會納入上一版的執行結果（預設關閉） |
 | GET | `/cases/{case_id}/aov/assist-evaluation` | 在模型保留的測試序列上評估候選排名 |
 | POST | `/cases/{case_id}/aov/validate` | 檢查一張流程是否為合法的有向無環圖 |
 | POST | `.../models/{model_version_id\|active}/replay` | 序列重播：每一步的路線判斷、各方法的預測與實際修改的排名 |

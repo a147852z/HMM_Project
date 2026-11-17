@@ -132,6 +132,7 @@ class AssistIn(BaseModel):
     prefix_length: int = Field(ge=0)
     top_k: int = Field(default=10, ge=1, le=50)
     model_version_id: str = "active"
+    use_previous_result: bool = False  # 實驗選項：納入上一版的執行結果
 
 
 class WorkflowCheckIn(BaseModel):
@@ -144,7 +145,8 @@ def build_assist_router(assist: AssistService) -> APIRouter:
 
     @router.post("/aov/assist")
     def assist_step(case_id: str, body: AssistIn) -> dict[str, Any]:
-        return assist.assist(case_id, body.episode_id, body.prefix_length, body.top_k, body.model_version_id)
+        return assist.assist(case_id, body.episode_id, body.prefix_length, body.top_k, body.model_version_id,
+                             body.use_previous_result)
 
     @router.post("/aov/validate")
     def validate(case_id: str, body: WorkflowCheckIn) -> dict[str, Any]:
