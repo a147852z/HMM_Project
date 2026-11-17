@@ -1,0 +1,31 @@
+<section id="web-open">
+<div class="head">
+<p class="eyebrow">網頁｜打開模型研究頁面</p>
+<h2 class="title">三個步驟打開網頁</h2>
+</div>
+<div style="display:flex; flex-direction:column; gap:24px;">
+<div class="row" style="align-items:flex-start; gap:28px;">
+<p class="step-no" style="margin-top:12px;">1</p>
+<div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+<p style="font-size:30px; font-weight:700;">啟動後端（API，埠 8900）</p>
+<p class="code">cd E:\程式碼\ERP_HMM_Project\k_core\backend<br>.\.venv\Scripts\python.exe -m uvicorn kcore.main:app --port 8900</p>
+</div>
+</div>
+<div class="row" style="align-items:flex-start; gap:28px;">
+<p class="step-no" style="margin-top:12px;">2</p>
+<div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+<p style="font-size:30px; font-weight:700;">啟動前端（網頁，埠 5174）</p>
+<p class="code">cd E:\程式碼\ERP_HMM_Project\k_core\frontend<br>npm run dev</p>
+</div>
+</div>
+<div class="row" style="align-items:flex-start; gap:28px;">
+<p class="step-no" style="margin-top:12px;">3</p>
+<div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+<p style="font-size:30px; font-weight:700;">用瀏覽器開啟，第一個分頁就是「模型研究」</p>
+<p class="code">http://localhost:5174/#case/CVFLOW</p>
+</div>
+</div>
+</div>
+<p class="note">程式更新後要重新啟動後端；畫面若顯示「找不到這項功能的 API」，就是後端還是舊版。</p>
+<aside>網址最後的 #case/CVFLOW 會直接打開 CVFLOW 案例，也可以從右上角的「場域案例」選單切換。其他三個分頁（轉換與審核、原始文件、轉換設定）是給「用本地 LLM 整理原始資料」用的，這次的 CVflow 資料不經過它們。</aside>
+</section>

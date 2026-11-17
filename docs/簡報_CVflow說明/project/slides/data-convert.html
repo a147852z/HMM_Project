@@ -1,0 +1,20 @@
+<section id="data-convert">
+<div class="head">
+<p class="eyebrow">資料｜轉成 K 的演變序列</p>
+<h2 class="title">用程式直接轉換，不需要 LLM</h2>
+</div>
+<div class="row" style="align-items:center; gap:20px;">
+<div class="card" style="flex:1;"><p class="num">230</p><p class="label">條解題過程<br>（5 模型 × 46 題）</p></div>
+<x-shape kind="arrow-right" style="width:64px; height:32px; background:#5B3A99;"></x-shape>
+<div class="card" style="flex:1.2; border-color:#5B3A99;"><h3>CVflow 轉接器</h3><p class="body">比對前後兩版流程圖；節點改名會自動對齊</p></div>
+<x-shape kind="arrow-right" style="width:64px; height:32px; background:#5B3A99;"></x-shape>
+<div class="card" style="flex:1;"><p class="num">155</p><p class="label">條演變序列<br>共 719 次修改</p></div>
+</div>
+<div class="grid2">
+<div class="card" style="padding:24px 32px;"><h3 style="font-size:32px;">一條序列 ＝ 一個模型解一題</h3><p class="body">五個模型的紀錄合成一個案例「CVFLOW」，模型名稱記在屬性裡。</p></div>
+<div class="card" style="padding:24px 32px;"><h3 style="font-size:32px;">一次修改 ＝ 前後兩版的差異</h3><p class="body">新增、刪除了哪些節點與連線，改了哪些參數。</p></div>
+<div class="card" style="padding:24px 32px;"><h3 style="font-size:32px;">修改理由 ＝ AI 當時的自述</h3><p class="body">取自 codex 與 Gemini 每輪寫的設計理由。</p></div>
+<div class="card" style="padding:24px 32px;"><h3 style="font-size:32px;">執行結果與成敗：只用來分析</h3><p class="body">不給模型看，避免答案洩漏進預測。</p></div>
+</div>
+<aside>230 條中有 75 條只有一個版本（多數是第一輪就成功），沒有「修改」可學，所以略過。927 張流程圖全部通過 K 的有向無環圖檢查。一個案例代表一種領域或資料類型，所以五個 AI 模型合在同一個案例，而不是各開一個。</aside>
+</section>

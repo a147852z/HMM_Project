@@ -1,0 +1,33 @@
+<section id="hmm-idea" class="alt">
+<div class="head">
+<p class="eyebrow">狀態｜HMM 的白話解釋</p>
+<h2 class="title">看得到的是修改，看不到的是背後的「狀態」</h2>
+</div>
+<div class="card" style="gap:20px; padding:36px 40px;">
+<div class="row" style="align-items:center; gap:16px;">
+<p class="barname" style="width:220px; color:#5B3A99; font-weight:700;">看不到的狀態</p>
+<p class="pill h1" style="flex:1; text-align:center;">H1</p>
+<x-shape kind="arrow-right" style="width:44px; height:22px; background:#4A4E62;"></x-shape>
+<p class="pill h1" style="flex:1; text-align:center;">H1</p>
+<x-shape kind="arrow-right" style="width:44px; height:22px; background:#4A4E62;"></x-shape>
+<p class="pill h1" style="flex:1; text-align:center;">H1</p>
+<x-shape kind="arrow-right" style="width:44px; height:22px; background:#4A4E62;"></x-shape>
+<p class="pill h1" style="flex:1; text-align:center;">H1</p>
+</div>
+<div class="row" style="align-items:center; gap:16px;">
+<p class="barname" style="width:220px; font-weight:700;">看得到的觀測</p>
+<p class="body" style="flex:1; text-align:center; border:2px solid #D8D4E4; border-radius:12px; padding:12px 8px;">調參・偵測</p>
+<div style="width:44px;"></div>
+<p class="body" style="flex:1; text-align:center; border:2px solid #D8D4E4; border-radius:12px; padding:12px 8px;">加入步驟・前處理</p>
+<div style="width:44px;"></div>
+<p class="body" style="flex:1; text-align:center; border:2px solid #D8D4E4; border-radius:12px; padding:12px 8px;">調參・偵測</p>
+<div style="width:44px;"></div>
+<p class="body" style="flex:1; text-align:center; border:2px solid #D8D4E4; border-radius:12px; padding:12px 8px;">加入步驟・後處理</p>
+</div>
+</div>
+<div class="grid2">
+<div class="card"><h3>學習一：每個狀態常產生哪些觀測</h3><p class="body">例如在 H1 時，「調參・偵測」出現的機率最高。</p></div>
+<div class="card"><h3>學習二：狀態之間怎麼轉換</h3><p class="body">例如在 H1 時，下一步多半還是 H1。</p></div>
+</div>
+<aside>類比：只看得到一個人每天做了什麼（觀測），猜他背後的模式（狀態）。HMM 從大量序列中同時學出「每種模式會做什麼」和「模式之間怎麼切換」。學好之後，給它一段修改紀錄，它就能推估目前處於哪個狀態，並預測下一次修改。</aside>
+</section>

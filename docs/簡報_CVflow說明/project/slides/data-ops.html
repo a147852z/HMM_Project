@@ -1,0 +1,17 @@
+<section id="data-ops" class="alt">
+<div class="head">
+<p class="eyebrow">資料｜每次修改分成六類</p>
+<h2 class="title">719 次修改裡，最常見的是調參與加入步驟</h2>
+</div>
+<table class="tbl">
+<tr><th style="width:22%;">修改類型</th><th style="width:56%;">意思</th><th style="width:11%; text-align:right;">次數</th><th style="width:11%; text-align:right;">比例</th></tr>
+<tr><td>調參</td><td>流程不變，只改節點參數，例如偵測的信心門檻</td><td style="text-align:right;">268</td><td style="text-align:right;">37%</td></tr>
+<tr><td>加入步驟</td><td>新增節點，例如加一道前處理或去重</td><td style="text-align:right;">213</td><td style="text-align:right;">30%</td></tr>
+<tr><td>換策略</td><td>主要辨識手段換了，例如顏色分割改成 DNN 偵測</td><td style="text-align:right;">113</td><td style="text-align:right;">16%</td></tr>
+<tr><td>替換步驟</td><td>同時新增與刪除節點，但辨識手段不變</td><td style="text-align:right;">64</td><td style="text-align:right;">9%</td></tr>
+<tr><td>刪除步驟</td><td>拿掉節點</td><td style="text-align:right;">60</td><td style="text-align:right;">8%</td></tr>
+<tr><td>調整連線</td><td>只改節點之間的連接</td><td style="text-align:right;">1</td><td style="text-align:right;">0.1%</td></tr>
+</table>
+<p class="note">「換策略」依流程圖中的主要辨識手段判斷：DNN、樣板比對、Hough、分水嶺、顏色分割、閾值。</p>
+<aside>這六類是程式依前後兩版的差異自動判斷，不是人工標註，也不是 LLM 判斷，所以可以重現。</aside>
+</section>

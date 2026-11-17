@@ -1,0 +1,19 @@
+<section id="predict" class="alt" style="gap:32px;">
+<div class="head">
+<p class="eyebrow">預測｜猜下一次修改</p>
+<h2 class="title">機率估得最準 vs. 第一名猜得最準</h2>
+</div>
+<table class="tbl" style="font-size:28px;">
+<tr><th style="width:26%;">方法</th><th style="width:44%;">怎麼預測</th><th style="width:15%; text-align:right;">困惑度</th><th style="width:15%; text-align:right;">Top-1</th></tr>
+<tr><td>HMM＋上一次（平均）</td><td>HMM 與「只看上一次」各佔一半，網頁預設</td><td style="text-align:right; color:#1A7A62;"><b>23.2</b></td><td style="text-align:right;">12%</td></tr>
+<tr><td>HMM</td><td>依目前路線推估下一個觀測</td><td style="text-align:right;">25.4</td><td style="text-align:right;">10%</td></tr>
+<tr><td>只看上一次修改</td><td>上一次做了 A，下一次最常做什麼</td><td style="text-align:right;">28.6</td><td style="text-align:right; color:#1A7A62;"><b>22%</b></td></tr>
+<tr><td>只看頻率</td><td>永遠猜最常見的修改</td><td style="text-align:right;">30.5</td><td style="text-align:right;">11%</td></tr>
+<tr><td>HMM＋路線轉移表</td><td>每條路線各一張「上一次 → 下一次」表</td><td style="text-align:right;">33.5</td><td style="text-align:right;">12%</td></tr>
+</table>
+<div class="grid2">
+<p class="callout"><b>困惑度</b>可以想成「平均像在幾個選項裡猜」，越低越好。HMM＋上一次（平均）最準。</p>
+<p class="callout" style="border-left-color:#1A7A62;"><b>Top-1</b> 是第一名剛好猜中的比例。這一項仍是「只看上一次修改」最好。</p>
+</div>
+<aside>表中數字是網頁「模型概況」顯示的值：依時間保留最後 31 條序列、130 次修改當測試資料，沒有參與訓練。另外做了 5 折交叉驗證，結論相同：HMM＋上一次（平均）的困惑度 18.3，比只看上一次修改的 22.6 低約 19%；只猜第一名時，只看上一次修改最好（26%）。之後 K 要替候選流程打分數，看的是機率準不準，所以預設用平均法。</aside>
+</section>

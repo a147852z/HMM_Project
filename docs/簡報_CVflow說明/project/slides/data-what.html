@@ -1,0 +1,21 @@
+<section id="data-what">
+<div class="head">
+<p class="eyebrow">資料｜佳元實驗材料包</p>
+<h2 class="title">五個 AI 模型，各自用「流程圖」解影像辨識題</h2>
+</div>
+<div class="grid3">
+<div class="card"><p class="num">5</p><p class="label">AI 模型：codex、Gemini、Opus、Sonnet、Haiku</p></div>
+<div class="card"><p class="num">41＋5</p><p class="label">題目（另含 5 題補考），例如「數一數圖中有幾顆蘋果」</p></div>
+<div class="card"><p class="num">≤10</p><p class="label">每題最多 10 輪，每輪交出一張 cvflow 流程圖</p></div>
+</div>
+<div class="row" style="align-items:center; gap:20px;">
+<div class="card" style="flex:1; padding:24px 28px;"><h3 style="font-size:32px;">設計流程圖</h3><p class="body" style="font-size:26px;">選節點、接連線、設參數</p></div>
+<x-shape kind="arrow-right" style="width:56px; height:28px; background:#5B3A99;"></x-shape>
+<div class="card" style="flex:1; padding:24px 28px;"><h3 style="font-size:32px;">執行</h3><p class="body" style="font-size:26px;">在沙盒中跑出結果</p></div>
+<x-shape kind="arrow-right" style="width:56px; height:28px; background:#5B3A99;"></x-shape>
+<div class="card" style="flex:1; padding:24px 28px;"><h3 style="font-size:32px;">評分</h3><p class="body" style="font-size:26px;">是否通過、偵測框對不對</p></div>
+<x-shape kind="arrow-right" style="width:56px; height:28px; background:#5B3A99;"></x-shape>
+<div class="card" style="flex:1; padding:24px 28px;"><h3 style="font-size:32px;">修改</h3><p class="body" style="font-size:26px;">寫下理由，進入下一輪</p></div>
+</div>
+<aside>資料位置：E:\程式碼\2026-10-13-jiayuan-package。每一輪都保存了流程圖 JSON、執行結果、評分；codex 與 Gemini 另外寫了每輪的觀察、假設與修正計畫。流程圖由節點（例如顏色分割、DNN 偵測、計數）與連線組成，是有向無環圖，和 K 要處理的 AoV 流程是同一類東西。</aside>
+</section>

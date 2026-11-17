@@ -1,0 +1,17 @@
+<section id="state-k">
+<div class="head">
+<p class="eyebrow">狀態｜要幾個狀態，由資料決定</p>
+<h2 class="title">試了 1 到 6 個狀態，2 個最好</h2>
+<p class="lead">BIC 同時考慮「解釋資料的能力」與「模型有多複雜」，數字越低越好。K=1 代表沒有隱藏結構。</p>
+</div>
+<div style="display:flex; flex-direction:column; gap:14px;">
+<div class="barrow"><p class="barname">K=1</p><div style="width:679px; height:44px; background:#B9B5C8; border-radius:10px;"></div><p class="note">3,870</p></div>
+<div class="barrow"><p class="barname" style="font-weight:700; color:#5B3A99;">K=2　最好</p><div style="width:631px; height:44px; background:#5B3A99; border-radius:10px;"></div><p class="note" style="color:#5B3A99; font-weight:700;">3,809</p></div>
+<div class="barrow"><p class="barname">K=3</p><div style="width:755px; height:44px; background:#B9B5C8; border-radius:10px;"></div><p class="note">3,968</p></div>
+<div class="barrow"><p class="barname">K=4</p><div style="width:900px; height:44px; background:#B9B5C8; border-radius:10px;"></div><p class="note">4,153</p></div>
+<div class="barrow"><p class="barname">K=5</p><div style="width:1110px; height:44px; background:#B9B5C8; border-radius:10px;"></div><p class="note">4,423</p></div>
+<div class="barrow"><p class="barname">K=6</p><div style="width:1321px; height:44px; background:#B9B5C8; border-radius:10px;"></div><p class="note">4,694</p></div>
+</div>
+<p class="callout">狀態名稱只是中性編號 H0、H1。代表什麼意思，是訓練完之後看它們的內容再解讀的。</p>
+<aside>長條長度只用來比較大小，座標從 3,000 起算（不是從 0），重點是 K=2 的 BIC 最低。若每個 AI 模型分開訓練，資料太少，BIC 幾乎都選 K=1；五個模型合併後，資料量才足以支持 2 個狀態。</aside>
+</section>

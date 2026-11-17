@@ -1,0 +1,21 @@
+{
+  "v": 5,
+  "createdOnFiles": {"v": 1, "at": "2026-11-16T10:00:00Z"},
+  "lists": "css",
+  "format": {"v": 1, "shared": ["project/deck.css"]},
+  "title": "K 知識核心：CVflow 實驗說明",
+  "order": ["cover", "agenda", "data-what", "data-loop", "data-convert", "data-ops", "data-obs", "hmm-idea", "state-k", "state-two", "state-groups", "predict", "web-open", "web-overview", "web-states", "web-replay", "web-example", "takeaways"],
+  "sections": {
+    "s1": {"description": "開場：這份簡報要回答的三個問題", "start": "cover"},
+    "s2": {"description": "資料：佳元實驗材料包是什麼，怎麼轉成 K 的演變序列與觀測", "start": "data-what"},
+    "s3": {"description": "狀態：HMM 的隱藏狀態怎麼來、代表什麼", "start": "hmm-idea"},
+    "s4": {"description": "預測：五種方法預測下一次修改的成績", "start": "predict"},
+    "s5": {"description": "網頁：如何打開與閱讀模型研究頁面", "start": "web-open"},
+    "s6": {"description": "結論：目前學到什麼與下一步", "start": "takeaways"}
+  },
+  "faces": {
+    "noto-sans-tc": {"family": "Noto Sans TC", "href": "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap"},
+    "jetbrains-mono": {"family": "JetBrains Mono", "href": "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap"}
+  },
+  "designSystems": []
+}

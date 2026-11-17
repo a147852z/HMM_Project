@@ -1,0 +1,29 @@
+<section id="data-obs">
+<div class="head">
+<p class="eyebrow">資料｜模型看到的「觀測」</p>
+<h2 class="title">觀測 ＝ 修改類型 × 受影響的活動類別</h2>
+<p class="lead">77 種節點太細，資料會太稀疏，所以先歸成 8 類，再和修改類型組合，共約 38 種觀測符號。</p>
+</div>
+<div class="grid2" style="gap:40px;">
+<div class="card">
+<h3>8 種活動類別</h3>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 24px;">
+<p class="body">輸入：讀取影像</p>
+<p class="body">前處理：模糊、裁切</p>
+<p class="body">分割：顏色、閾值</p>
+<p class="body">形態學：分水嶺</p>
+<p class="body">區域：輪廓、外框</p>
+<p class="body">偵測：DNN、Hough</p>
+<p class="body">後處理：過濾、去重</p>
+<p class="body">輸出：計數、疊圖</p>
+</div>
+</div>
+<div class="card">
+<h3>觀測的例子</h3>
+<p class="body"><b style="color:#1C1E2B;">調參・偵測</b><br>調整了 DNN 等偵測節點的參數</p>
+<p class="body"><b style="color:#1C1E2B;">換策略・分割</b><br>換了辨識手段，主要影響分割類節點</p>
+<p class="body"><b style="color:#1C1E2B;">加入步驟・後處理</b><br>新增了過濾或去重之類的節點</p>
+</div>
+</div>
+<aside>網頁上看到的「調參・偵測」這類文字，就是觀測符號。HMM 只看得到這一串觀測，看不到 AI 的想法、也看不到結果是否通過。</aside>
+</section>

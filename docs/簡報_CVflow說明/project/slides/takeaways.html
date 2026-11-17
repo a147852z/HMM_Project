@@ -1,0 +1,31 @@
+<section id="takeaways" class="dark">
+<div class="head">
+<p class="eyebrow">結論與下一步</p>
+<h2 class="title">目前學到的三件事</h2>
+</div>
+<div class="grid3">
+<div class="card" style="background:#2A2D40; border-color:#3D4058;">
+<h3 style="color:#F6F5F9;">資料可以直接用</h3>
+<p class="body" style="color:#C9CBDA;">程式轉換出 155 條序列、719 次修改，不需要 LLM，也可以重現。</p>
+</div>
+<div class="card" style="background:#2A2D40; border-color:#3D4058;">
+<h3 style="color:#F6F5F9;">狀態是解題路線</h3>
+<p class="body" style="color:#C9CBDA;">HMM 找出傳統影像處理與 DNN 兩條路線；各 AI 模型偏好不同，但和成敗無關。</p>
+</div>
+<div class="card" style="background:#2A2D40; border-color:#3D4058;">
+<h3 style="color:#F6F5F9;">結合讓機率更準</h3>
+<p class="body" style="color:#C9CBDA;">HMM＋上一次修改的機率估計最好；只猜第一名時，只看上一次修改仍最好。</p>
+</div>
+</div>
+<div class="grid2">
+<div>
+<p class="eyebrow" style="margin-bottom:12px;">限制</p>
+<p class="lead" style="font-size:28px;">資料量仍小；狀態意義要人工解讀；AI 的行為不一定等於工廠人員。</p>
+</div>
+<div>
+<p class="eyebrow" style="margin-bottom:12px;">下一步</p>
+<p class="lead" style="font-size:28px;">用模型替候選流程打分數（HMM 協助 AoV 生成）；加入更多資料與「上一版執行結果」。</p>
+</div>
+</div>
+<aside>這份簡報的數字來自 docs/CVflow實驗報告.md 與網頁上的使用中模型 CVFLOW-M005。如果要更深入，可以看報告中的交叉驗證結果與每個模型分開建模的對照。</aside>
+</section>

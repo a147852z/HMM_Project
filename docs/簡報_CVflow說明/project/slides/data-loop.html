@@ -1,0 +1,27 @@
+<section id="data-loop" class="alt">
+<div class="head">
+<p class="eyebrow">資料｜一題的真實過程</p>
+<h2 class="title">codex 數蘋果：12 次修改，路線來回切換</h2>
+<p class="lead">題目「請數一數這張圖片中總共有幾顆蘋果」。第 1 版用 HSV 顏色分割，之後在顏色分割、DNN 偵測、分水嶺、Hough 之間反覆嘗試。</p>
+</div>
+<div style="display:grid; grid-template-columns:repeat(13, 1fr); gap:8px;">
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#6A45A8;"><p style="font-size:24px; font-weight:700;">第1版</p><p style="font-size:24px; color:#6A45A8;">顏色</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#1A7A62;"><p style="font-size:24px; font-weight:700;">換策略</p><p style="font-size:24px; color:#1A7A62;">DNN</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#6A45A8;"><p style="font-size:24px; font-weight:700;">換策略</p><p style="font-size:24px; color:#6A45A8;">顏色</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#1A7A62;"><p style="font-size:24px; font-weight:700;">換策略</p><p style="font-size:24px; color:#1A7A62;">DNN</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#1A7A62; background:#E3F2EC;"><p style="font-size:24px; font-weight:700;">調參</p><p style="font-size:24px; color:#1A7A62;">通過</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#6A45A8;"><p style="font-size:24px; font-weight:700;">換策略</p><p style="font-size:24px; color:#6A45A8;">分水嶺</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#6A45A8;"><p style="font-size:24px; font-weight:700;">修補</p><p style="font-size:24px; color:#6A45A8;">分水嶺</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#6A45A8;"><p style="font-size:24px; font-weight:700;">修補</p><p style="font-size:24px; color:#6A45A8;">分水嶺</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#1A7A62;"><p style="font-size:24px; font-weight:700;">換策略</p><p style="font-size:24px; color:#1A7A62;">DNN</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#1A7A62;"><p style="font-size:24px; font-weight:700;">修補</p><p style="font-size:24px; color:#1A7A62;">DNN</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#6A45A8;"><p style="font-size:24px; font-weight:700;">換策略</p><p style="font-size:24px; color:#6A45A8;">Hough</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#1A7A62;"><p style="font-size:24px; font-weight:700;">換策略</p><p style="font-size:24px; color:#1A7A62;">DNN</p></div>
+<div class="card" style="padding:14px 8px; gap:6px; align-items:center; border-color:#1A7A62; background:#E3F2EC;"><p style="font-size:24px; font-weight:700;">刪步驟</p><p style="font-size:24px; color:#1A7A62;">通過</p></div>
+</div>
+<div class="grid2">
+<p class="callout">第 5 個版本（第 4 次修改）第一次通過；之後仍繼續修改，到第 10 輪用完次數。「修補」是同一輪內流程圖無法執行時的修正版。</p>
+<p class="callout" style="border-left-color:#B4581A;">有趣的發現：AI 寫下的「下一輪計畫」常和實際做法不同。例如第 1 輪後計畫「調整 HSV 門檻」，第 2 輪卻直接改用 DNN。</p>
+</div>
+<aside>紫色框代表傳統影像處理的做法（顏色分割、分水嶺、Hough），綠色框代表 DNN 偵測。這一條序列在 K 裡是 CVFLOW-codex-t-apples… ，可以在網頁的序列重播中找到。這種「同一題反覆換方法」的行為，就是後面 HMM 要學的東西。</aside>
+</section>

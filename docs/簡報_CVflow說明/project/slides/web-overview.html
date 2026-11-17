@@ -1,0 +1,13 @@
+<section id="web-overview" class="alt">
+<div class="head">
+<p class="eyebrow">網頁｜區塊一：模型概況</p>
+<h2 class="title">先看模型學到幾個狀態，以及各方法的成績</h2>
+</div>
+<img src="/_blob/00b3d3c7e59c13800c4ccf402a032534" alt="模型概況區塊截圖：模型版本選單、K=2 等標籤與五種方法的成績表" class="shot" style="width:1500px; height:380px;">
+<div class="grid3">
+<div class="card" style="padding:24px 28px;"><h3 style="font-size:32px;">右上：模型版本</h3><p class="body">每次訓練都會留下一個版本，標示「使用中」的是預測時用的那個。</p></div>
+<div class="card" style="padding:24px 28px;"><h3 style="font-size:32px;">標籤列</h3><p class="body">隱藏狀態數 K、觀測的編碼方式、測試資料量、各 K 的 BIC。</p></div>
+<div class="card" style="padding:24px 28px;"><h3 style="font-size:32px;">成績表</h3><p class="body">綠色是該欄最好。困惑度越低越好；Top-1、Top-3、MRR 越高越好。</p></div>
+</div>
+<aside>這裡的成績都來自訓練時刻意保留、沒有參與訓練的測試序列，所以是「沒看過的資料」上的表現。MRR 是實際答案排名倒數的平均，第一名得 1、第二名得 0.5，依此類推。</aside>
+</section>

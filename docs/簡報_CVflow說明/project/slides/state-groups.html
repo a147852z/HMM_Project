@@ -1,0 +1,22 @@
+<section id="state-groups">
+<div class="head">
+<p class="eyebrow">狀態｜各 AI 模型走哪條路線</p>
+<h2 class="title">偏好不同，但路線和最後成敗無關</h2>
+</div>
+<div class="row" style="gap:16px; align-items:center;">
+<p class="pill h0">H0 傳統影像處理</p>
+<p class="pill h1">H1 DNN 偵測</p>
+<p class="note">（以修改次數計算比例）</p>
+</div>
+<div style="display:flex; flex-direction:column; gap:14px;">
+<div class="barrow"><p class="barname">Gemini</p><div class="bar"><div class="seg h0" style="width:65%;">65%</div><div class="seg h1" style="width:35%;">35%</div></div></div>
+<div class="barrow"><p class="barname">codex</p><div class="bar"><div class="seg h0" style="width:52%;">52%</div><div class="seg h1" style="width:48%;">48%</div></div></div>
+<div class="barrow"><p class="barname">Sonnet</p><div class="bar"><div class="seg h0" style="width:51%;">51%</div><div class="seg h1" style="width:49%;">49%</div></div></div>
+<div class="barrow"><p class="barname">Haiku</p><div class="bar"><div class="seg h0" style="width:47%;">47%</div><div class="seg h1" style="width:53%;">53%</div></div></div>
+<div class="barrow"><p class="barname">Opus</p><div class="bar"><div class="seg h0" style="width:40%;">40%</div><div class="seg h1" style="width:60%;">60%</div></div></div>
+<hr style="border-top:2px solid #D8D4E4;">
+<div class="barrow"><p class="barname" style="font-weight:700;">最後成功</p><div class="bar"><div class="seg h0" style="width:51%;">51%</div><div class="seg h1" style="width:49%;">49%</div></div></div>
+<div class="barrow"><p class="barname" style="font-weight:700;">最後失敗</p><div class="bar"><div class="seg h0" style="width:52%;">52%</div><div class="seg h1" style="width:48%;">48%</div></div></div>
+</div>
+<aside>Gemini 最常走傳統路線，Opus 最常走 DNN 路線，其他三個大約一半一半。成功與失敗的序列中兩條路線的比例幾乎相同，代表「選哪條路線」本身不決定成敗。樣本數約每模型 30 題，解讀時要保守。</aside>
+</section>

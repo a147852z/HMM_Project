@@ -1,0 +1,1626 @@
+{
+ "config": {
+  "k_min": 2,
+  "k_max": 6,
+  "restarts": 5,
+  "n_iter": 300,
+  "tol": 0.0001,
+  "smoothing": 0.1,
+  "seed": 0,
+  "criterion": "bic"
+ },
+ "cases": {
+  "CVFLOW-CODEX": {
+   "ingest": {
+    "episodes": 32,
+    "events": 220,
+    "skipped_single_version": 14,
+    "skipped_identical_versions": 0,
+    "renamed_nodes": 739,
+    "merged_port_edges": 0,
+    "operation_types": {
+     "strategy_switch": 38,
+     "param_tune": 57,
+     "remove_step": 21,
+     "add_step": 64,
+     "replace_step": 39,
+     "rewire": 1
+    }
+   },
+   "runs": {
+    "op_category": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-CODEX-R001",
+     "model_version_id": "CVFLOW-CODEX-M001",
+     "dataset": {
+      "finalized_episodes": 32,
+      "train_episodes": 26,
+      "test_episodes": 6,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -490.50684923885876,
+       "bic": 1308.1699800838007,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -468.5616959485525,
+       "bic": 1446.0331632843456,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -450.91566962178706,
+       "bic": 1602.8805141137525,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -439.64204732382376,
+       "bic": 1782.858586702544,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -436.5299548881454,
+       "bic": 1989.5456327176862,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 0.0,
+     "vocabulary_size": 31,
+     "test_unknown_rate": 0.2,
+     "test": {
+      "hmm": {
+       "events": 40,
+       "ranked_steps": 34,
+       "log_likelihood_per_event": -3.6726857234574006,
+       "perplexity": 39.35746731560736,
+       "next_top1": 0.08823529411764706,
+       "next_top3": 0.29411764705882354,
+       "next_mrr": 0.23517244158610384
+      },
+      "bigram": {
+       "events": 40,
+       "ranked_steps": 34,
+       "log_likelihood_per_event": -3.212358958201232,
+       "perplexity": 24.837608051389918,
+       "next_top1": 0.38235294117647056,
+       "next_top3": 0.6176470588235294,
+       "next_mrr": 0.5293183940242763
+      },
+      "unigram": {
+       "events": 40,
+       "ranked_steps": 34,
+       "log_likelihood_per_event": -4.04602964453423,
+       "perplexity": 57.170020538803584,
+       "next_top1": 0.08823529411764706,
+       "next_top3": 0.08823529411764706,
+       "next_mrr": 0.18340786342833681
+      }
+     },
+     "analysis": {
+      "states": {
+       "H0": {
+        "events": 121,
+        "stationary": 0.042,
+        "self_transition": 0.973,
+        "top_observations": [
+         [
+          "add_step|preprocess",
+          0.168
+         ],
+         [
+          "add_step|postprocess",
+          0.153
+         ],
+         [
+          "param_tune|preprocess",
+          0.119
+         ],
+         [
+          "param_tune|detect",
+          0.094
+         ]
+        ],
+        "mean_relative_position": 0.467860422405877,
+        "passed_after_rate": 0.0743801652892562,
+        "executable_after_rate": 1.0,
+        "reason_rate": 0.9917355371900827,
+        "top_strategies": [
+         [
+          "dnn",
+          94
+         ],
+         [
+          "watershed",
+          18
+         ],
+         [
+          "threshold",
+          5
+         ]
+        ],
+        "operation_mix": [
+         [
+          "add_step",
+          47
+         ],
+         [
+          "param_tune",
+          31
+         ],
+         [
+          "replace_step",
+          30
+         ],
+         [
+          "remove_step",
+          12
+         ],
+         [
+          "rewire",
+          1
+         ]
+        ]
+       },
+       "H1": {
+        "events": 99,
+        "stationary": 0.958,
+        "self_transition": 0.999,
+        "top_observations": [
+         [
+          "param_tune|morphology",
+          0.168
+         ],
+         [
+          "strategy_switch|segment",
+          0.158
+         ],
+         [
+          "strategy_switch|preprocess",
+          0.109
+         ],
+         [
+          "param_tune|segment",
+          0.06
+         ]
+        ],
+        "mean_relative_position": 0.5089786756453424,
+        "passed_after_rate": 0.050505050505050504,
+        "executable_after_rate": 0.7777777777777778,
+        "reason_rate": 0.7878787878787878,
+        "top_strategies": [
+         [
+          "watershed",
+          38
+         ],
+         [
+          "color",
+          23
+         ],
+         [
+          "threshold",
+          18
+         ]
+        ],
+        "operation_mix": [
+         [
+          "strategy_switch",
+          38
+         ],
+         [
+          "param_tune",
+          26
+         ],
+         [
+          "add_step",
+          17
+         ],
+         [
+          "remove_step",
+          9
+         ],
+         [
+          "replace_step",
+          9
+         ]
+        ]
+       }
+      },
+      "transition": [
+       [
+        0.973,
+        0.027
+       ],
+       [
+        0.001,
+        0.999
+       ]
+      ],
+      "initial": [
+       0.677,
+       0.323
+      ],
+      "occupancy_by_outcome": {
+       "final_ok": {
+        "H0": 0.451,
+        "H1": 0.549
+       },
+       "final_fail": {
+        "H0": 0.58,
+        "H1": 0.42
+       }
+      }
+     }
+    },
+    "op_only": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-CODEX-R002",
+     "model_version_id": "CVFLOW-CODEX-M002",
+     "dataset": {
+      "finalized_episodes": 32,
+      "train_episodes": 26,
+      "test_episodes": 6,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -260.68132214920337,
+       "bic": 599.2569970617599,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -252.137318371374,
+       "bic": 639.2915148658934,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -246.2002712290528,
+       "bic": 694.9258596428238,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -241.87202752189188,
+       "bic": 764.1637249918551,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -235.62225612167833,
+       "bic": 839.9444486565617,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 0.0,
+     "vocabulary_size": 7,
+     "test_unknown_rate": 0.0,
+     "test": {
+      "hmm": {
+       "events": 40,
+       "ranked_steps": 34,
+       "log_likelihood_per_event": -1.454955249054283,
+       "perplexity": 4.284291735205212,
+       "next_top1": 0.2647058823529412,
+       "next_top3": 0.8529411764705882,
+       "next_mrr": 0.5318627450980394
+      },
+      "bigram": {
+       "events": 40,
+       "ranked_steps": 34,
+       "log_likelihood_per_event": -1.5270305509826219,
+       "perplexity": 4.604483722215739,
+       "next_top1": 0.4411764705882353,
+       "next_top3": 0.7058823529411765,
+       "next_mrr": 0.6318627450980391
+      },
+      "unigram": {
+       "events": 40,
+       "ranked_steps": 34,
+       "log_likelihood_per_event": -1.6397757906330412,
+       "perplexity": 5.154013804506868,
+       "next_top1": 0.20588235294117646,
+       "next_top3": 0.47058823529411764,
+       "next_mrr": 0.4647058823529411
+      }
+     }
+    }
+   }
+  },
+  "CVFLOW-GEMINI": {
+   "ingest": {
+    "episodes": 31,
+    "events": 161,
+    "skipped_single_version": 15,
+    "skipped_identical_versions": 3,
+    "renamed_nodes": 288,
+    "merged_port_edges": 2,
+    "operation_types": {
+     "strategy_switch": 15,
+     "replace_step": 11,
+     "param_tune": 63,
+     "add_step": 52,
+     "remove_step": 20
+    }
+   },
+   "runs": {
+    "op_category": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-GEMINI-R001",
+     "model_version_id": "CVFLOW-GEMINI-M001",
+     "dataset": {
+      "finalized_episodes": 31,
+      "train_episodes": 25,
+      "test_episodes": 6,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -361.417361542608,
+       "bic": 1015.6425562705505,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -325.54520549647975,
+       "bic": 1107.672116976871,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -333.9124467265368,
+       "bic": 1298.1061614960818,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -318.29952272835885,
+       "bic": 1450.5055648193425,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -305.7519759757375,
+       "bic": 1618.961411894236,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 5.684341886080802e-14,
+     "vocabulary_size": 29,
+     "test_unknown_rate": 0.0,
+     "test": {
+      "hmm": {
+       "events": 18,
+       "ranked_steps": 12,
+       "log_likelihood_per_event": -3.3965002784078115,
+       "perplexity": 29.859417326506545,
+       "next_top1": 0.08333333333333333,
+       "next_top3": 0.3333333333333333,
+       "next_mrr": 0.2792055897319055
+      },
+      "bigram": {
+       "events": 18,
+       "ranked_steps": 12,
+       "log_likelihood_per_event": -3.4488750992032338,
+       "perplexity": 31.464977415196866,
+       "next_top1": 0.08333333333333333,
+       "next_top3": 0.4166666666666667,
+       "next_mrr": 0.3244047619047619
+      },
+      "unigram": {
+       "events": 18,
+       "ranked_steps": 12,
+       "log_likelihood_per_event": -3.0472275415400256,
+       "perplexity": 21.05688408413736,
+       "next_top1": 0.08333333333333333,
+       "next_top3": 0.3333333333333333,
+       "next_mrr": 0.30092592592592593
+      }
+     },
+     "analysis": {
+      "states": {
+       "H0": {
+        "events": 81,
+        "stationary": 0.449,
+        "self_transition": 0.998,
+        "top_observations": [
+         [
+          "param_tune|detect",
+          0.335
+         ],
+         [
+          "add_step|postprocess",
+          0.161
+         ],
+         [
+          "param_tune|output",
+          0.074
+         ],
+         [
+          "replace_step|preprocess",
+          0.059
+         ]
+        ],
+        "mean_relative_position": 0.4521604938271605,
+        "passed_after_rate": 0.16049382716049382,
+        "executable_after_rate": 0.9876543209876543,
+        "reason_rate": 1.0,
+        "top_strategies": [
+         [
+          "dnn",
+          55
+         ],
+         [
+          "watershed",
+          11
+         ],
+         [
+          "threshold",
+          10
+         ]
+        ],
+        "operation_mix": [
+         [
+          "param_tune",
+          34
+         ],
+         [
+          "add_step",
+          28
+         ],
+         [
+          "replace_step",
+          9
+         ],
+         [
+          "remove_step",
+          7
+         ],
+         [
+          "strategy_switch",
+          3
+         ]
+        ]
+       },
+       "H1": {
+        "events": 80,
+        "stationary": 0.551,
+        "self_transition": 0.998,
+        "top_observations": [
+         [
+          "add_step|output",
+          0.176
+         ],
+         [
+          "param_tune|region",
+          0.164
+         ],
+         [
+          "remove_step|output",
+          0.139
+         ],
+         [
+          "param_tune|io",
+          0.089
+         ]
+        ],
+        "mean_relative_position": 0.4859375,
+        "passed_after_rate": 0.075,
+        "executable_after_rate": 0.975,
+        "reason_rate": 1.0,
+        "top_strategies": [
+         [
+          "watershed",
+          29
+         ],
+         [
+          "threshold",
+          21
+         ],
+         [
+          "dnn",
+          16
+         ]
+        ],
+        "operation_mix": [
+         [
+          "param_tune",
+          29
+         ],
+         [
+          "add_step",
+          24
+         ],
+         [
+          "remove_step",
+          13
+         ],
+         [
+          "strategy_switch",
+          12
+         ],
+         [
+          "replace_step",
+          2
+         ]
+        ]
+       }
+      },
+      "transition": [
+       [
+        0.998,
+        0.002
+       ],
+       [
+        0.002,
+        0.998
+       ]
+      ],
+      "initial": [
+       0.522,
+       0.478
+      ],
+      "occupancy_by_outcome": {
+       "final_ok": {
+        "H0": 0.686,
+        "H1": 0.314
+       },
+       "final_fail": {
+        "H0": 0.452,
+        "H1": 0.548
+       }
+      }
+     }
+    },
+    "op_only": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-GEMINI-R002",
+     "model_version_id": "CVFLOW-GEMINI-M002",
+     "dataset": {
+      "finalized_episodes": 31,
+      "train_episodes": 25,
+      "test_episodes": 6,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -191.55358486782404,
+       "bic": 447.6241499290269,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -183.42515834157513,
+       "bic": 480.9957431791281,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -173.22888834879382,
+       "bic": 520.1573387566843,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -170.9893822299367,
+       "bic": 585.1581513426088,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -163.17915588043405,
+       "bic": 648.9432127277621,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 0.0,
+     "vocabulary_size": 6,
+     "test_unknown_rate": 0.0,
+     "test": {
+      "hmm": {
+       "events": 18,
+       "ranked_steps": 12,
+       "log_likelihood_per_event": -1.4452365420223192,
+       "perplexity": 4.242855637784362,
+       "next_top1": 0.25,
+       "next_top3": 0.8333333333333334,
+       "next_mrr": 0.5694444444444444
+      },
+      "bigram": {
+       "events": 18,
+       "ranked_steps": 12,
+       "log_likelihood_per_event": -1.5346240963889488,
+       "perplexity": 4.639581166803931,
+       "next_top1": 0.3333333333333333,
+       "next_top3": 0.9166666666666666,
+       "next_mrr": 0.6
+      },
+      "unigram": {
+       "events": 18,
+       "ranked_steps": 12,
+       "log_likelihood_per_event": -1.4702160108019389,
+       "perplexity": 4.350174724309794,
+       "next_top1": 0.25,
+       "next_top3": 0.8333333333333334,
+       "next_mrr": 0.5611111111111111
+      }
+     }
+    }
+   }
+  },
+  "CVFLOW-OPUS": {
+   "ingest": {
+    "episodes": 34,
+    "events": 141,
+    "skipped_single_version": 12,
+    "skipped_identical_versions": 0,
+    "renamed_nodes": 34,
+    "merged_port_edges": 0,
+    "operation_types": {
+     "add_step": 48,
+     "strategy_switch": 24,
+     "param_tune": 50,
+     "remove_step": 10,
+     "replace_step": 9
+    }
+   },
+   "runs": {
+    "op_category": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-OPUS-R001",
+     "model_version_id": "CVFLOW-OPUS-M001",
+     "dataset": {
+      "finalized_episodes": 34,
+      "train_episodes": 27,
+      "test_episodes": 7,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -284.8416801804843,
+       "bic": 813.8454392428529,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -271.26900179830704,
+       "bic": 925.5373430191778,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -258.04028611542674,
+       "bic": 1047.4921556796605,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -250.48251326108317,
+       "bic": 1190.363837482781,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -247.79257907303798,
+       "bic": 1352.5461801040622,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 5.684341886080802e-14,
+     "vocabulary_size": 25,
+     "test_unknown_rate": 0.23809523809523808,
+     "test": {
+      "hmm": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -3.7795586153903464,
+       "perplexity": 43.796706276596865,
+       "next_top1": 0.0,
+       "next_top3": 0.14285714285714285,
+       "next_mrr": 0.14564574314574313
+      },
+      "bigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -3.2288781989118833,
+       "perplexity": 25.251314124755815,
+       "next_top1": 0.35714285714285715,
+       "next_top3": 0.6428571428571429,
+       "next_mrr": 0.5554945054945055
+      },
+      "unigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -4.056323543568854,
+       "perplexity": 57.76156237046236,
+       "next_top1": 0.0,
+       "next_top3": 0.14285714285714285,
+       "next_mrr": 0.12140589569160998
+      }
+     },
+     "analysis": {
+      "states": {
+       "H0": {
+        "events": 87,
+        "stationary": 0.047,
+        "self_transition": 0.918,
+        "top_observations": [
+         [
+          "add_step|preprocess",
+          0.33
+         ],
+         [
+          "param_tune|detect",
+          0.328
+         ],
+         [
+          "remove_step|preprocess",
+          0.07
+         ],
+         [
+          "add_step|detect",
+          0.057
+         ]
+        ],
+        "mean_relative_position": 0.44314449917898197,
+        "passed_after_rate": 0.09195402298850575,
+        "executable_after_rate": 1.0,
+        "reason_rate": 0.0,
+        "top_strategies": [
+         [
+          "dnn",
+          79
+         ],
+         [
+          "hough",
+          3
+         ],
+         [
+          "color",
+          2
+         ]
+        ],
+        "operation_mix": [
+         [
+          "add_step",
+          38
+         ],
+         [
+          "param_tune",
+          31
+         ],
+         [
+          "remove_step",
+          10
+         ],
+         [
+          "replace_step",
+          5
+         ],
+         [
+          "strategy_switch",
+          3
+         ]
+        ]
+       },
+       "H1": {
+        "events": 54,
+        "stationary": 0.953,
+        "self_transition": 0.996,
+        "top_observations": [
+         [
+          "strategy_switch|morphology",
+          0.115
+         ],
+         [
+          "param_tune|preprocess",
+          0.114
+         ],
+         [
+          "strategy_switch|preprocess",
+          0.114
+         ],
+         [
+          "param_tune|detect",
+          0.086
+         ]
+        ],
+        "mean_relative_position": 0.5545634920634921,
+        "passed_after_rate": 0.1111111111111111,
+        "executable_after_rate": 0.9814814814814815,
+        "reason_rate": 0.0,
+        "top_strategies": [
+         [
+          "hough",
+          19
+         ],
+         [
+          "threshold",
+          16
+         ],
+         [
+          "watershed",
+          8
+         ]
+        ],
+        "operation_mix": [
+         [
+          "strategy_switch",
+          21
+         ],
+         [
+          "param_tune",
+          19
+         ],
+         [
+          "add_step",
+          10
+         ],
+         [
+          "replace_step",
+          4
+         ]
+        ]
+       }
+      },
+      "transition": [
+       [
+        0.918,
+        0.082
+       ],
+       [
+        0.004,
+        0.996
+       ]
+      ],
+      "initial": [
+       0.743,
+       0.257
+      ],
+      "occupancy_by_outcome": {
+       "final_ok": {
+        "H0": 0.676,
+        "H1": 0.324
+       },
+       "final_fail": {
+        "H0": 0.598,
+        "H1": 0.402
+       }
+      }
+     }
+    },
+    "op_only": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-OPUS-R002",
+     "model_version_id": "CVFLOW-OPUS-M002",
+     "dataset": {
+      "finalized_episodes": 34,
+      "train_episodes": 27,
+      "test_episodes": 7,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -148.99543065734312,
+       "bic": 360.22825397085285,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -141.47699121833642,
+       "bic": 393.0662925206599,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -137.26443055616167,
+       "bic": 442.09107210969495,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -125.91499627789673,
+       "bic": 486.4170879521137,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -120.98599570770627,
+       "bic": 553.1589546962455,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 0.0,
+     "vocabulary_size": 6,
+     "test_unknown_rate": 0.0,
+     "test": {
+      "hmm": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -1.722678019616125,
+       "perplexity": 5.599503984468508,
+       "next_top1": 0.07142857142857142,
+       "next_top3": 0.6428571428571429,
+       "next_mrr": 0.4
+      },
+      "bigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -1.6714747650750514,
+       "perplexity": 5.320007776364055,
+       "next_top1": 0.35714285714285715,
+       "next_top3": 0.7857142857142857,
+       "next_mrr": 0.5654761904761905
+      },
+      "unigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -1.8257228767968314,
+       "perplexity": 6.207280496728202,
+       "next_top1": 0.07142857142857142,
+       "next_top3": 0.42857142857142855,
+       "next_mrr": 0.37500000000000006
+      }
+     }
+    }
+   }
+  },
+  "CVFLOW-SONNET": {
+   "ingest": {
+    "episodes": 25,
+    "events": 73,
+    "skipped_single_version": 21,
+    "skipped_identical_versions": 0,
+    "renamed_nodes": 0,
+    "merged_port_edges": 0,
+    "operation_types": {
+     "strategy_switch": 16,
+     "add_step": 18,
+     "param_tune": 32,
+     "replace_step": 4,
+     "remove_step": 3
+    }
+   },
+   "runs": {
+    "op_category": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-SONNET-R001",
+     "model_version_id": "CVFLOW-SONNET-M001",
+     "dataset": {
+      "finalized_episodes": 25,
+      "train_episodes": 20,
+      "test_episodes": 5,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -107.10225417867585,
+       "bic": 386.51983532234794,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -102.63839570893464,
+       "bic": 477.7754480136773,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -93.85367676549029,
+       "bic": 568.4040061280654,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -91.771936045166,
+       "bic": 680.4531870591584,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -92.10477991543179,
+       "bic": 805.3462035418966,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 2.842170943040401e-14,
+     "vocabulary_size": 21,
+     "test_unknown_rate": 0.2222222222222222,
+     "test": {
+      "hmm": {
+       "events": 18,
+       "ranked_steps": 13,
+       "log_likelihood_per_event": -3.718526626487935,
+       "perplexity": 41.20364101033304,
+       "next_top1": 0.15384615384615385,
+       "next_top3": 0.15384615384615385,
+       "next_mrr": 0.24117420247451207
+      },
+      "bigram": {
+       "events": 18,
+       "ranked_steps": 13,
+       "log_likelihood_per_event": -3.3593067544191717,
+       "perplexity": 28.769239816182193,
+       "next_top1": 0.38461538461538464,
+       "next_top3": 0.7692307692307693,
+       "next_mrr": 0.6205128205128205
+      },
+      "unigram": {
+       "events": 18,
+       "ranked_steps": 13,
+       "log_likelihood_per_event": -3.5589305438482928,
+       "perplexity": 35.12561174915486,
+       "next_top1": 0.23076923076923078,
+       "next_top3": 0.46153846153846156,
+       "next_mrr": 0.3548229548229548
+      }
+     },
+     "analysis": {
+      "states": {
+       "H0": {
+        "events": 37,
+        "stationary": 0.088,
+        "self_transition": 0.933,
+        "top_observations": [
+         [
+          "strategy_switch|morphology",
+          0.191
+         ],
+         [
+          "param_tune|segment",
+          0.116
+         ],
+         [
+          "add_step|postprocess",
+          0.114
+         ],
+         [
+          "replace_step|preprocess",
+          0.078
+         ]
+        ],
+        "mean_relative_position": 0.43194980694980695,
+        "passed_after_rate": 0.1891891891891892,
+        "executable_after_rate": 1.0,
+        "reason_rate": 0.0,
+        "top_strategies": [
+         [
+          "watershed",
+          14
+         ],
+         [
+          "threshold",
+          10
+         ],
+         [
+          "hough",
+          7
+         ]
+        ],
+        "operation_mix": [
+         [
+          "strategy_switch",
+          16
+         ],
+         [
+          "add_step",
+          11
+         ],
+         [
+          "param_tune",
+          5
+         ],
+         [
+          "replace_step",
+          3
+         ],
+         [
+          "remove_step",
+          2
+         ]
+        ]
+       },
+       "H1": {
+        "events": 36,
+        "stationary": 0.912,
+        "self_transition": 0.994,
+        "top_observations": [
+         [
+          "param_tune|detect",
+          0.741
+         ],
+         [
+          "add_step|preprocess",
+          0.065
+         ],
+         [
+          "add_step|detect",
+          0.034
+         ],
+         [
+          "replace_step|morphology",
+          0.034
+         ]
+        ],
+        "mean_relative_position": 0.48660714285714285,
+        "passed_after_rate": 0.027777777777777776,
+        "executable_after_rate": 1.0,
+        "reason_rate": 0.0,
+        "top_strategies": [
+         [
+          "dnn",
+          30
+         ],
+         [
+          "hough",
+          6
+         ]
+        ],
+        "operation_mix": [
+         [
+          "param_tune",
+          27
+         ],
+         [
+          "add_step",
+          7
+         ],
+         [
+          "replace_step",
+          1
+         ],
+         [
+          "remove_step",
+          1
+         ]
+        ]
+       }
+      },
+      "transition": [
+       [
+        0.933,
+        0.067
+       ],
+       [
+        0.006,
+        0.994
+       ]
+      ],
+      "initial": [
+       0.448,
+       0.552
+      ],
+      "occupancy_by_outcome": {
+       "final_ok": {
+        "H0": 0.75,
+        "H1": 0.25
+       },
+       "final_fail": {
+        "H0": 0.415,
+        "H1": 0.585
+       }
+      }
+     }
+    },
+    "op_only": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-SONNET-R002",
+     "model_version_id": "CVFLOW-SONNET-M002",
+     "dataset": {
+      "finalized_episodes": 25,
+      "train_episodes": 20,
+      "test_episodes": 5,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -63.26236898767843,
+       "bic": 178.620069383379,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -60.94340505803345,
+       "bic": 214.05547337641372,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -53.69816848972215,
+       "bic": 247.6529984625808,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -50.16290299024111,
+       "bic": 296.6851320568733,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -49.460132345215186,
+       "bic": 359.396921730541,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 0.0,
+     "vocabulary_size": 6,
+     "test_unknown_rate": 0.0,
+     "test": {
+      "hmm": {
+       "events": 18,
+       "ranked_steps": 13,
+       "log_likelihood_per_event": -1.621117819297321,
+       "perplexity": 5.058741916576123,
+       "next_top1": 0.38461538461538464,
+       "next_top3": 0.9230769230769231,
+       "next_mrr": 0.6435897435897436
+      },
+      "bigram": {
+       "events": 18,
+       "ranked_steps": 13,
+       "log_likelihood_per_event": -1.9597128764922873,
+       "perplexity": 7.0972889740732175,
+       "next_top1": 0.46153846153846156,
+       "next_top3": 0.8461538461538461,
+       "next_mrr": 0.6333333333333333
+      },
+      "unigram": {
+       "events": 18,
+       "ranked_steps": 13,
+       "log_likelihood_per_event": -1.6203671723593496,
+       "perplexity": 5.054946012316652,
+       "next_top1": 0.23076923076923078,
+       "next_top3": 0.9230769230769231,
+       "next_mrr": 0.5282051282051282
+      }
+     }
+    }
+   }
+  },
+  "CVFLOW-HAIKU": {
+   "ingest": {
+    "episodes": 33,
+    "events": 124,
+    "skipped_single_version": 13,
+    "skipped_identical_versions": 0,
+    "renamed_nodes": 6,
+    "merged_port_edges": 0,
+    "operation_types": {
+     "add_step": 31,
+     "strategy_switch": 20,
+     "param_tune": 66,
+     "remove_step": 6,
+     "replace_step": 1
+    }
+   },
+   "runs": {
+    "op_category": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-HAIKU-R001",
+     "model_version_id": "CVFLOW-HAIKU-M001",
+     "dataset": {
+      "finalized_episodes": 33,
+      "train_episodes": 26,
+      "test_episodes": 7,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -215.34876954127918,
+       "bic": 657.7992595058105,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -208.47350933149204,
+       "bic": 773.821150756666,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -198.0288434686736,
+       "bic": 891.9736886779183,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -189.3692759970425,
+       "bic": 1022.9658813580044,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -194.61150989561358,
+       "bic": 1191.031134754954,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 2.842170943040401e-14,
+     "vocabulary_size": 24,
+     "test_unknown_rate": 0.0,
+     "test": {
+      "hmm": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -1.8831953813944573,
+       "perplexity": 6.574479302517911,
+       "next_top1": 0.5714285714285714,
+       "next_top3": 0.7857142857142857,
+       "next_mrr": 0.7032738095238095
+      },
+      "bigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -2.330871756728463,
+       "perplexity": 10.286905304275896,
+       "next_top1": 0.6428571428571429,
+       "next_top3": 0.7857142857142857,
+       "next_mrr": 0.75
+      },
+      "unigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -2.276163239130714,
+       "perplexity": 9.739241492714967,
+       "next_top1": 0.42857142857142855,
+       "next_top3": 0.6428571428571429,
+       "next_mrr": 0.5709183673469388
+      }
+     },
+     "analysis": {
+      "states": {
+       "H0": {
+        "events": 71,
+        "stationary": 0.925,
+        "self_transition": 0.997,
+        "top_observations": [
+         [
+          "param_tune|detect",
+          0.565
+         ],
+         [
+          "add_step|preprocess",
+          0.169
+         ],
+         [
+          "param_tune|postprocess",
+          0.068
+         ],
+         [
+          "add_step|detect",
+          0.052
+         ]
+        ],
+        "mean_relative_position": 0.4894366197183099,
+        "passed_after_rate": 0.04225352112676056,
+        "executable_after_rate": 1.0,
+        "reason_rate": 0.0,
+        "top_strategies": [
+         [
+          "dnn",
+          66
+         ],
+         [
+          "hough",
+          5
+         ]
+        ],
+        "operation_mix": [
+         [
+          "param_tune",
+          48
+         ],
+         [
+          "add_step",
+          20
+         ],
+         [
+          "remove_step",
+          2
+         ],
+         [
+          "replace_step",
+          1
+         ]
+        ]
+       },
+       "H1": {
+        "events": 53,
+        "stationary": 0.075,
+        "self_transition": 0.966,
+        "top_observations": [
+         [
+          "param_tune|segment",
+          0.189
+         ],
+         [
+          "strategy_switch|output",
+          0.168
+         ],
+         [
+          "add_step|output",
+          0.132
+         ],
+         [
+          "strategy_switch|morphology",
+          0.064
+         ]
+        ],
+        "mean_relative_position": 0.4669811320754717,
+        "passed_after_rate": 0.1509433962264151,
+        "executable_after_rate": 1.0,
+        "reason_rate": 0.0,
+        "top_strategies": [
+         [
+          "watershed",
+          20
+         ],
+         [
+          "hough",
+          15
+         ],
+         [
+          "threshold",
+          10
+         ]
+        ],
+        "operation_mix": [
+         [
+          "strategy_switch",
+          20
+         ],
+         [
+          "param_tune",
+          18
+         ],
+         [
+          "add_step",
+          11
+         ],
+         [
+          "remove_step",
+          4
+         ]
+        ]
+       }
+      },
+      "transition": [
+       [
+        0.997,
+        0.003
+       ],
+       [
+        0.034,
+        0.966
+       ]
+      ],
+      "initial": [
+       0.629,
+       0.371
+      ],
+      "occupancy_by_outcome": {
+       "final_ok": {
+        "H0": 0.438,
+        "H1": 0.562
+       },
+       "final_fail": {
+        "H0": 0.62,
+        "H1": 0.38
+       }
+      }
+     }
+    },
+    "op_only": {
+     "status": "succeeded",
+     "message": null,
+     "run_id": "CVFLOW-HAIKU-R002",
+     "model_version_id": "CVFLOW-HAIKU-M002",
+     "dataset": {
+      "finalized_episodes": 33,
+      "train_episodes": 26,
+      "test_episodes": 7,
+      "synthetic_episodes": 0
+     },
+     "selected_k": 2,
+     "candidates": [
+      {
+       "k": 2,
+       "log_likelihood": -117.79828149739657,
+       "bic": 295.8480398417784,
+       "converged": true
+      },
+      {
+       "k": 3,
+       "log_likelihood": -113.23755218304278,
+       "bic": 333.07387109536717,
+       "converged": true
+      },
+      {
+       "k": 4,
+       "log_likelihood": -106.39580674606786,
+       "bic": 375.00712808017295,
+       "converged": true
+      },
+      {
+       "k": 5,
+       "log_likelihood": -105.05849701635377,
+       "bic": 437.2187144559597,
+       "converged": true
+      },
+      {
+       "k": 6,
+       "log_likelihood": -101.61844902624745,
+       "bic": 504.49428228742124,
+       "converged": true
+      }
+     ],
+     "implementation_gap": 1.4210854715202004e-14,
+     "vocabulary_size": 6,
+     "test_unknown_rate": 0.0,
+     "test": {
+      "hmm": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -0.9927896175143484,
+       "perplexity": 2.698752468459959,
+       "next_top1": 0.7857142857142857,
+       "next_top3": 1.0,
+       "next_mrr": 0.869047619047619
+      },
+      "bigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -0.9599162296198666,
+       "perplexity": 2.6114776997802496,
+       "next_top1": 0.7857142857142857,
+       "next_top3": 1.0,
+       "next_mrr": 0.869047619047619
+      },
+      "unigram": {
+       "events": 21,
+       "ranked_steps": 14,
+       "log_likelihood_per_event": -1.0541104779285186,
+       "perplexity": 2.8694216045008556,
+       "next_top1": 0.6428571428571429,
+       "next_top3": 1.0,
+       "next_mrr": 0.7857142857142857
+      }
+     }
+    }
+   }
+  }
+ }
+}

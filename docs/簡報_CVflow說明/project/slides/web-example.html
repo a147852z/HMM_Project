@@ -1,0 +1,23 @@
+<section id="web-example">
+<div class="head">
+<p class="eyebrow">網頁｜讀一步的例子</p>
+<h2 class="title">codex 數核桃，第 1 次修改</h2>
+<p class="lead">低光源的核桃計數題，codex 修改 16 次，最後仍失敗。</p>
+</div>
+<div class="grid2" style="gap:32px;">
+<div class="card">
+<p class="step-no">看路線</p>
+<p class="body">還沒看到任何修改，路線判斷只是整體起始比例：H0 40.8%、H1 59.2%。</p>
+<div class="barrow" style="gap:16px;"><div class="bar"><div class="seg h0" style="width:41%;">H0 41%</div><div class="seg h1" style="width:59%;">H1 59%</div></div></div>
+</div>
+<div class="card">
+<p class="step-no">看預測</p>
+<p class="body">三種方法的第一名都是「調參・偵測」（24%）。實際是「<b style="color:#1C1E2B;">換策略・前處理</b>」，被排在第 12 名，機率只有 2.7%，這一步猜錯。</p>
+</div>
+</div>
+<div class="card" style="border-color:#1A7A62;">
+<p class="step-no" style="background:#1A7A62;">看整條序列</p>
+<p class="body">16 次修改中，實際修改落在前三名的比例：<b style="color:#1C1E2B;">HMM＋上一次（平均）63%</b>、HMM＋路線轉移表 69%、只用 HMM 25%。加上「上一次修改」後，前三名命中率明顯提高。</p>
+</div>
+<aside>操作方式：在序列重播選這條序列（v2_ln06_walnuts_candlelight，codex），滑桿停在第 1 步。可以接著往後拖，看路線判斷怎麼隨修改改變，以及哪些步驟猜中（時間軸上打勾）。第一步最難猜，因為還沒有任何前面的修改可以參考。</aside>
+</section>

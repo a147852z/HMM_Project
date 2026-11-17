@@ -1,0 +1,22 @@
+<section id="state-two" class="alt">
+<div class="head">
+<p class="eyebrow">狀態｜兩個狀態代表什麼</p>
+<h2 class="title">兩個狀態是兩條「解題路線」</h2>
+</div>
+<div class="grid2">
+<div class="card h0">
+<h3>H0　傳統影像處理路線</h3>
+<p class="body">369 次修改・主要用分水嶺、閾值、Hough、顏色分割</p>
+<p class="body">常見觀測：換策略・分割、換策略・形態學、調參・分割</p>
+<p class="body">修改組成：換策略 31%、調參 28%、加入步驟 22%</p>
+</div>
+<div class="card h1">
+<h3>H1　DNN 偵測路線</h3>
+<p class="body">350 次修改・93% 發生在 DNN 偵測流程上</p>
+<p class="body">常見觀測：調參・偵測（36.8%）、加入步驟・前處理</p>
+<p class="body">修改組成：調參 47%、加入步驟 37%</p>
+</div>
+</div>
+<div class="callout">停留機率 H0 99.9%、H1 99.3%；只有 <b>0.6%</b> 的序列中途換過狀態。所以狀態代表的是「<b>這一題走哪條路線</b>」，而不是「摸索 → 建構 → 微調」這種階段。</div>
+<aside>H0、H1 的中文名稱是看完內容後人工取的。DNN 路線上大多在微調偵測參數與補前後處理；傳統路線上常常換方法。注意：數蘋果那題 codex 在兩條路線間來回切換，但模型整體判斷是「一題通常固定在一條路線」，這類來回切換的序列是少數。</aside>
+</section>
