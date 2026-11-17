@@ -1,0 +1,2682 @@
+{
+ "labels": {
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E01": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "merged",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "merged",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E08": {
+   "primary": "not_executable",
+   "problems": [
+    "not_executable"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E10": {
+   "primary": "split",
+   "problems": [
+    "false_positive",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E11": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-apples_hsv_shrishailsgajbhar-ce7545-E12": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E01": {
+   "primary": "merged",
+   "problems": [
+    "split",
+    "missed",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E02": {
+   "primary": "merged",
+   "problems": [
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E03": {
+   "primary": "split",
+   "problems": [
+    "false_positive",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E04": {
+   "primary": "merged",
+   "problems": [
+    "box_misfit",
+    "merged",
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E05": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E06": {
+   "primary": "merged",
+   "problems": [
+    "split",
+    "merged",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E07": {
+   "primary": "merged",
+   "problems": [
+    "false_positive",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-apples_hsv_shrishailsgajbhar-efcf7f-E09": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E01": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E07": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E11": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E12": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E13": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E14": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00016-rbc-count-a9beae-E15": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00031-wbc-count-83d97e-E01": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E02": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E03": {
+   "primary": "box_misfit",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E04": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-bccd-00038-rbc-count-9a3310-E10": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_bus_15517-254c7c-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_bus_15517-254c7c-E02": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_bus_15517-254c7c-E03": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_bus_15517-254c7c-E04": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E01": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "merged",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E04": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E05": {
+   "primary": "box_misfit",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E07": {
+   "primary": "false_positive",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E08": {
+   "primary": "box_misfit",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_111086-af78e6-E09": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E05": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E06": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_124798-fe69cd-E08": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_166391-dae1bb-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_166391-dae1bb-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_166391-dae1bb-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_166391-dae1bb-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_166391-dae1bb-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E01": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E03": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E04": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E06": {
+   "primary": "merged",
+   "problems": [
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E07": {
+   "primary": "split",
+   "problems": [
+    "box_misfit",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E08": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_266981-5fdf92-E09": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "merged",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00016-rbc-count-df24aa-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E03": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E05": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "false_positive",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_car_309391-d2574b-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E01": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E02": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E03": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E04": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E05": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E06": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E07": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E08": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_19109-4060ff-E09": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E01": {
+   "primary": "merged",
+   "problems": [
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E02": {
+   "primary": "merged",
+   "problems": [
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E03": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E04": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E05": {
+   "primary": "merged",
+   "problems": [
+    "box_misfit",
+    "merged",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E06": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E07": {
+   "primary": "merged",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E08": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_motorcycle_245448-644148-E09": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_123131-a20266-E01": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_123131-a20266-E02": {
+   "primary": "split",
+   "problems": [
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_155341-fc5e73-E01": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_169996-3aefea-E01": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_169996-3aefea-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_169996-3aefea-E03": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_169996-3aefea-E04": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_219271-7e5820-E01": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_truck_293324-09def2-E01": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E06": {
+   "primary": "not_executable",
+   "problems": [
+    "missed",
+    "false_positive",
+    "not_executable"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-mark-twain-tree-amnh--ff6f23-E10": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "not_executable"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E02": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E05": {
+   "primary": "not_executable",
+   "problems": [
+    "box_misfit",
+    "not_executable"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E06": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E07": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-dendro-smithsonian-petrified-aa143d-E10": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00031-wbc-count-6f2f5a-E01": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E02": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "merged",
+    "box_misfit",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-bccd-00038-rbc-count-ade37c-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E01": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E02": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E03": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E06": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E07": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E09": {
+   "primary": "merged",
+   "problems": [
+    "box_misfit",
+    "merged",
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E10": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-seeds_calibration_scipython-51bf6f-E11": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-v2_b1g2_01_euro_coins_set_lo-3622bb-E01": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_b2g0_01_three_tomatoes_da-ae43f7-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_b2g0_01_three_tomatoes_da-ae43f7-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_b2g0_01_three_tomatoes_da-ae43f7-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-t-v2_haze01_carpark_cars-d9ca6a-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E01": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E06": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E09": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln02_candlelight_dinner_t-24bb97-E10": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E03": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E05": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit",
+    "not_executable"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E08": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln05_capers_candlelight-a612b5-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E09": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E11": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E12": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E15": {
+   "primary": "not_executable",
+   "problems": [
+    "not_executable"
+   ]
+  },
+  "CVFLOW-codex-t-v2_ln06_walnuts_candlelight-cba3da-E16": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E01": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E02": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E04": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E05": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E06": {
+   "primary": "false_positive",
+   "problems": [
+    "merged",
+    "split",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E07": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E08": {
+   "primary": "box_misfit",
+   "problems": [
+    "merged",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-watershed_human_mitosis_skim-50d8eb-E09": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_vehicle_166391-a5366d-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_vehicle_166391-a5366d-E02": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-t-coco_vehicle_166391-a5366d-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-t-coco_vehicle_166391-a5366d-E04": {
+   "primary": "box_misfit",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_bus_125572-925aaf-E01": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_bus_133819-9f6176-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_bus_133819-9f6176-E02": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_bus_133819-9f6176-E03": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_bus_133819-9f6176-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_bus_15517-15a1d7-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E01": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E02": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E04": {
+   "primary": "split",
+   "problems": [
+    "missed",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E07": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E08": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_111086-eaac09-E09": {
+   "primary": "box_misfit",
+   "problems": [
+    "false_positive",
+    "split",
+    "merged",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_126592-a317c9-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_126592-a317c9-E02": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_126592-a317c9-E03": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_126592-a317c9-E04": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_126592-a317c9-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_126592-a317c9-E06": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_126592-a317c9-E07": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_166391-d5ce6e-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E02": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E03": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E05": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E07": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E08": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_266981-32ddb5-E09": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_309391-52b68a-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_car_309391-52b68a-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E02": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E06": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "false_positive",
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_203389-55a6df-E01": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4-E01": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4-E03": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4-E06": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4-E07": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_123131-069841-E01": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_123131-069841-E02": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_219271-da842f-E01": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed",
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_293324-f54535-E01": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_293324-f54535-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed",
+    "split",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_293324-f54535-E03": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_293324-f54535-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "not_executable"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_293324-f54535-E05": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_truck_293324-f54535-E06": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E01": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E02": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E04": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E05": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E07": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E08": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-mark-twain-tree-amnh--5e39c5-E09": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E01": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E05": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E07": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E08": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-dendro-smithsonian-petrified-8b9392-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E01": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E02": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E03": {
+   "primary": "merged",
+   "problems": [
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E05": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E06": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E07": {
+   "primary": "merged",
+   "problems": [
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E08": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-seeds_calibration_scipython-69e126-E09": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_haze01_carpark_cars-e07ef8-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E03": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E05": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E07": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln02_candlelight_dinner_t-091890-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E03": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E04": {
+   "primary": "merged",
+   "problems": [
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E05": {
+   "primary": "missed",
+   "problems": [
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E08": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "merged",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln05_capers_candlelight-7308cd-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E01": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E03": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E04": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit",
+    "false_positive",
+    "not_executable"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E07": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E08": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-v2_ln06_walnuts_candlelight-93edb3-E09": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-gemini-t-watershed_human_mitosis_skim-63138a-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-t-watershed_human_mitosis_skim-63138a-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-watershed_human_mitosis_skim-63138a-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_vehicle_166391-d5d1cb-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_vehicle_166391-d5d1cb-E02": {
+   "primary": "missed",
+   "problems": [
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-t-coco_vehicle_166391-d5d1cb-E03": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E01": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E02": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E03": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "missed",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E05": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "missed",
+    "merged",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E06": {
+   "primary": "missed",
+   "problems": [
+    "box_misfit",
+    "box_misfit",
+    "missed",
+    "missed",
+    "missed",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E07": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E08": {
+   "primary": "missed",
+   "problems": [
+    "split",
+    "missed",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_111086-ad2032-E09": {
+   "primary": "merged",
+   "problems": [
+    "false_positive",
+    "merged",
+    "box_misfit",
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_166391-4db536-E01": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "split"
+   ]
+  },
+  "CVFLOW-codex-r-coco_car_166391-4db536-E02": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-r-coco_truck_293324-36777e-E01": {
+   "primary": "merged",
+   "problems": [
+    "missed",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-r-coco_truck_293324-36777e-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-coco_truck_293324-36777e-E03": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-r-coco_truck_293324-36777e-E04": {
+   "primary": "split",
+   "problems": [
+    "box_misfit",
+    "split",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-r-coco_truck_293324-36777e-E05": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-r-coco_truck_293324-36777e-E06": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-codex-r-coco_truck_293324-36777e-E07": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E01": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E02": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E03": {
+   "primary": "false_positive",
+   "problems": [
+    "false_positive",
+    "split",
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E04": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E05": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E06": {
+   "primary": "missed",
+   "problems": [
+    "missed",
+    "false_positive",
+    "merged",
+    "box_misfit"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E07": {
+   "primary": "missed",
+   "problems": [
+    "merged",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E08": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "box_misfit",
+    "missed",
+    "split"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_car_111086-a351c0-E09": {
+   "primary": "missed",
+   "problems": [
+    "merged",
+    "split",
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E01": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E02": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed",
+    "merged",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E03": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E04": {
+   "primary": "merged",
+   "problems": [
+    "merged",
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E05": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed",
+    "false_positive",
+    "merged"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E06": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E07": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "false_positive",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E08": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-codex-r-watershed_human_mitosis_skim-d26552-E09": {
+   "primary": "box_misfit",
+   "problems": [
+    "box_misfit",
+    "missed"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_motorcycle_203389-d8b467-E01": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "box_misfit",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-r-coco_truck_293324-f20418-E01": {
+   "primary": "split",
+   "problems": [
+    "split",
+    "false_positive"
+   ]
+  },
+  "CVFLOW-gemini-r-watershed_human_mitosis_skim-94b255-E01": {
+   "primary": "missed",
+   "problems": [
+    "false_positive",
+    "missed",
+    "box_misfit"
+   ]
+  }
+ },
+ "model": "google/gemma-4-26b-a4b",
+ "prompt_version": "problem-v1",
+ "label_definitions": {
+  "missed": "有目標沒有被框到或被少算（漏偵測）",
+  "false_positive": "框到背景、陰影或不是目標的東西，或數量多算（誤偵測）",
+  "merged": "多個相鄰目標被合成同一個框或同一個區域",
+  "split": "同一個目標被拆成多個框，或被重複框選",
+  "box_misfit": "有框到目標，但框的大小或位置不準（太大、太小、只框到一部分）",
+  "not_executable": "流程無法執行或沒有產生結果",
+  "correct": "結果正確，沒有需要修正的問題"
+ },
+ "system_prompt": "你是影像辨識流程的品質分析助理。使用者會給你一段文字，描述某個流程執行後在圖片上看到的結果。\n請判斷這段文字提到了哪些問題，並選出最主要的一個。只能使用以下問題類型：\n- missed：有目標沒有被框到或被少算（漏偵測）\n- false_positive：框到背景、陰影或不是目標的東西，或數量多算（誤偵測）\n- merged：多個相鄰目標被合成同一個框或同一個區域\n- split：同一個目標被拆成多個框，或被重複框選\n- box_misfit：有框到目標，但框的大小或位置不準（太大、太小、只框到一部分）\n- not_executable：流程無法執行或沒有產生結果\n- correct：結果正確，沒有需要修正的問題\n規則：只根據文字內容判斷，不要推測文字沒有提到的問題。primary 必須是 problems 其中之一；如果文字同時提到多種問題，選文字中描述最多、影響最大的那一種。只輸出 JSON。"
+}
