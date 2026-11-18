@@ -1,0 +1,799 @@
+{
+ "summary": {
+  "model": "google/gemma-4-26b-a4b",
+  "profile_version": 1,
+  "documents": 5,
+  "repeat": 2,
+  "runs": 10,
+  "all_correct_runs": 5,
+  "valid_runs": 10,
+  "episodes_found": "12/12",
+  "initial_ok": "12/12",
+  "final_ok": "7/12",
+  "op_correct": "23/24",
+  "reason_correct": "24/24",
+  "false_human": 0,
+  "wrong_final_flagged": "5/5",
+  "correct_final_flagged": 0,
+  "mean_seconds": 46.6
+ },
+ "runs": [
+  {
+   "file": "a_engineer_notes.txt",
+   "style": "工程師手寫筆記",
+   "attempt": 1,
+   "conversion_id": "LLMTEST-C0021",
+   "seconds": 27.4,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2611",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": false,
+     "events_expected": 3,
+     "events_found": 3,
+     "op_correct": 3,
+     "reason_correct": 3,
+     "false_human": 0,
+     "structure_warnings": [
+      "event 3: workflow became disconnected",
+      "event 3: node n1（備料） no longer has a next step",
+      "event 3: node n3（加工） no longer has a previous step"
+     ],
+     "got": {
+      "initial": {
+       "nodes": [
+        "cut",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "cut->process",
+        "prepare->cut",
+        "process->pack"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "inspect",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "inspect->pack",
+        "process->inspect"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters",
+       "remove_activity"
+      ],
+      "reason_sources": [
+       "human",
+       null,
+       "human"
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": false
+  },
+  {
+   "file": "a_engineer_notes.txt",
+   "style": "工程師手寫筆記",
+   "attempt": 2,
+   "conversion_id": "LLMTEST-C0022",
+   "seconds": 48.9,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2611",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": false,
+     "events_expected": 3,
+     "events_found": 3,
+     "op_correct": 2,
+     "reason_correct": 3,
+     "false_human": 0,
+     "structure_warnings": [
+      "event 3: workflow became disconnected",
+      "event 3: node n1（備料） no longer has a next step",
+      "event 3: node n3（加工） no longer has a previous step"
+     ],
+     "got": {
+      "initial": {
+       "nodes": [
+        "cut",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "cut->process",
+        "prepare->cut",
+        "process->pack"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "inspect",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "inspect->pack",
+        "process->inspect"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters",
+       "composite"
+      ],
+      "reason_sources": [
+       "human",
+       null,
+       "human"
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": false
+  },
+  {
+   "file": "b_change_table.csv",
+   "style": "表格（CSV）",
+   "attempt": 1,
+   "conversion_id": "LLMTEST-C0023",
+   "seconds": 40.7,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2612",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": true,
+     "events_expected": 3,
+     "events_found": 3,
+     "op_correct": 3,
+     "reason_correct": 3,
+     "false_human": 0,
+     "structure_warnings": [],
+     "got": {
+      "initial": {
+       "nodes": [
+        "assemble",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "assemble->pack",
+        "prepare->process",
+        "process->assemble"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "assemble",
+        "clean",
+        "inspect",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "assemble->inspect",
+        "clean->assemble",
+        "inspect->pack",
+        "prepare->process",
+        "process->clean"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters",
+       "insert_activity"
+      ],
+      "reason_sources": [
+       "human",
+       null,
+       null
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": true
+  },
+  {
+   "file": "b_change_table.csv",
+   "style": "表格（CSV）",
+   "attempt": 2,
+   "conversion_id": "LLMTEST-C0024",
+   "seconds": 48.0,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2612",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": true,
+     "events_expected": 3,
+     "events_found": 3,
+     "op_correct": 3,
+     "reason_correct": 3,
+     "false_human": 0,
+     "structure_warnings": [],
+     "got": {
+      "initial": {
+       "nodes": [
+        "assemble",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "assemble->pack",
+        "prepare->process",
+        "process->assemble"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "assemble",
+        "clean",
+        "inspect",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "assemble->inspect",
+        "clean->assemble",
+        "inspect->pack",
+        "prepare->process",
+        "process->clean"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters",
+       "insert_activity"
+      ],
+      "reason_sources": [
+       "human",
+       null,
+       null
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": true
+  },
+  {
+   "file": "c_versions.txt",
+   "style": "各版本的完整流程（含平行分支）",
+   "attempt": 1,
+   "conversion_id": "LLMTEST-C0025",
+   "seconds": 43.2,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2613",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": true,
+     "events_expected": 2,
+     "events_found": 2,
+     "op_correct": 2,
+     "reason_correct": 2,
+     "false_human": 0,
+     "structure_warnings": [],
+     "got": {
+      "initial": {
+       "nodes": [
+        "pack",
+        "paint",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "paint->pack",
+        "prepare->process",
+        "process->paint"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "inspect",
+        "pack",
+        "paint",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "inspect->pack",
+        "paint->pack",
+        "prepare->process",
+        "process->inspect",
+        "process->paint"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters"
+      ],
+      "reason_sources": [
+       "human",
+       null
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": true
+  },
+  {
+   "file": "c_versions.txt",
+   "style": "各版本的完整流程（含平行分支）",
+   "attempt": 2,
+   "conversion_id": "LLMTEST-C0026",
+   "seconds": 66.6,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2613",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": false,
+     "events_expected": 2,
+     "events_found": 2,
+     "op_correct": 2,
+     "reason_correct": 2,
+     "false_human": 0,
+     "structure_warnings": [
+      "event 1: node n3（塗裝） no longer has a next step"
+     ],
+     "got": {
+      "initial": {
+       "nodes": [
+        "pack",
+        "paint",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "paint->pack",
+        "prepare->process",
+        "process->paint"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "inspect",
+        "pack",
+        "paint",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "inspect->pack",
+        "prepare->process",
+        "process->inspect",
+        "process->paint"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters"
+      ],
+      "reason_sources": [
+       "human",
+       null
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": false
+  },
+  {
+   "file": "d_meeting.txt",
+   "style": "會議紀錄（含未採用的提議與無關內容）",
+   "attempt": 1,
+   "conversion_id": "LLMTEST-C0027",
+   "seconds": 121.6,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2614",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": true,
+     "events_expected": 2,
+     "events_found": 2,
+     "op_correct": 2,
+     "reason_correct": 2,
+     "false_human": 0,
+     "structure_warnings": [],
+     "got": {
+      "initial": {
+       "nodes": [
+        "bend",
+        "cut",
+        "pack",
+        "prepare",
+        "weld"
+       ],
+       "edges": [
+        "bend->weld",
+        "cut->bend",
+        "prepare->cut",
+        "weld->pack"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "bend",
+        "cut",
+        "inspect",
+        "pack",
+        "prepare",
+        "weld"
+       ],
+       "edges": [
+        "bend->weld",
+        "cut->bend",
+        "inspect->pack",
+        "prepare->cut",
+        "weld->inspect"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters"
+      ],
+      "reason_sources": [
+       "human",
+       null
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": true
+  },
+  {
+   "file": "d_meeting.txt",
+   "style": "會議紀錄（含未採用的提議與無關內容）",
+   "attempt": 2,
+   "conversion_id": "LLMTEST-C0028",
+   "seconds": 22.3,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 1,
+   "episodes_found": 1,
+   "episodes": [
+    {
+     "work_order": "MO-2614",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": true,
+     "events_expected": 2,
+     "events_found": 2,
+     "op_correct": 2,
+     "reason_correct": 2,
+     "false_human": 0,
+     "structure_warnings": [],
+     "got": {
+      "initial": {
+       "nodes": [
+        "bend",
+        "cut",
+        "pack",
+        "prepare",
+        "weld"
+       ],
+       "edges": [
+        "bend->weld",
+        "cut->bend",
+        "prepare->cut",
+        "weld->pack"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "bend",
+        "cut",
+        "inspect",
+        "pack",
+        "prepare",
+        "weld"
+       ],
+       "edges": [
+        "bend->weld",
+        "cut->bend",
+        "inspect->pack",
+        "prepare->cut",
+        "weld->inspect"
+       ]
+      },
+      "ops": [
+       "insert_activity",
+       "update_parameters"
+      ],
+      "reason_sources": [
+       "human",
+       null
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": true
+  },
+  {
+   "file": "e_weekly_summary.txt",
+   "style": "一份文件兩張製令",
+   "attempt": 1,
+   "conversion_id": "LLMTEST-C0029",
+   "seconds": 23.7,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 2,
+   "episodes_found": 2,
+   "episodes": [
+    {
+     "work_order": "MO-2615",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": true,
+     "events_expected": 1,
+     "events_found": 1,
+     "op_correct": 1,
+     "reason_correct": 1,
+     "false_human": 0,
+     "structure_warnings": [],
+     "got": {
+      "initial": {
+       "nodes": [
+        "heat_treat",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "heat_treat->pack",
+        "prepare->process",
+        "process->heat_treat"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "heat_treat",
+        "inspect",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "heat_treat->inspect",
+        "inspect->pack",
+        "prepare->process",
+        "process->heat_treat"
+       ]
+      },
+      "ops": [
+       "insert_activity"
+      ],
+      "reason_sources": [
+       "human"
+      ],
+      "stopped_at": null
+     }
+    },
+    {
+     "work_order": "MO-2616",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": false,
+     "events_expected": 1,
+     "events_found": 1,
+     "op_correct": 1,
+     "reason_correct": 1,
+     "false_human": 0,
+     "structure_warnings": [
+      "event 1: workflow became disconnected",
+      "event 1: node n2（加工） no longer has a next step",
+      "event 1: node n4（包裝） no longer has a previous step"
+     ],
+     "got": {
+      "initial": {
+       "nodes": [
+        "grind",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "grind->pack",
+        "prepare->process",
+        "process->grind"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "prepare->process"
+       ]
+      },
+      "ops": [
+       "remove_activity"
+      ],
+      "reason_sources": [
+       "human"
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": false
+  },
+  {
+   "file": "e_weekly_summary.txt",
+   "style": "一份文件兩張製令",
+   "attempt": 2,
+   "conversion_id": "LLMTEST-C0030",
+   "seconds": 23.4,
+   "status": "needs_review",
+   "error": null,
+   "valid": true,
+   "episodes_expected": 2,
+   "episodes_found": 2,
+   "episodes": [
+    {
+     "work_order": "MO-2615",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": true,
+     "events_expected": 1,
+     "events_found": 1,
+     "op_correct": 1,
+     "reason_correct": 1,
+     "false_human": 0,
+     "structure_warnings": [],
+     "got": {
+      "initial": {
+       "nodes": [
+        "heat_treat",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "heat_treat->pack",
+        "prepare->process",
+        "process->heat_treat"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "heat_treat",
+        "inspect",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "heat_treat->inspect",
+        "inspect->pack",
+        "prepare->process",
+        "process->heat_treat"
+       ]
+      },
+      "ops": [
+       "insert_activity"
+      ],
+      "reason_sources": [
+       "human"
+      ],
+      "stopped_at": null
+     }
+    },
+    {
+     "work_order": "MO-2616",
+     "found": true,
+     "initial_ok": true,
+     "final_ok": false,
+     "events_expected": 1,
+     "events_found": 1,
+     "op_correct": 1,
+     "reason_correct": 1,
+     "false_human": 0,
+     "structure_warnings": [
+      "event 1: workflow became disconnected",
+      "event 1: node n2（加工） no longer has a next step",
+      "event 1: node n4（包裝） no longer has a previous step"
+     ],
+     "got": {
+      "initial": {
+       "nodes": [
+        "grind",
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "grind->pack",
+        "prepare->process",
+        "process->grind"
+       ]
+      },
+      "final": {
+       "nodes": [
+        "pack",
+        "prepare",
+        "process"
+       ],
+       "edges": [
+        "prepare->process"
+       ]
+      },
+      "ops": [
+       "remove_activity"
+      ],
+      "reason_sources": [
+       "human"
+      ],
+      "stopped_at": null
+     }
+    }
+   ],
+   "all_correct": false
+  }
+ ]
+}

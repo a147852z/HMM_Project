@@ -14,6 +14,7 @@ from .draft import build_messages, build_preview, draft_json_schema, validate_an
 from .llm_client import LLMClient, LLMError, client_from_profile, extract_json
 
 MAX_DOCUMENT_CHARS = 200_000
+DEFAULT_USER_TEMPLATE = "以下是檔案 {filename} 的內容，請依系統指示整理：\n\n{document}"
 TEXT_ENCODINGS = ("utf-8-sig", "cp950", "big5hkscs")
 PROFILE_FIELDS = ("name", "base_url", "model", "api_key_env", "system_prompt", "user_prompt_template",
                   "temperature", "max_tokens", "structured_output", "timeout_seconds")
@@ -63,8 +64,12 @@ class ConversionService:
             self.core._case(session, case_id)
             if session.scalar(select(LLMProfileRecord).where(LLMProfileRecord.profile_id == data["profile_id"])):
                 raise KCoreError("profile_exists", f"LLM profile {data['profile_id']} already exists", 409)
-            record = LLMProfileRecord(profile_id=data["profile_id"], version=1, case_id=case_id,
-                                      **{name: data[name] for name in PROFILE_FIELDS if name in data})
+            values = {name: data[name] for name in PROFILE_FIELDS if data.get(name) is not None}
+            values.setdefault("user_prompt_template", DEFAULT_USER_TEMPLATE)
+            missing = [name for name in ("name", "base_url", "model", "system_prompt") if not values.get(name)]
+            if missing:
+                raise KCoreError("invalid_profile", f"missing fields: {', '.join(missing)}", 422)
+            record = LLMProfileRecord(profile_id=data["profile_id"], version=1, case_id=case_id, **values)
             session.add(record)
             session.commit()
             return self._profile_dict(record)

@@ -1,0 +1,81 @@
+{
+ "_note": "LLM 轉換測試集的標準答案。測試文件是人工撰寫的示意資料，不是真實工廠紀錄。節點以活動類型比較；修改類型為 K 依差異推定的結構類型；reason 為 human 代表原文有寫原因，none 代表原文沒寫（LLM 填 null 或標為 llm 都算正確）。",
+ "activity_types": {
+  "prepare": "備料", "cut": "裁切、切割", "process": "加工", "bend": "折彎", "weld": "焊接",
+  "heat_treat": "熱處理", "grind": "研磨", "clean": "清洗", "paint": "塗裝", "assemble": "組裝",
+  "inspect": "各種檢驗", "pack": "包裝"
+ },
+ "documents": [
+  {
+   "file": "a_engineer_notes.txt", "style": "工程師手寫筆記",
+   "episodes": [{
+    "work_order": "MO-2611",
+    "initial": {"nodes": ["prepare", "cut", "process", "pack"], "edges": [["prepare", "cut"], ["cut", "process"], ["process", "pack"]]},
+    "events": [
+     {"op": "insert_activity", "reason": "human"},
+     {"op": "update_parameters", "reason": "none"},
+     {"op": "remove_activity", "reason": "human"}
+    ],
+    "final": {"nodes": ["prepare", "process", "inspect", "pack"], "edges": [["prepare", "process"], ["process", "inspect"], ["inspect", "pack"]]}
+   }]
+  },
+  {
+   "file": "b_change_table.csv", "style": "表格（CSV）",
+   "episodes": [{
+    "work_order": "MO-2612",
+    "initial": {"nodes": ["prepare", "process", "assemble", "pack"], "edges": [["prepare", "process"], ["process", "assemble"], ["assemble", "pack"]]},
+    "events": [
+     {"op": "insert_activity", "reason": "human"},
+     {"op": "update_parameters", "reason": "none"},
+     {"op": "insert_activity", "reason": "none"}
+    ],
+    "final": {"nodes": ["prepare", "process", "clean", "assemble", "inspect", "pack"],
+              "edges": [["prepare", "process"], ["process", "clean"], ["clean", "assemble"], ["assemble", "inspect"], ["inspect", "pack"]]}
+   }]
+  },
+  {
+   "file": "c_versions.txt", "style": "各版本的完整流程（含平行分支）",
+   "episodes": [{
+    "work_order": "MO-2613",
+    "initial": {"nodes": ["prepare", "process", "paint", "pack"], "edges": [["prepare", "process"], ["process", "paint"], ["paint", "pack"]]},
+    "events": [
+     {"op": "insert_activity", "reason": "human"},
+     {"op": "update_parameters", "reason": "none"}
+    ],
+    "final": {"nodes": ["prepare", "process", "paint", "inspect", "pack"],
+              "edges": [["prepare", "process"], ["process", "paint"], ["paint", "pack"], ["process", "inspect"], ["inspect", "pack"]]}
+   }]
+  },
+  {
+   "file": "d_meeting.txt", "style": "會議紀錄（含未採用的提議與無關內容）",
+   "episodes": [{
+    "work_order": "MO-2614",
+    "initial": {"nodes": ["prepare", "cut", "bend", "weld", "pack"], "edges": [["prepare", "cut"], ["cut", "bend"], ["bend", "weld"], ["weld", "pack"]]},
+    "events": [
+     {"op": "insert_activity", "reason": "human"},
+     {"op": "update_parameters", "reason": "none"}
+    ],
+    "final": {"nodes": ["prepare", "cut", "bend", "weld", "inspect", "pack"],
+              "edges": [["prepare", "cut"], ["cut", "bend"], ["bend", "weld"], ["weld", "inspect"], ["inspect", "pack"]]}
+   }]
+  },
+  {
+   "file": "e_weekly_summary.txt", "style": "一份文件兩張製令",
+   "episodes": [
+    {
+     "work_order": "MO-2615",
+     "initial": {"nodes": ["prepare", "process", "heat_treat", "pack"], "edges": [["prepare", "process"], ["process", "heat_treat"], ["heat_treat", "pack"]]},
+     "events": [{"op": "insert_activity", "reason": "human"}],
+     "final": {"nodes": ["prepare", "process", "heat_treat", "inspect", "pack"],
+               "edges": [["prepare", "process"], ["process", "heat_treat"], ["heat_treat", "inspect"], ["inspect", "pack"]]}
+    },
+    {
+     "work_order": "MO-2616",
+     "initial": {"nodes": ["prepare", "process", "grind", "pack"], "edges": [["prepare", "process"], ["process", "grind"], ["grind", "pack"]]},
+     "events": [{"op": "remove_activity", "reason": "human"}],
+     "final": {"nodes": ["prepare", "process", "pack"], "edges": [["prepare", "process"], ["process", "pack"]]}
+    }
+   ]
+  }
+ ]
+}

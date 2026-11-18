@@ -20,3 +20,7 @@ dist/
 .claude/
 ~$*
 *.tmp
+
+# 實驗腳本輸出的逐步原始紀錄（可重新產生）
+k_core/backend/cvflow_learning_curve.json
+k_core/backend/cvflow_step_analysis.json

@@ -240,3 +240,45 @@ def test_conversion_detail_includes_step_by_step_preview(tmp_path):
     assert preview["stopped_at"] is None
     assert [len(v["nodes"]) for v in preview["versions"]] == [3, 4, 4]
     assert preview["events"][0]["operation_type"] == "insert_activity"
+
+
+def test_both_change_and_after_workflow_uses_after_workflow(tmp_path):
+    draft = good_draft()
+    first = draft["episodes"][0]["events"][0]
+    # LLM 同時給了差異與完整流程，而且兩者一致：應通過，不產生提醒
+    first["change"] = {"added_nodes": [{"node_id": "d", "activity_type": "inspect", "name": "檢驗"}],
+                       "added_edges": [{"source": "b", "target": "d"}, {"source": "d", "target": "c"}],
+                       "removed_edges": [{"source": "b", "target": "c"}]}
+    client = make_client(tmp_path, FakeLLM(json.dumps(draft, ensure_ascii=False)))
+    conversion = convert(client, upload(client)["document_id"])
+    assert conversion["can_approve"], conversion["validation"]
+    assert not any("disagree" in w for w in conversion["validation"]["episodes"][0]["warnings"])
+
+
+def test_disagreeing_change_is_flagged_and_after_workflow_wins(tmp_path):
+    draft = good_draft()
+    draft["episodes"][0]["events"][0]["change"] = {"removed_nodes": ["a"]}  # 與完整流程不一致
+    client = make_client(tmp_path, FakeLLM(json.dumps(draft, ensure_ascii=False)))
+    conversion = convert(client, upload(client)["document_id"])
+    assert conversion["can_approve"]
+    assert any("disagree" in w for w in conversion["validation"]["episodes"][0]["warnings"])
+    assert [len(v["nodes"]) for v in conversion["preview"][0]["versions"]] == [3, 4, 4]
+
+
+def test_event_without_change_or_after_workflow_is_error(tmp_path):
+    draft = good_draft()
+    draft["episodes"][0]["events"][1]["change"] = None
+    client = make_client(tmp_path, FakeLLM(json.dumps(draft, ensure_ascii=False)))
+    conversion = convert(client, upload(client)["document_id"])
+    assert not conversion["can_approve"]
+
+
+def test_missing_bridge_after_removal_is_flagged():
+    from kcore.conversion.draft import structure_warnings
+    before = [{"node_id": n, "activity_type": n} for n in ("a", "b", "c")]
+    edges = [{"source": "a", "target": "b"}, {"source": "b", "target": "c"}]
+    after = [n for n in before if n["node_id"] != "b"]
+    flagged = structure_warnings(before, edges, after, [])  # 刪掉 b，但沒有接 a -> c
+    assert "workflow became disconnected" in flagged
+    assert any("a（a） no longer has a next step" in w for w in flagged)
+    assert structure_warnings(before, edges, after, [{"source": "a", "target": "c"}]) == []

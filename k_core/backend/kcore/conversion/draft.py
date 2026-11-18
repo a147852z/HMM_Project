@@ -107,10 +107,65 @@ FORMAT_INSTRUCTIONS = """\
 規則：
 1. 不要產生序列、事件或版本的識別碼，K 會自動產生。node_id 只需在同一筆 episode 內唯一，且同一個活動在各版本中必須使用相同的 node_id。
 2. 刪除節點時，必須同時在 removed_edges 列出該節點的所有連線；新增節點時要補上它的連線。
-3. 修改原因：原文有寫原因時，reason 填原因，reason_source 填 "human"，reason_quote 逐字複製原文；
-   原文沒寫但你推論出原因時，reason_source 填 "llm"，reason_quote 填 null；無法判斷時三者都填 null。不可把推論寫成原文。
-4. 不要捏造原文沒有的活動、修改或時間；不確定的地方寫在 notes。
+   刪除中間的站點時，除非原文另有說明，要把它的前一站與後一站直接相連（added_edges）。
+   新增平行的站點或分支時，不要刪除原本的連線，原有的流程仍然保留。
+3. 修改原因是「為什麼要改」，不是「改了什麼」。例如「加工改用 CNC-2 機台」是修改內容，不是原因。
+   原文有寫原因時，reason 填原因，reason_source 填 "human"，reason_quote 逐字複製原文中說明原因的那段文字；
+   原文只寫了改什麼、沒寫為什麼時，reason、reason_source、reason_quote 都填 null；
+   原文沒寫但你推論出原因時，reason_source 填 "llm"，reason_quote 填 null。不可把推論寫成原文。
+4. change 與 after_workflow 只填其中一個，另一個填 null。
+5. 不要捏造原文沒有的活動、修改或時間。原文的時間沒有年份時，occurred_at 填 null。不確定的地方寫在 notes。
 """
+
+
+def _components(nodes: list[dict], edges: list[dict]) -> int:
+    parent = {n["node_id"]: n["node_id"] for n in nodes}
+
+    def find(x: str) -> str:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for e in edges:
+        if e["source"] in parent and e["target"] in parent:
+            parent[find(e["source"])] = find(e["target"])
+    return len({find(n) for n in parent})
+
+
+def structure_warnings(before_nodes: list[dict], before_edges: list[dict],
+                       after_nodes: list[dict], after_edges: list[dict]) -> list[str]:
+    """合法但可疑的結構變化：流程斷成多段、某站突然沒有下一站或上一站（常見原因是漏了連線）。"""
+    warnings = []
+    if _components(after_nodes, after_edges) > _components(before_nodes, before_edges):
+        warnings.append("workflow became disconnected")
+    out_before = {e["source"] for e in before_edges}
+    in_before = {e["target"] for e in before_edges}
+    out_after = {e["source"] for e in after_edges}
+    in_after = {e["target"] for e in after_edges}
+    for node in after_nodes:
+        node_id = node["node_id"]
+        label = f"{node_id}（{node.get('name') or node.get('activity_type')}）"
+        if node_id in out_before and node_id not in out_after:
+            warnings.append(f"node {label} no longer has a next step")
+        if node_id in in_before and node_id not in in_after:
+            warnings.append(f"node {label} no longer has a previous step")
+    return warnings
+
+
+def _same_change(a: dict[str, Any], b: dict[str, Any]) -> bool:
+    """比較兩份差異是否描述同一件事（忽略順序與節點的細部屬性）。"""
+    def edges(items: list) -> set:
+        return {(e["source"], e["target"]) for e in items}
+
+    def node_ids(items: list) -> set:
+        return {n["node_id"] if isinstance(n, dict) else n for n in items}
+
+    return (node_ids(a.get("added_nodes", [])) == node_ids(b.get("added_nodes", []))
+            and node_ids(a.get("removed_nodes", [])) == node_ids(b.get("removed_nodes", []))
+            and edges(a.get("added_edges", [])) == edges(b.get("added_edges", []))
+            and edges(a.get("removed_edges", [])) == edges(b.get("removed_edges", []))
+            and node_ids(a.get("updated_node_attributes", [])) == node_ids(b.get("updated_node_attributes", [])))
 
 
 def build_messages(system_prompt: str, user_template: str, document: str, filename: str) -> tuple[str, str]:
@@ -187,13 +242,16 @@ def validate_and_normalize(raw_draft: Any, case_id: str, document_sha256: str,
 
         for position, event in enumerate(episode.events, start=1):
             label = f"event {position}"
-            if (event.change is None) == (event.after_workflow is None):
-                errors.append(f"{label}: provide exactly one of change or after_workflow")
+            if event.change is None and event.after_workflow is None:
+                errors.append(f"{label}: provide change or after_workflow")
                 continue
             if event.after_workflow is not None:
+                # 兩者都有時以完整流程為準：由程式計算差異，比模型自己描述的差異可靠
                 after = event.after_workflow
                 change = diff_workflows(nodes, edges, [n.model_dump() for n in after.nodes],
                                         [e.model_dump() for e in after.edges])
+                if event.change is not None and not _same_change(change, event.change.model_dump()):
+                    warnings.append(f"{label}: change and after_workflow disagree; used after_workflow")
             else:
                 change = event.change.model_dump()
             if is_empty_change(change):
@@ -201,7 +259,9 @@ def validate_and_normalize(raw_draft: Any, case_id: str, document_sha256: str,
                 continue
             if not errors:
                 try:
-                    nodes, edges = apply_change(nodes, edges, change)
+                    new_nodes, new_edges = apply_change(nodes, edges, change)
+                    warnings += [f"{label}: {w}" for w in structure_warnings(nodes, edges, new_nodes, new_edges)]
+                    nodes, edges = new_nodes, new_edges
                 except AoVError as error:
                     errors += [f"{label}: {problem}" for problem in error.problems]
 
