@@ -1,0 +1,86 @@
+CVflow 材料包：評分欄位定義待確認問題
+====================================
+
+日期：2026-11-23
+相關材料：
+  - 10/13 材料包：2026-10-13-jiayuan-package（teachers/<解題者>/<tasks|retake>/<題>/）
+  - 11/17 更新包：2026-11-17-jiayuan-package-update（d171-negative-20261029）
+
+背景
+----
+我們用 CVflow 的解題紀錄研究「流程是怎麼一步步被修改的」，並且想只挑「改成功的修改」來分析。
+所以需要確定「一版流程算不算通過」與「一題算不算解開」的正確定義。
+以下先列出我們從文件讀到的理解，請幫忙確認；後面是文件裡找不到答案的問題。
+
+
+一、我們目前的理解（請確認是否正確）
+-------------------------------------
+1. 11/17 更新包的錯誤類型（docs/d171-negative-20261029-REPORT.md 第 27～33 行）：
+   - count_over／count_under：預測數與正解數不完全相等。
+   - boxes_extra：P < 0.8；boxes_missed：R < 0.8。
+   - 以上都沒有才是 ok。
+   → 我們打算把「error_types 只有 ok」當成「這一版通過」。這樣使用是否正確？
+
+2. 10/13 那包的判分檔 score_sealed4.json 是「NMS 修正後重播＋正解更正 7、8」的正式成績
+   （docs/aov-evolution-20261013-README.md 第 51 行），
+   所以裡面的預測數量可能與解題當下 try*.json 的 count 不同。
+   → 是否正確？
+
+
+二、10/13 材料包的問題
+----------------------
+Q1. 判分檔 tries 裡的 v0、v1i、v1c、v1s 分別代表什麼條件？門檻各是多少？
+    我們從數字推測：v1i 與 P 的門檻有關（P 約 0.6 以上成立），v1s 最嚴格，但無法確定。
+    它們和上面的錯誤類型（count 完全相等、P ≥ 0.8、R ≥ 0.8）是什麼關係？
+
+Q2. 判分檔最上層的 final_ok、first_ok_round、any_ok、first_try_ok，
+    以及 any_ok_c、first_ok_round_c（帶 _c 的版本），各是根據哪一個標記判斷的？
+    例：teachers/codex/tasks/coco_car_124798/score_sealed4.json
+        final_ok = true、first_ok_round = 1，但 9 個 try 的 v1s 都是 false；
+        try 1 的 v1i、v1c 是 true（P = 0.75、R = 1.0、K = 6、n_pred = 8）。
+
+Q3. 分析「解題者當下怎麼修改」時，每一版的結果應該用哪一個？
+    (a) 解題當下的 try*.json（count 與解題者寫的觀察文字一致）
+    (b) 判分檔重播後的結果（正式成績）
+    兩者的數量約有 30% 不同（928 個 try 中 277 個）。
+    例：teachers/codex/tasks/coco_car_124798，try 1 的 count = 4（觀察文字也寫看到 4 個框），
+        score_sealed4.json 的 n_pred = 8。
+    重播時除了 NMS 修正，還有其他差異嗎（例如模型版本、執行環境）？
+
+Q4. 只數數量的題目（metric = count_only）在判分檔裡 K 都是 0。
+    這類題目的正解數量記在哪裡？
+    例：teachers/codex/tasks/apples_hsv_shrishailsgajbhar/score_sealed4.json（K = 0）
+
+Q5. K 是正解框的數量嗎？同一題不同 try 的 K 為什麼會不同？
+    例：teachers/codex/retake/coco_truck_293324/score_retake.json
+        try 1～3 的 K = 1，try 4 的 K = 2；同一題在 tasks/ 底下的 score_sealed4.json 則是 K = 0。
+    另外這張卡車圖解題者從圖上判斷約有 4 輛，K = 1 或 2 看起來偏少，
+    正解是否只標註了部分車輛？「正解更正 7、8」是指哪些題目、改了什麼？
+
+Q6. tasks/ 與 retake/ 兩個資料夾的差別是什麼？
+    分析時兩者應該都使用，還是以其中一個為準？
+
+
+三、11/17 更新包的問題
+----------------------
+Q7. tries.jsonl 的 judge_v1i 與錯誤類型 ok 有 35 個 try 不一致（judge_v1i = true，但錯誤類型不是 ok）。
+    judge_v1i 的定義是什麼？「通過」應該以哪一個為準？
+
+Q8. attempts.jsonl 的 ok 是怎麼判斷的？
+    是「任何一個 try 的錯誤類型為 ok」，還是解題者宣告滿意（stop_reason = satisfied），或是其他條件？
+
+Q9. attempts.jsonl 的 sealed_try_mismatch 代表什麼？
+    為 true 或 null 時，分析上需要注意什麼？
+
+Q10. 報告提到判分用的是「原判」，計數重判（count-rejudge-*）與 10/23「以題目文字為準」的裁定都沒有套用
+     （docs/d171-negative-20261029-REPORT.md 第 212 行）。
+     如果要分析「哪些修改讓題目解開」，建議使用原判還是重判後的結果？
+     重判結果是否可以提供？
+
+
+四、整體
+--------
+Q11. 如果只能選一個標準來代表「這一版流程是成功的」，你們建議用哪一個？
+     （例如：錯誤類型為 ok、v1s、v1i，或其他）
+
+謝謝！

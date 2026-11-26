@@ -8,6 +8,13 @@
 - 每個版本的執行結果（能否執行、是否通過）放在事件 attributes；整題成敗放在 provenance["outcome"]。
   這些都是結果資料，特徵編碼不會讀取，避免把答案洩漏進觀測。
 
+評分欄位的定義依 CVflow 的回覆（docs/REPLY-jiayuan.md，2026-11-24）：
+- 「通過」用評分檔每個 try 的 v1i（P、R 各 ≥ 0.8，多出來的框可被忽略區吸收）；v0／v1c／v1s 一併保留。
+  整題的 final_ok＝最後一個 try 的 v1i，any_ok＝任一 try 的 v1i。框題完全不檢查數量。
+- 評分檔的 P、R、K 是不套忽略區的嚴格口徑；K 是配對成功的框數，不是正解框數。正解框數＝K ÷ R（R > 0 時）。
+- count 是解題當下 try 檔的框數（解題者看到的結果）；n_pred 是評分檔重播（NMS 修正後）的框數，約 30% 不同。
+- count_only 題沒有正解框，評分檔的 P、R、K 是補的 0，這裡記為 None；正解數量不在材料包裡。
+
 轉換時的處理：
 - 節點改名：先依代號比對；新出現的代號若與消失的代號類型相同，視為同一節點改名，沿用舊代號（原代號存於 source_id）。
 - 多個 port 連接同一對節點時合併為一條連線，port 資訊保存在 ports。
@@ -28,7 +35,16 @@ from ..aov import diff_workflows, is_empty_change
 
 VERSION_FILE = re.compile(r"^g(\d+)(?:f(\d+))?\.json$")
 
-# 77 種節點類型歸成 8 類，供特徵編碼使用（FeatureSchema.activity_map）
+# CVflow 回覆（docs/REPLY-jiayuan.md）：看過解題者答案後才更正正解的題目（引用時必須註明），
+# 以及 10/14 裁定超出範圍的題目。sequoia 題資料夾裡的「超出範圍」標記已過時，不採用。
+GT_CORRECTED = {"coco_car_266981": "更正7", "coco_car_166391": "更正8", "coco_vehicle_166391": "更正8",
+                "coco_car_111086": "更正9"}
+OUT_OF_SCOPE = {"dendro-mark-twain-tree-amnh-crosssection", "coco_truck_123131"}
+JUDGE_FLAGS = ("v0", "v1i", "v1c", "v1s")
+
+# 節點類型歸成 8 類，供特徵編碼使用（FeatureSchema.activity_map）。
+# 2026-11-18 起加入 2026-11-17 更新包出現的 50 種新節點（每類最後一行）；
+# cv.image_stats、cv.histogram、cv.compare_histograms 屬於影像統計，不屬於任何一類，歸為 other。
 CATEGORY_MEMBERS: dict[str, list[str]] = {
     "io": ["io.load_image", "io.blank_image"],
     "preprocess": [
@@ -37,23 +53,36 @@ CATEGORY_MEMBERS: dict[str, list[str]] = {
         "cv.brightness_contrast", "cv.normalize_image", "cv.equalize_color", "cv.dehaze_dcp", "cv.convert_color",
         "cv.split_channel", "cv.extract_hsv_channel", "cv.adjust_hue", "cv.apply_colormap", "cv.invert",
         "cv.add_weighted", "cv.absdiff", "cv.sobel",
+        "cv.adjust_saturation", "cv.box_filter", "cv.denoise_gray", "cv.equalize_hist", "cv.fast_nl_means",
+        "cv.filter2d", "cv.laplacian", "cv.log_transform", "cv.pyr_mean_shift", "cv.flip", "cv.rotate",
+        "cv.translate", "cv.vconcat", "cv.warp_affine", "cv.warp_perspective", "cv.warp_with_matrix",
+        "cv.document_rectify", "cv.crop_to_detection",
     ],
     "segment": [
         "cv.color_mask_hsv", "cv.in_range", "cv.threshold", "cv.threshold_otsu", "cv.threshold_triangle",
         "cv.threshold_value", "cv.adaptive_threshold", "cv.canny", "cv.mask_to_image", "cv.matrix_to_mask",
         "cv.bitwise_images", "cv.bitwise_apply", "cv.contours_to_mask",
+        "cv.auto_canny", "cv.calc_back_project", "cv.grab_cut", "cv.paint_mask",
     ],
     "morphology": ["cv.morphology", "cv.fill_holes", "cv.remove_small_objects", "cv.distance_transform",
-                   "cv.watershed", "cv.local_maxima"],
+                   "cv.watershed", "cv.local_maxima",
+                   "cv.morphology_image", "cv.morph_blackhat", "cv.morph_gradient", "cv.morph_hitmiss",
+                   "cv.skeletonize"],
     "region": ["cv.find_contours", "cv.largest_contour", "cv.contour_stats", "cv.connected_components",
-               "cv.connected_components_stats", "cv.bounding_boxes", "flow.filter_contours"],
+               "cv.connected_components_stats", "cv.bounding_boxes", "flow.filter_contours",
+               "cv.approx_poly", "cv.convex_hull", "cv.fit_ellipse", "cv.min_area_rect", "cv.min_enclosing_circle",
+               "cv.contour_centroids", "cv.contour_extreme_points", "cv.contour_hu_moments"],
     "detect": ["cv.dnn_detect", "cv.hog_svm_detect", "cv.template_match", "cv.hough_circles",
-               "cv.find_chessboard_corners"],
+               "cv.find_chessboard_corners",
+               "cv.hough_lines", "cv.hough_lines_p", "cv.corner_harris", "cv.good_features", "cv.min_max_loc",
+               "cv.sift_keypoints", "cv.orb_keypoints", "cv.akaze_keypoints", "cv.feature_match",
+               "cv.find_homography", "cv.match_homography"],
     "postprocess": ["flow.filter_detections", "flow.nms", "flow.merge_detections", "flow.transform_detections",
                     "flow.expand_detections", "flow.iou_filter", "flow.largest_detection", "flow.sort_detections",
                     "flow.keypoints_to_detections", "flow.detections_to_mask", "flow.detections_to_points"],
     "output": ["flow.count", "flow.overlay_detections", "flow.overlay_keypoints", "cv.overlay_mask",
-               "cv.draw_rectangle", "cv.draw_contours", "cv.put_text"],
+               "cv.draw_rectangle", "cv.draw_contours", "cv.put_text",
+               "cv.draw_circle", "cv.draw_line", "cv.draw_polylines", "cv.draw_matches"],
 }
 CVFLOW_ACTIVITY_MAP = {member: category for category, members in CATEGORY_MEMBERS.items() for member in members}
 CVFLOW_ACTIVITY_DEFAULT = "other"
@@ -62,7 +91,9 @@ CVFLOW_ACTIVITY_DEFAULT = "other"
 STRATEGY_MARKERS = [
     ("dnn", ("cv.dnn_detect", "cv.hog_svm_detect")),
     ("template", ("cv.template_match",)),
-    ("hough", ("cv.hough_circles", "cv.find_chessboard_corners")),
+    ("feature", ("cv.sift_keypoints", "cv.orb_keypoints", "cv.akaze_keypoints", "cv.feature_match",
+                 "cv.match_homography", "cv.find_homography")),
+    ("hough", ("cv.hough_circles", "cv.hough_lines", "cv.hough_lines_p", "cv.find_chessboard_corners")),
     ("watershed", ("cv.watershed", "cv.distance_transform")),
     ("color", ("cv.color_mask_hsv", "cv.in_range")),
     ("threshold", ("cv.threshold", "cv.threshold_otsu", "cv.threshold_triangle", "cv.threshold_value",
@@ -169,22 +200,51 @@ def classify(prev_nodes: list[dict], nodes: list[dict], change: dict[str, Any]) 
     return "rewire"
 
 
-def _try_results(task_dir: Path, score: dict[str, Any]) -> list[dict[str, Any]]:
-    """每次執行的結果，附上評分（v1s 視為通過）。用流程圖內容對應到版本。"""
+def _try_results(task_dir: Path, score: dict[str, Any], metric: str | None) -> list[dict[str, Any]]:
+    """每次執行的結果，附上評分（v1i 視為通過；沒有評分紀錄時為 None）。用流程圖內容對應到版本。"""
     by_index = {t["try_index"]: t for t in score.get("tries", [])}
+    has_boxes = metric != "count_only"
     results = []
     for path in task_dir.glob("try*.json"):
         if not re.match(r"^try\d+\.json$", path.name):
             continue
         data = _load(path)
-        scored = by_index.get(data.get("try_index"), {})
+        scored = by_index.get(data.get("try_index"))
         results.append({
             "graph": data.get("graph"), "ts": data.get("ts"), "round": data.get("round"),
-            "executable": scored.get("executable", not data.get("validator_errors") and not data.get("exec_error")),
-            "passed": bool(scored.get("v1s")),
+            "try_index": data.get("try_index"),
+            "executable": scored["executable"] if scored and "executable" in scored else (
+                not data.get("validator_errors") and not data.get("exec_error")),
+            "passed": bool(scored["v1i"]) if scored and "v1i" in scored else None,
+            "judge": {flag: scored.get(flag) for flag in JUDGE_FLAGS} if scored else None,
+            "count": data.get("count"),
+            "n_pred": scored.get("n_pred") if scored else None,
+            "precision": scored.get("P") if scored and has_boxes else None,
+            "recall": scored.get("R") if scored and has_boxes else None,
+            "matched": scored.get("K") if scored and has_boxes else None,
             "validator_errors": data.get("validator_errors") or [],
         })
     return results
+
+
+def ground_truth_boxes(teachers_root: Path, task: str) -> int | None:
+    """正解框數＝K ÷ R。正解是每題共用的，所以從所有解題者、tasks 與 retake 的評分檔一起推；推不出來時為 None。"""
+    values = set()
+    for score_file in teachers_root.glob(f"*/*/{task}/score_*.json"):
+        for t in _load(score_file).get("tries", []):
+            if t.get("R"):
+                values.add(round(t["K"] / t["R"]))
+    return values.pop() if len(values) == 1 else None
+
+
+def status_flags(task_dir: Path) -> list[str]:
+    flags = {p.stem.replace("STATUS_", "") for p in task_dir.glob("STATUS_*.md")}
+    flags.discard("超出範圍")  # 資料夾裡的標記有過時的（sequoia 題），改用 10/14 的裁定
+    if task_dir.name in OUT_OF_SCOPE:
+        flags.add("超出範圍")
+    if task_dir.name in GT_CORRECTED:
+        flags.add(f"正解事後{GT_CORRECTED[task_dir.name]}")
+    return sorted(flags)
 
 
 def _short_id(teacher: str, scope: str, task: str, prefix: str = "CVF") -> str:
@@ -203,14 +263,14 @@ def build_episode(task_dir: Path, teacher: str, scope: str, stats: AdapterStats,
     score = _load(score_file) if score_file.exists() else {}
     traj = _load(task_dir / "traj.json") if (task_dir / "traj.json").exists() else {}
     steps = {step["round"]: step for step in traj.get("steps", [])}
-    tries = _try_results(task_dir, score)
+    tries = _try_results(task_dir, score, card.get("metric"))
+    result_keys = ("executable", "passed", "judge", "count", "n_pred", "precision", "recall", "matched", "ts")
 
     def outcome(graph: dict[str, Any]) -> dict[str, Any]:
         for t in tries:
             if t["graph"] == graph:
-                return {"executable": t["executable"], "passed": t["passed"], "ts": t["ts"],
-                        "validator_errors": t["validator_errors"][:3]}
-        return {"executable": None, "passed": None, "ts": None, "validator_errors": []}
+                return {**{key: t[key] for key in result_keys}, "validator_errors": t["validator_errors"][:3]}
+        return {**{key: None for key in result_keys}, "validator_errors": []}
 
     episode_id = _short_id(teacher, scope, task_dir.name, id_prefix)
     first = versions[0]
@@ -263,26 +323,31 @@ def build_episode(task_dir: Path, teacher: str, scope: str, stats: AdapterStats,
         return None
     stats.episodes += 1
     stats.events += len(events)
-    flags = [p.stem.replace("STATUS_", "") for p in task_dir.glob("STATUS_*.md")]
+    metric = card.get("metric")
+    # task_dir = teachers/<模型>/<tasks|retake>/<題目>，parents[2] 是 teachers
+    gt_boxes = ground_truth_boxes(task_dir.parents[2], task_dir.name) if metric != "count_only" else None
     return {
         "episode_id": episode_id,
         "work_order_id": task_dir.name,
         "started_at": started,
         "is_synthetic": False,
         "initial_context": {
-            "task_id": task_dir.name, "teacher": teacher, "request": card.get("nl_request"), "metric": card.get("metric"),
-            "category": card.get("category"), "scope": scope, "status_flags": flags,
+            "task_id": task_dir.name, "teacher": teacher, "request": card.get("nl_request"), "metric": metric,
+            "category": card.get("category"), "scope": scope, "status_flags": status_flags(task_dir),
         },
         "initial_workflow": {"workflow_id": f"{episode_id}-WF", "version_id": f"{episode_id}-V0",
                              "nodes": to_aov(first.graph)[0], "edges": to_aov(first.graph)[1]},
         "events": events,
         "provenance": {
-            "method": "adapter", "adapter": "cvflow-v1", "source": "2026-10-13-jiayuan-package",
+            "method": "adapter", "adapter": "cvflow-v2", "source": "2026-10-13-jiayuan-package",
             "path": f"teachers/{teacher}/{scope}/{task_dir.name}", "teacher": teacher,
             "first_version_result": first_outcome,
             # 結果資料：只供分析，特徵編碼不讀取
-            "outcome": {"final_ok": score.get("final_ok"), "first_ok_round": score.get("first_ok_round"),
+            "outcome": {"pass_rule": "v1i", "final_ok": score.get("final_ok"), "any_ok": score.get("any_ok"),
+                        "first_ok_round": score.get("first_ok_round"), "first_ok_index": score.get("first_ok_index"),
                         "stop_reason": traj.get("stop_reason"), "confidence": traj.get("confidence")},
+            "ground_truth": {"gt_boxes": gt_boxes, "gt_boxes_source": "K÷R" if gt_boxes is not None else None,
+                             "gt_count": None},
         },
     }
 

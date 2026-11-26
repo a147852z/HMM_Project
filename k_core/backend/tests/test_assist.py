@@ -100,7 +100,7 @@ def test_previous_result_changes_ranking_when_results_exist(tmp_path, service):
             (task / f"g{i}.json").write_text(json.dumps(g), encoding="utf-8")
             (task / f"try{i}.json").write_text(json.dumps(
                 {"try_index": i, "round": i, "graph": g, "ts": f"2026-10-{k + 1:02d}T05:0{i}:00+00:00"}), encoding="utf-8")
-            tries.append({"try_index": i, "round": i, "executable": executable, "v1s": passed})
+            tries.append({"try_index": i, "round": i, "executable": executable, "v1i": passed, "v1s": passed})
         (task / "score_sealed4.json").write_text(json.dumps({"tries": tries, "final_ok": True}), encoding="utf-8")
     service.create_case({"case_id": "CV", "domain_kind": "cvflow"})
     ingest_teacher(service, tmp_path, "codex", "CV")

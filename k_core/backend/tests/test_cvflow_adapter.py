@@ -23,18 +23,20 @@ G3 = graph([("load", "io.load_image", {}), ("det", "cv.dnn_detect", {"conf_thres
            [("load", "image", "det", "image"), ("det", "detections", "count", "detections")])
 
 
-def make_package(root):
-    task = root / "teachers" / "codex" / "tasks" / "apples_demo"
+def make_package(root, metric="count_only", task_name="apples_demo"):
+    task = root / "teachers" / "codex" / "tasks" / task_name
     task.mkdir(parents=True)
     for name, g in (("g1", G1), ("g2", G2), ("g3", G3)):
         (task / f"{name}.json").write_text(json.dumps(g), encoding="utf-8")
-    (task / "card.json").write_text(json.dumps({"nl_request": "數蘋果", "metric": "count_only", "category": "common"}),
+    (task / "card.json").write_text(json.dumps({"nl_request": "數蘋果", "metric": metric, "category": "common"}),
                                     encoding="utf-8")
     tries = []
     for i, (g, ok) in enumerate(((G1, False), (G2, False), (G3, True)), start=1):
-        (task / f"try{i}.json").write_text(json.dumps({"try_index": i, "round": i, "graph": g, "ts": f"2026-10-11T05:0{i}:00+00:00"}),
-                                           encoding="utf-8")
-        tries.append({"try_index": i, "round": i, "executable": True, "v1s": ok})
+        (task / f"try{i}.json").write_text(json.dumps({"try_index": i, "round": i, "graph": g, "count": 3 + i,
+                                                       "ts": f"2026-10-11T05:0{i}:00+00:00"}), encoding="utf-8")
+        # 正解 4 框：通過的 try 配到 4 框（R = 1.0），多報 1 框（嚴格的 P = 0.8 但 v1s 不成立，被忽略區吸收後 v1i 成立）
+        tries.append({"try_index": i, "round": i, "executable": True, "v0": ok, "v1i": ok, "v1c": ok, "v1s": False,
+                      "P": 0.8 if ok else 0.5, "R": 1.0 if ok else 0.5, "K": 4 if ok else 2, "n_pred": 5 if ok else 4})
     (task / "score_sealed4.json").write_text(json.dumps({"tries": tries, "final_ok": True, "first_ok_round": 3}),
                                              encoding="utf-8")
     steps = [{"round": r, "hypothesis": f"第{r}輪設計理由", "fix": f"第{r}輪後的修正計畫", "exec_report": "x"} for r in (1, 2, 3)]
@@ -61,6 +63,48 @@ def test_build_episode_canonicalizes_renames_and_merges_ports(tmp_path):
     assert second["attributes"]["result"]["passed"] is True
     assert episode["provenance"]["outcome"]["final_ok"] is True
     assert first["actor_type"] == "ai_agent"
+
+
+def test_pass_rule_is_v1i_and_ground_truth_is_k_over_r(tmp_path):
+    task = make_package(tmp_path, metric="detect_only")
+    episode = build_episode(task, "codex", "tasks", AdapterStats())
+    result = episode["events"][1]["attributes"]["result"]
+    # v1i 成立、v1s 不成立：依 CVflow 的建議算通過
+    assert result["passed"] is True and result["judge"] == {"v0": True, "v1i": True, "v1c": True, "v1s": False}
+    assert result["count"] == 6 and result["n_pred"] == 5  # 解題當下的框數與重播的框數分開保存
+    assert result["precision"] == 0.8 and result["recall"] == 1.0 and result["matched"] == 4
+    assert episode["provenance"]["first_version_result"]["passed"] is False
+    # K 是配對數，不是正解數；正解框數 = K ÷ R
+    assert episode["provenance"]["ground_truth"] == {"gt_boxes": 4, "gt_boxes_source": "K÷R", "gt_count": None}
+    assert episode["provenance"]["outcome"]["pass_rule"] == "v1i"
+
+
+def test_count_only_scores_and_unscored_try(tmp_path):
+    task = make_package(tmp_path)  # count_only：評分檔的 P、R、K 是補的 0
+    score_file = task / "score_sealed4.json"
+    score = json.loads(score_file.read_text(encoding="utf-8"))
+    score["tries"] = [t for t in score["tries"] if t["try_index"] != 1]  # 第一版沒有評分紀錄
+    score_file.write_text(json.dumps(score), encoding="utf-8")
+    episode = build_episode(task, "codex", "tasks", AdapterStats())
+    assert episode["provenance"]["first_version_result"]["passed"] is None  # 沒有評分不是失敗
+    result = episode["events"][1]["attributes"]["result"]
+    assert result["precision"] is None and result["matched"] is None
+    assert episode["provenance"]["ground_truth"]["gt_boxes"] is None
+
+
+def test_status_flags_follow_rulings(tmp_path):
+    from kcore.adapters.cvflow import status_flags
+
+    teachers = tmp_path / "teachers" / "gemini" / "tasks"
+    sequoia = teachers / "dendro-smithsonian-petrified-sequoia-rings"
+    sequoia.mkdir(parents=True)
+    (sequoia / "STATUS_超出範圍.md").write_text("過時的標記", encoding="utf-8")
+    (sequoia / "STATUS_作廢.md").write_text("作廢", encoding="utf-8")
+    assert status_flags(sequoia) == ["作廢"]
+    (teachers / "coco_truck_123131").mkdir()
+    assert status_flags(teachers / "coco_truck_123131") == ["超出範圍"]
+    (teachers / "coco_car_111086").mkdir()
+    assert status_flags(teachers / "coco_car_111086") == ["正解事後更正9"]
 
 
 def test_ingest_teacher_is_idempotent_and_skips_single_versions(tmp_path, service):

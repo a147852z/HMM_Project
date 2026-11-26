@@ -70,6 +70,8 @@ def result_label(result: Any) -> str | None:
         return None
     if result.get("executable") is False:
         return "error"
+    if result.get("passed") is None:  # 能執行但沒有判分（例如沒有標準答案的題目）
+        return None
     return "pass" if result.get("passed") is True else "fail"
 
 
