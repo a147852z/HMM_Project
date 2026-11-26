@@ -1,0 +1,5480 @@
+{
+ "prompt_version": "tag-v2",
+ "model": "google/gemma-4-26b-a4b",
+ "vocab": {
+  "task_type": [
+   "目標偵測",
+   "計數"
+  ],
+  "target_object": [
+   "乘用車",
+   "休旅車",
+   "其他物體",
+   "巴士",
+   "植物與種子",
+   "標記與符號",
+   "機車",
+   "生物細胞",
+   "紅血球",
+   "貨車"
+  ],
+  "object_category": [
+   "其他物件",
+   "圓形",
+   "小物體",
+   "植物紋理",
+   "機車",
+   "細胞",
+   "車輛",
+   "顏色",
+   "食物"
+  ],
+  "image_conditions": [
+   "低對比",
+   "尺寸差異大",
+   "強烈反光",
+   "影像邊界問題",
+   "文字干擾",
+   "濃霧",
+   "物體不完整",
+   "物體密集重疊",
+   "物體遮擋",
+   "紋理雜亂",
+   "背景雜亂",
+   "輪廓模糊",
+   "遠處小目標",
+   "陰影",
+   "顏色差異大"
+  ],
+  "problems": [
+   "多框問題",
+   "框位不準",
+   "漏偵測",
+   "無法執行",
+   "目標黏連",
+   "誤判類別",
+   "誤檢/誤框",
+   "邊緣裁切",
+   "重複偵測"
+  ],
+  "effective_methods": [
+   "HOG特徵檢測",
+   "HSV色彩遮罩",
+   "中值模糊",
+   "伽瑪校正",
+   "分水嶺演算法",
+   "參數調優",
+   "孔洞填充",
+   "對比度增強",
+   "局部最大值檢測",
+   "形態學處理",
+   "影像縮放",
+   "影像裁剪",
+   "檢測結果處理",
+   "深度學習檢測",
+   "物件計數",
+   "移除小物件",
+   "自適應閾值分割",
+   "距離變換",
+   "輪廓檢測",
+   "連通域分析",
+   "邊界框提取",
+   "閾值分割",
+   "霍夫圓檢測",
+   "非極大值抑制",
+   "高斯模糊"
+  ],
+  "ineffective_methods": [
+   "去霧與降噪",
+   "參數調優",
+   "形態學與分割",
+   "影像預處理與縮放",
+   "檢測結果過濾",
+   "特徵檢測與識別",
+   "色彩與通道處理",
+   "連通域分析",
+   "邊緣檢測",
+   "閾值分割"
+  ]
+ },
+ "canonical": {
+  "task_type": {
+   "detect_only": "目標偵測",
+   "偵測": "目標偵測",
+   "偵測並畫框": "目標偵測",
+   "計數": "計數"
+  },
+  "target_object": {
+   "RBC": "紅血球",
+   "紅血球": "紅血球",
+   "SUV": "休旅車",
+   "休旅車": "休旅車",
+   "三輪機車": "機車",
+   "機車": "機車",
+   "速克達": "機車",
+   "公車": "巴士",
+   "接駁巴士": "巴士",
+   "卡車": "貨車",
+   "地勤車": "貨車",
+   "廂型車": "貨車",
+   "油罐車": "貨車",
+   "皮卡": "貨車",
+   "貨車": "貨車",
+   "掀背車": "乘用車",
+   "旅行車": "乘用車",
+   "汽車": "乘用車",
+   "轎車": "乘用車",
+   "核桃": "植物與種子",
+   "種子": "植物與種子",
+   "穀粒": "植物與種子",
+   "蘋果": "植物與種子",
+   "酸豆": "植物與種子",
+   "白血球": "生物細胞",
+   "細胞核": "生物細胞",
+   "年代標記": "標記與符號",
+   "方塊符號": "標記與符號",
+   "紅色標記圖釘": "標記與符號",
+   "年輪": "其他物體",
+   "矽化木標本": "其他物體",
+   "硬幣": "其他物體",
+   "番茄": "其他物體"
+  },
+  "object_category": {
+   "休旅車": "車輛",
+   "單層公車": "車輛",
+   "廂型車": "車輛",
+   "皮卡": "車輛",
+   "車輛": "車輛",
+   "轎車": "車輛",
+   "雙層公車": "車輛",
+   "大型機車": "機車",
+   "小型機車": "機車",
+   "重型機車": "機車",
+   "圓形": "圓形",
+   "圓盤狀": "圓形",
+   "小型物體": "小物體",
+   "小物件": "小物體",
+   "小物體": "小物體",
+   "有分葉核細胞": "細胞",
+   "細胞": "細胞",
+   "螢光染色": "細胞",
+   "血液抹片": "細胞",
+   "巨杉橫切面": "植物紋理",
+   "木紋": "植物紋理",
+   "植物紋理": "植物紋理",
+   "水果": "食物",
+   "食物": "食物",
+   "淡粉紅色": "顏色",
+   "深紫藍色": "顏色",
+   "深綠色": "顏色",
+   "紅色": "顏色",
+   "化石": "其他物件",
+   "撲克牌圖案": "其他物件",
+   "標籤": "其他物件",
+   "硬幣": "其他物件"
+  },
+  "image_conditions": {
+   "低對比": "低對比",
+   "大小差異大": "尺寸差異大",
+   "年輪紋理雜亂": "紋理雜亂",
+   "破碎紋理": "紋理雜亂",
+   "紋理破碎": "紋理雜亂",
+   "放射狀裂紋": "紋理雜亂",
+   "放射狀裂縫": "紋理雜亂",
+   "礦物裂隙": "紋理雜亂",
+   "強烈反光": "強烈反光",
+   "金屬反光": "強烈反光",
+   "高光空洞": "強烈反光",
+   "影像邊界留白": "影像邊界問題",
+   "畫面裁切": "影像邊界問題",
+   "裁切": "影像邊界問題",
+   "邊界截斷": "影像邊界問題",
+   "邊緣截斷": "影像邊界問題",
+   "邊緣裁切": "影像邊界問題",
+   "物體被裁切": "影像邊界問題",
+   "物體超出影像": "影像邊界問題",
+   "邊緣局部露出": "影像邊界問題",
+   "部分露出的目標": "影像邊界問題",
+   "標題文字干擾": "文字干擾",
+   "濃霧": "濃霧",
+   "物體不完整": "物體不完整",
+   "邊緣碎片": "物體不完整",
+   "物體密集": "物體密集重疊",
+   "物體密集排列": "物體密集重疊",
+   "緊密排列": "物體密集重疊",
+   "物體黏連": "物體密集重疊",
+   "物體黏連重疊": "物體密集重疊",
+   "重疊": "物體密集重疊",
+   "物體遮擋": "物體遮擋",
+   "遮擋": "物體遮擋",
+   "背景雜亂": "背景雜亂",
+   "背景雜訊": "背景雜亂",
+   "背景雜質": "背景雜亂",
+   "貼邊雜訊": "背景雜亂",
+   "雜質斑塊": "背景雜亂",
+   "輪廓模糊": "輪廓模糊",
+   "遠景小目標": "遠處小目標",
+   "遠處小物體": "遠處小目標",
+   "遠處小目標": "遠處小目標",
+   "陰影": "陰影",
+   "顏色差異大": "顏色差異大"
+  },
+  "problems": {
+   "兩車黏連": "目標黏連",
+   "目標合併": "目標黏連",
+   "黏成一框": "目標黏連",
+   "切掉邊緣": "邊緣裁切",
+   "尺寸不完整": "邊緣裁切",
+   "框不完整": "邊緣裁切",
+   "框住片段": "邊緣裁切",
+   "框的大小不完整": "邊緣裁切",
+   "框選不完整": "邊緣裁切",
+   "目標被裁切": "邊緣裁切",
+   "邊緣漏框": "邊緣裁切",
+   "多框": "多框問題",
+   "多框碎片": "多框問題",
+   "多框細小雜質": "多框問題",
+   "多框背景": "多框問題",
+   "多框重疊": "多框問題",
+   "碎片框": "多框問題",
+   "遮罩破碎": "多框問題",
+   "座標偏移": "框位不準",
+   "框位不準": "框位不準",
+   "框偏小": "框位不準",
+   "框大小不對": "框位不準",
+   "框太小": "框位不準",
+   "框的大小不一致": "框位不準",
+   "框的大小不合理": "框位不準",
+   "框的大小不合適": "框位不準",
+   "框的大小不正確": "框位不準",
+   "框範圍過大": "框位不準",
+   "框選範圍不準確": "框位不準",
+   "框選範圍不精準": "框位不準",
+   "數量不足": "漏偵測",
+   "漏偵測": "漏偵測",
+   "數量誤判": "誤判類別",
+   "誤判機車為汽車": "誤判類別",
+   "誤判類別": "誤判類別",
+   "誤框": "誤檢/誤框",
+   "誤框文字": "誤檢/誤框",
+   "誤框標本邊界": "誤檢/誤框",
+   "誤框標誌": "誤檢/誤框",
+   "誤框白血球": "誤檢/誤框",
+   "誤框背景": "誤檢/誤框",
+   "誤框背景或雜訊": "誤檢/誤框",
+   "誤檢": "誤檢/誤框",
+   "誤檢背景": "誤檢/誤框",
+   "誤檢行人": "誤檢/誤框",
+   "無法執行": "無法執行",
+   "重複偵測": "重複偵測",
+   "重複框": "重複偵測",
+   "重複框選": "重複偵測",
+   "重複計數": "重複偵測"
+  },
+  "effective_methods": {
+   "cv.adaptive_threshold": "自適應閾值分割",
+   "cv.bounding_boxes": "邊界框提取",
+   "cv.clahe": "對比度增強",
+   "cv.equalize_color": "對比度增強",
+   "cv.normalize_image": "對比度增強",
+   "cv.color_mask_hsv": "HSV色彩遮罩",
+   "cv.connected_components": "連通域分析",
+   "cv.crop": "影像裁剪",
+   "cv.distance_transform": "距離變換",
+   "cv.dnn_detect": "深度學習檢測",
+   "param_tune(cv.dnn_detect)": "深度學習檢測",
+   "cv.fill_holes": "孔洞填充",
+   "cv.find_contours": "輪廓檢測",
+   "flow.filter_contours": "輪廓檢測",
+   "cv.gamma_correct": "伽瑪校正",
+   "cv.gaussian_blur": "高斯模糊",
+   "cv.hog_svm_detect": "HOG特徵檢測",
+   "cv.hough_circles": "霍夫圓檢測",
+   "cv.local_maxima": "局部最大值檢測",
+   "cv.median_blur": "中值模糊",
+   "cv.morphology": "形態學處理",
+   "cv.nms": "非極大值抑制",
+   "flow.nms": "非極大值抑制",
+   "cv.remove_small_objects": "移除小物件",
+   "cv.resize": "影像縮放",
+   "cv.threshold": "閾值分割",
+   "cv.threshold_otsu": "閾值分割",
+   "cv.watershed": "分水嶺演算法",
+   "flow.count": "物件計數",
+   "flow.expand_detections": "檢測結果處理",
+   "flow.filter_detections": "檢測結果處理",
+   "flow.iou_filter": "檢測結果處理",
+   "flow.largest_detection": "檢測結果處理",
+   "flow.merge_detections": "檢測結果處理",
+   "flow.transform_detections": "檢測結果處理",
+   "param_tune": "參數調優"
+  },
+  "ineffective_methods": {
+   "cv.canny": "邊緣檢測",
+   "cv.sobel": "邊緣檢測",
+   "cv.color_mask_hsv": "色彩與通道處理",
+   "cv.grayscale": "色彩與通道處理",
+   "cv.split_channel": "色彩與通道處理",
+   "cv.in_range": "色彩與通道處理",
+   "cv.connected_components": "連通域分析",
+   "cv.connected_components_stats": "連通域分析",
+   "cv.find_contours": "連通域分析",
+   "cv.remove_small_objects": "連通域分析",
+   "cv.crop": "影像預處理與縮放",
+   "cv.resize": "影像預處理與縮放",
+   "cv.pyr_down": "影像預處理與縮放",
+   "cv.dehaze_dcp": "去霧與降噪",
+   "cv.gaussian_blur": "去霧與降噪",
+   "cv.morphology": "形態學與分割",
+   "cv.distance_transform": "形態學與分割",
+   "cv.watershed": "形態學與分割",
+   "cv.hog_svm_detect": "特徵檢測與識別",
+   "cv.hough_circles": "特徵檢測與識別",
+   "cv.threshold": "閾值分割",
+   "cv.threshold_otsu": "閾值分割",
+   "cv.threshold_triangle": "閾值分割",
+   "flow.expand_detections": "檢測結果過濾",
+   "flow.filter_detections": "檢測結果過濾",
+   "flow.iou_filter": "檢測結果過濾",
+   "flow.nms": "檢測結果過濾",
+   "param_tune(cv.dnn_detect)": "參數調優"
+  }
+ },
+ "raw": {
+  "coco_car_111086": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "休旅車",
+    "掀背車",
+    "旅行車",
+    "汽車",
+    "貨車",
+    "轎車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "大小差異大",
+    "物體遮擋",
+    "背景雜亂",
+    "邊界截斷"
+   ],
+   "problems": [
+    "框選不完整",
+    "漏偵測",
+    "誤框背景",
+    "重複框選",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.clahe",
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.equalize_color",
+    "flow.filter_detections",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.connected_components",
+    "cv.hog_svm_detect"
+   ]
+  },
+  "coco_car_166391": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "SUV",
+    "機車",
+    "汽車",
+    "皮卡",
+    "貨車",
+    "轎車"
+   ],
+   "object_category": [
+    "小物體",
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體遮擋",
+    "輪廓模糊",
+    "遠景小目標"
+   ],
+   "problems": [
+    "數量不足",
+    "漏偵測",
+    "誤判機車為汽車"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.resize",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.hog_svm_detect",
+    "flow.filter_detections"
+   ]
+  },
+  "coco_truck_293324": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "卡車",
+    "地勤車",
+    "接駁巴士",
+    "油罐車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體黏連重疊",
+    "遮擋"
+   ],
+   "problems": [
+    "多框",
+    "漏偵測",
+    "碎片框",
+    "誤檢",
+    "重複計數"
+   ],
+   "effective_methods": [
+    "cv.bounding_boxes",
+    "cv.dnn_detect",
+    "cv.find_contours",
+    "cv.morphology",
+    "flow.filter_detections",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.color_mask_hsv",
+    "cv.crop",
+    "cv.gaussian_blur",
+    "cv.resize"
+   ]
+  },
+  "watershed_human_mitosis_skimage": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "細胞核"
+   ],
+   "object_category": [
+    "細胞",
+    "螢光染色"
+   ],
+   "image_conditions": [
+    "影像邊界留白",
+    "標題文字干擾",
+    "物體黏連重疊",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框",
+    "座標偏移",
+    "漏偵測",
+    "碎片框",
+    "誤框文字",
+    "誤框背景"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.distance_transform",
+    "cv.gaussian_blur",
+    "cv.local_maxima",
+    "cv.morphology",
+    "cv.threshold_otsu",
+    "cv.watershed",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.in_range"
+   ]
+  },
+  "apples_hsv_shrishailsgajbhar": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "蘋果"
+   ],
+   "object_category": [
+    "水果"
+   ],
+   "image_conditions": [
+    "物體黏連重疊",
+    "背景雜亂",
+    "裁切",
+    "遮擋",
+    "高光空洞"
+   ],
+   "problems": [
+    "多框",
+    "漏偵測",
+    "碎片框",
+    "誤框背景",
+    "重複框選",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.color_mask_hsv",
+    "cv.distance_transform",
+    "cv.dnn_detect",
+    "cv.fill_holes",
+    "cv.find_contours",
+    "flow.filter_detections",
+    "flow.nms"
+   ],
+   "ineffective_methods": [
+    "cv.connected_components",
+    "cv.hough_circles",
+    "cv.watershed"
+   ]
+  },
+  "bccd-00016-rbc-count": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "RBC",
+    "紅血球"
+   ],
+   "object_category": [
+    "圓盤狀",
+    "淡粉紅色",
+    "細胞"
+   ],
+   "image_conditions": [
+    "大小差異大",
+    "物體黏連重疊",
+    "背景雜亂",
+    "邊緣碎片"
+   ],
+   "problems": [
+    "框的大小不合適",
+    "漏偵測",
+    "碎片框",
+    "誤框背景或雜訊",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.color_mask_hsv",
+    "cv.connected_components",
+    "cv.fill_holes",
+    "cv.hough_circles",
+    "cv.morphology",
+    "cv.normalize_image",
+    "cv.watershed",
+    "flow.iou_filter"
+   ],
+   "ineffective_methods": [
+    "cv.grayscale",
+    "cv.remove_small_objects",
+    "cv.split_channel",
+    "cv.threshold_otsu"
+   ]
+  },
+  "bccd-00031-wbc-count": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "白血球"
+   ],
+   "object_category": [
+    "有分葉核細胞",
+    "深紫藍色"
+   ],
+   "image_conditions": [
+    "背景雜質"
+   ],
+   "problems": [
+    "多框細小雜質",
+    "碎片框"
+   ],
+   "effective_methods": [
+    "cv.color_mask_hsv",
+    "cv.connected_components",
+    "cv.fill_holes",
+    "cv.morphology",
+    "cv.remove_small_objects"
+   ],
+   "ineffective_methods": []
+  },
+  "bccd-00038-rbc-count": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "RBC",
+    "紅血球"
+   ],
+   "object_category": [
+    "細胞",
+    "血液抹片"
+   ],
+   "image_conditions": [
+    "物體黏連重疊",
+    "背景雜亂",
+    "顏色差異大"
+   ],
+   "problems": [
+    "多框",
+    "框的大小不正確",
+    "漏偵測",
+    "碎片框",
+    "誤框白血球",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.color_mask_hsv",
+    "cv.fill_holes",
+    "cv.hough_circles",
+    "cv.morphology",
+    "flow.nms"
+   ],
+   "ineffective_methods": [
+    "cv.connected_components",
+    "cv.distance_transform",
+    "cv.grayscale",
+    "cv.remove_small_objects",
+    "cv.watershed"
+   ]
+  },
+  "coco_bus_15517": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "公車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "大小差異大",
+    "物體密集",
+    "重疊"
+   ],
+   "problems": [
+    "多框重疊",
+    "框住片段",
+    "漏偵測",
+    "重複計數"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.resize",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_car_124798": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "汽車"
+   ],
+   "object_category": [
+    "小型物體",
+    "車輛"
+   ],
+   "image_conditions": [
+    "大小差異大",
+    "物體被裁切",
+    "遠處小目標",
+    "遮擋"
+   ],
+   "problems": [
+    "漏偵測",
+    "碎片框",
+    "誤框",
+    "重複框",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "flow.count",
+    "flow.filter_detections",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.resize",
+    "flow.iou_filter"
+   ]
+  },
+  "coco_car_266981": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "汽車"
+   ],
+   "object_category": [
+    "休旅車",
+    "廂型車",
+    "車輛",
+    "轎車"
+   ],
+   "image_conditions": [
+    "大小差異大",
+    "物體遮擋",
+    "背景雜亂",
+    "遠處小物體"
+   ],
+   "problems": [
+    "框不完整",
+    "框太小",
+    "漏偵測",
+    "誤檢行人",
+    "重複框選"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.resize",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.hog_svm_detect",
+    "flow.expand_detections"
+   ]
+  },
+  "coco_car_309391": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "汽車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "大小差異大",
+    "物體遮擋"
+   ],
+   "problems": [
+    "框範圍過大",
+    "漏偵測",
+    "碎片框",
+    "重複計數"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.hog_svm_detect",
+    "flow.filter_detections",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.resize"
+   ]
+  },
+  "coco_motorcycle_19109": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "三輪機車",
+    "機車",
+    "速克達"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體黏連重疊",
+    "緊密排列",
+    "遮擋",
+    "邊緣截斷"
+   ],
+   "problems": [
+    "框的大小不一致",
+    "漏偵測",
+    "碎片框",
+    "誤框背景",
+    "重複框",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "flow.filter_detections",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_motorcycle_245448": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "機車"
+   ],
+   "object_category": [
+    "大型機車",
+    "小型機車",
+    "重型機車"
+   ],
+   "image_conditions": [
+    "物體密集排列",
+    "背景雜亂",
+    "遮擋"
+   ],
+   "problems": [
+    "多框",
+    "框位不準",
+    "漏偵測",
+    "碎片框",
+    "重複計數",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.gamma_correct",
+    "cv.resize",
+    "flow.filter_detections",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_truck_123131": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "卡車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體黏連"
+   ],
+   "problems": [
+    "多框",
+    "漏偵測",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "flow.filter_detections"
+   ],
+   "ineffective_methods": [
+    "cv.crop",
+    "cv.resize"
+   ]
+  },
+  "coco_truck_155341": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "卡車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [],
+   "problems": [
+    "邊緣漏框"
+   ],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "flow.expand_detections"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_truck_169996": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "卡車",
+    "廂型車",
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體超出影像",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框",
+    "漏偵測",
+    "誤判類別"
+   ],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "param_tune"
+   ],
+   "ineffective_methods": [
+    "flow.filter_detections"
+   ]
+  },
+  "coco_truck_219271": {
+   "task_type": [
+    "偵測",
+    "計數"
+   ],
+   "target_object": [
+    "卡車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體不完整",
+    "背景雜亂",
+    "遮擋"
+   ],
+   "problems": [
+    "多框背景",
+    "框的大小不完整",
+    "漏偵測",
+    "重複框"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.resize",
+    "flow.merge_detections",
+    "flow.nms"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_vehicle_166391": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "休旅車",
+    "卡車",
+    "汽車",
+    "皮卡"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "大小差異大",
+    "遠處小目標"
+   ],
+   "problems": [
+    "漏偵測",
+    "重複框選"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.dnn_detect",
+    "cv.resize",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": []
+  },
+  "dendro-mark-twain-tree-amnh-crosssection": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "年代標記",
+    "年輪",
+    "紅色標記圖釘"
+   ],
+   "object_category": [
+    "巨杉橫切面",
+    "木紋",
+    "標籤"
+   ],
+   "image_conditions": [
+    "年輪紋理雜亂",
+    "強烈反光",
+    "放射狀裂紋",
+    "物體遮擋",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框",
+    "漏偵測",
+    "無法執行",
+    "碎片框"
+   ],
+   "effective_methods": [
+    "cv.adaptive_threshold",
+    "cv.clahe",
+    "cv.connected_components",
+    "cv.morphology",
+    "flow.count"
+   ],
+   "ineffective_methods": [
+    "cv.canny",
+    "cv.color_mask_hsv",
+    "cv.pyr_down"
+   ]
+  },
+  "dendro-smithsonian-petrified-sequoia-rings": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "年輪",
+    "矽化木標本"
+   ],
+   "object_category": [
+    "化石",
+    "植物紋理"
+   ],
+   "image_conditions": [
+    "放射狀裂縫",
+    "破碎紋理",
+    "礦物裂隙",
+    "背景雜亂",
+    "雜質斑塊"
+   ],
+   "problems": [
+    "多框",
+    "框的大小不合理",
+    "漏偵測",
+    "碎片框",
+    "誤框標本邊界"
+   ],
+   "effective_methods": [
+    "cv.clahe",
+    "cv.hough_circles",
+    "flow.filter_contours"
+   ],
+   "ineffective_methods": [
+    "cv.canny",
+    "cv.connected_components",
+    "cv.find_contours",
+    "cv.morphology",
+    "cv.sobel",
+    "cv.threshold"
+   ]
+  },
+  "seeds_calibration_scipython": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "種子",
+    "穀粒"
+   ],
+   "object_category": [
+    "小物體"
+   ],
+   "image_conditions": [
+    "物體黏連重疊",
+    "背景雜亂",
+    "貼邊雜訊"
+   ],
+   "problems": [
+    "多框碎片",
+    "框大小不對",
+    "漏偵測",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.bounding_boxes",
+    "cv.distance_transform",
+    "cv.fill_holes",
+    "cv.find_contours",
+    "cv.morphology",
+    "cv.threshold",
+    "cv.watershed"
+   ],
+   "ineffective_methods": [
+    "cv.connected_components",
+    "cv.connected_components_stats",
+    "cv.remove_small_objects"
+   ]
+  },
+  "v2_b1g2_01_euro_coins_set_lowlight": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "硬幣"
+   ],
+   "object_category": [
+    "硬幣"
+   ],
+   "image_conditions": [],
+   "problems": [
+    "切掉邊緣",
+    "框偏小"
+   ],
+   "effective_methods": [
+    "cv.clahe",
+    "cv.gamma_correct",
+    "cv.gaussian_blur",
+    "cv.hough_circles",
+    "cv.median_blur",
+    "param_tune"
+   ],
+   "ineffective_methods": []
+  },
+  "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "番茄"
+   ],
+   "object_category": [
+    "紅色"
+   ],
+   "image_conditions": [
+    "陰影"
+   ],
+   "problems": [
+    "多框",
+    "漏偵測"
+   ],
+   "effective_methods": [
+    "cv.bounding_boxes",
+    "cv.color_mask_hsv",
+    "cv.connected_components",
+    "cv.fill_holes",
+    "cv.find_contours",
+    "cv.gamma_correct",
+    "cv.gaussian_blur",
+    "cv.morphology"
+   ],
+   "ineffective_methods": [
+    "cv.grayscale",
+    "cv.threshold_otsu",
+    "cv.threshold_triangle"
+   ]
+  },
+  "v2_haze01_carpark_cars": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "休旅車",
+    "廂型車",
+    "掀背車",
+    "汽車",
+    "轎車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "濃霧"
+   ],
+   "problems": [
+    "漏偵測"
+   ],
+   "effective_methods": [
+    "cv.clahe",
+    "cv.dnn_detect",
+    "cv.nms"
+   ],
+   "ineffective_methods": [
+    "cv.crop",
+    "cv.dehaze_dcp",
+    "flow.iou_filter"
+   ]
+  },
+  "v2_ln02_candlelight_dinner_tomatoes": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "番茄"
+   ],
+   "object_category": [
+    "小物件",
+    "紅色"
+   ],
+   "image_conditions": [
+    "物體黏連",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框",
+    "漏偵測",
+    "目標合併",
+    "誤檢",
+    "遮罩破碎"
+   ],
+   "effective_methods": [
+    "cv.color_mask_hsv",
+    "cv.connected_components",
+    "cv.fill_holes",
+    "cv.find_contours",
+    "cv.hough_circles",
+    "cv.morphology",
+    "cv.watershed",
+    "flow.nms"
+   ],
+   "ineffective_methods": [
+    "cv.gaussian_blur",
+    "cv.grayscale"
+   ]
+  },
+  "v2_ln05_capers_candlelight": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "酸豆"
+   ],
+   "object_category": [
+    "圓形",
+    "深綠色",
+    "食物"
+   ],
+   "image_conditions": [
+    "物體黏連重疊",
+    "背景雜亂",
+    "金屬反光"
+   ],
+   "problems": [
+    "多框背景",
+    "漏偵測",
+    "碎片框",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.clahe",
+    "cv.find_contours",
+    "cv.hough_circles",
+    "cv.median_blur",
+    "flow.filter_detections"
+   ],
+   "ineffective_methods": [
+    "cv.color_mask_hsv",
+    "cv.connected_components",
+    "cv.morphology"
+   ]
+  },
+  "v2_ln06_walnuts_candlelight": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "核桃"
+   ],
+   "object_category": [
+    "小物體"
+   ],
+   "image_conditions": [
+    "低對比",
+    "物體黏連重疊",
+    "畫面裁切",
+    "紋理破碎",
+    "背景雜亂",
+    "遮擋"
+   ],
+   "problems": [
+    "多框",
+    "框不完整",
+    "漏偵測",
+    "碎片框",
+    "誤檢背景",
+    "黏成一框"
+   ],
+   "effective_methods": [
+    "cv.crop",
+    "cv.distance_transform",
+    "cv.fill_holes",
+    "cv.morphology",
+    "cv.threshold",
+    "cv.watershed",
+    "flow.filter_detections"
+   ],
+   "ineffective_methods": [
+    "cv.color_mask_hsv",
+    "cv.connected_components",
+    "cv.hough_circles",
+    "cv.remove_small_objects"
+   ]
+  },
+  "coco_motorcycle_203389": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "機車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [],
+   "problems": [
+    "尺寸不完整",
+    "數量誤判",
+    "碎片框",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "cv.nms",
+    "flow.largest_detection"
+   ],
+   "ineffective_methods": [
+    "param_tune(cv.dnn_detect)"
+   ]
+  },
+  "coco_bus_125572": {
+   "task_type": [
+    "偵測",
+    "計數"
+   ],
+   "target_object": [
+    "公車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體黏連",
+    "邊緣裁切"
+   ],
+   "problems": [
+    "兩車黏連",
+    "框選範圍不準確",
+    "目標被裁切"
+   ],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "flow.filter_detections"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_bus_133819": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "公車"
+   ],
+   "object_category": [
+    "單層公車",
+    "車輛",
+    "雙層公車"
+   ],
+   "image_conditions": [
+    "物體遮擋",
+    "邊緣局部露出"
+   ],
+   "problems": [
+    "框選範圍不精準",
+    "漏偵測",
+    "重複框選"
+   ],
+   "effective_methods": [
+    "param_tune(cv.dnn_detect)"
+   ],
+   "ineffective_methods": [
+    "cv.crop",
+    "flow.nms"
+   ]
+  },
+  "coco_car_126592": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "汽車"
+   ],
+   "object_category": [
+    "休旅車",
+    "皮卡",
+    "車輛",
+    "轎車"
+   ],
+   "image_conditions": [
+    "物體遮擋",
+    "背景雜訊",
+    "部分露出的目標"
+   ],
+   "problems": [
+    "框的大小不正確",
+    "漏偵測",
+    "碎片框",
+    "誤框標誌",
+    "重複框選"
+   ],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "cv.resize",
+    "flow.filter_detections",
+    "flow.merge_detections",
+    "flow.nms",
+    "flow.transform_detections"
+   ],
+   "ineffective_methods": [
+    "cv.crop"
+   ]
+  },
+  "coco_bus_171298": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "公車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "cv.find_contours"
+   ],
+   "ineffective_methods": [
+    "cv.color_mask_hsv",
+    "cv.morphology"
+   ]
+  },
+  "coco_truck_154000": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "卡車"
+   ],
+   "object_category": [],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "flow.count",
+    "flow.nms"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_truck_166391": {
+   "task_type": [
+    "detect_only",
+    "計數"
+   ],
+   "target_object": [
+    "卡車"
+   ],
+   "object_category": [],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "flow.count",
+    "flow.filter_detections",
+    "flow.nms",
+    "param_tune"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_bus_15338": {
+   "task_type": [
+    "偵測並畫框",
+    "計數"
+   ],
+   "target_object": [
+    "公車"
+   ],
+   "object_category": [],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "cv.dnn_detect",
+    "flow.count"
+   ],
+   "ineffective_methods": []
+  },
+  "eight_of_diamonds_multi_template_matching_pyimagesearch": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "方塊符號"
+   ],
+   "object_category": [
+    "撲克牌圖案"
+   ],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "cv.bounding_boxes",
+    "cv.color_mask_hsv",
+    "cv.find_contours",
+    "cv.morphology",
+    "flow.count"
+   ],
+   "ineffective_methods": []
+  }
+ },
+ "gold": {
+  "coco_car_111086": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "乘用車",
+    "休旅車",
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "尺寸差異大",
+    "影像邊界問題",
+    "物體遮擋",
+    "背景雜亂"
+   ],
+   "problems": [
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框",
+    "邊緣裁切",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "對比度增強",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "特徵檢測與識別",
+    "連通域分析"
+   ]
+  },
+  "coco_car_166391": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "乘用車",
+    "休旅車",
+    "機車",
+    "貨車"
+   ],
+   "object_category": [
+    "小物體",
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體遮擋",
+    "輪廓模糊",
+    "遠處小目標"
+   ],
+   "problems": [
+    "漏偵測",
+    "誤判類別"
+   ],
+   "effective_methods": [
+    "影像縮放",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "檢測結果過濾",
+    "特徵檢測與識別"
+   ]
+  },
+  "coco_truck_293324": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "巴士",
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體密集重疊",
+    "物體遮擋"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "誤檢/誤框",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "形態學處理",
+    "檢測結果處理",
+    "深度學習檢測",
+    "輪廓檢測",
+    "邊界框提取",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "去霧與降噪",
+    "影像預處理與縮放",
+    "色彩與通道處理"
+   ]
+  },
+  "watershed_human_mitosis_skimage": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "生物細胞"
+   ],
+   "object_category": [
+    "細胞"
+   ],
+   "image_conditions": [
+    "影像邊界問題",
+    "文字干擾",
+    "物體密集重疊",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "誤檢/誤框"
+   ],
+   "effective_methods": [
+    "分水嶺演算法",
+    "局部最大值檢測",
+    "形態學處理",
+    "影像裁剪",
+    "檢測結果處理",
+    "距離變換",
+    "閾值分割",
+    "高斯模糊"
+   ],
+   "ineffective_methods": [
+    "色彩與通道處理"
+   ]
+  },
+  "apples_hsv_shrishailsgajbhar": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "植物與種子"
+   ],
+   "object_category": [
+    "食物"
+   ],
+   "image_conditions": [
+    "強烈反光",
+    "影像邊界問題",
+    "物體密集重疊",
+    "物體遮擋",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "HSV色彩遮罩",
+    "孔洞填充",
+    "檢測結果處理",
+    "深度學習檢測",
+    "距離變換",
+    "輪廓檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "形態學與分割",
+    "特徵檢測與識別",
+    "連通域分析"
+   ]
+  },
+  "bccd-00016-rbc-count": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "紅血球"
+   ],
+   "object_category": [
+    "圓形",
+    "細胞",
+    "顏色"
+   ],
+   "image_conditions": [
+    "尺寸差異大",
+    "物體不完整",
+    "物體密集重疊",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框"
+   ],
+   "effective_methods": [
+    "HSV色彩遮罩",
+    "分水嶺演算法",
+    "孔洞填充",
+    "對比度增強",
+    "形態學處理",
+    "檢測結果處理",
+    "連通域分析",
+    "霍夫圓檢測"
+   ],
+   "ineffective_methods": [
+    "色彩與通道處理",
+    "連通域分析",
+    "閾值分割"
+   ]
+  },
+  "bccd-00031-wbc-count": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "生物細胞"
+   ],
+   "object_category": [
+    "細胞",
+    "顏色"
+   ],
+   "image_conditions": [
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題"
+   ],
+   "effective_methods": [
+    "HSV色彩遮罩",
+    "孔洞填充",
+    "形態學處理",
+    "移除小物件",
+    "連通域分析"
+   ],
+   "ineffective_methods": []
+  },
+  "bccd-00038-rbc-count": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "紅血球"
+   ],
+   "object_category": [
+    "細胞"
+   ],
+   "image_conditions": [
+    "物體密集重疊",
+    "背景雜亂",
+    "顏色差異大"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框"
+   ],
+   "effective_methods": [
+    "HSV色彩遮罩",
+    "孔洞填充",
+    "形態學處理",
+    "霍夫圓檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "形態學與分割",
+    "色彩與通道處理",
+    "連通域分析"
+   ]
+  },
+  "coco_bus_15517": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "巴士"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "尺寸差異大",
+    "物體密集重疊"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "邊緣裁切",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "影像縮放",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_car_124798": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "乘用車"
+   ],
+   "object_category": [
+    "小物體",
+    "車輛"
+   ],
+   "image_conditions": [
+    "尺寸差異大",
+    "影像邊界問題",
+    "物體遮擋",
+    "遠處小目標"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "物件計數",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "影像預處理與縮放",
+    "檢測結果過濾"
+   ]
+  },
+  "coco_car_266981": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "乘用車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "尺寸差異大",
+    "物體遮擋",
+    "背景雜亂",
+    "遠處小目標"
+   ],
+   "problems": [
+    "框位不準",
+    "漏偵測",
+    "誤檢/誤框",
+    "邊緣裁切",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "影像縮放",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "檢測結果過濾",
+    "特徵檢測與識別"
+   ]
+  },
+  "coco_car_309391": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "乘用車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "尺寸差異大",
+    "物體遮擋"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "HOG特徵檢測",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "影像預處理與縮放"
+   ]
+  },
+  "coco_motorcycle_19109": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "機車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "影像邊界問題",
+    "物體密集重疊",
+    "物體遮擋"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_motorcycle_245448": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "機車"
+   ],
+   "object_category": [
+    "機車"
+   ],
+   "image_conditions": [
+    "物體密集重疊",
+    "物體遮擋",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "目標黏連",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "伽瑪校正",
+    "影像縮放",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_truck_123131": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體密集重疊"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "目標黏連"
+   ],
+   "effective_methods": [
+    "檢測結果處理",
+    "深度學習檢測"
+   ],
+   "ineffective_methods": [
+    "影像預處理與縮放"
+   ]
+  },
+  "coco_truck_155341": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [],
+   "problems": [
+    "邊緣裁切"
+   ],
+   "effective_methods": [
+    "檢測結果處理",
+    "深度學習檢測"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_truck_169996": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "影像邊界問題",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "誤判類別"
+   ],
+   "effective_methods": [
+    "參數調優",
+    "深度學習檢測"
+   ],
+   "ineffective_methods": [
+    "檢測結果過濾"
+   ]
+  },
+  "coco_truck_219271": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "物體不完整",
+    "物體遮擋",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "邊緣裁切",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "影像縮放",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_vehicle_166391": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "乘用車",
+    "休旅車",
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "尺寸差異大",
+    "遠處小目標"
+   ],
+   "problems": [
+    "漏偵測",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "影像縮放",
+    "影像裁剪",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": []
+  },
+  "dendro-mark-twain-tree-amnh-crosssection": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "其他物體",
+    "標記與符號"
+   ],
+   "object_category": [
+    "其他物件",
+    "植物紋理"
+   ],
+   "image_conditions": [
+    "強烈反光",
+    "物體遮擋",
+    "紋理雜亂",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "無法執行"
+   ],
+   "effective_methods": [
+    "對比度增強",
+    "形態學處理",
+    "物件計數",
+    "自適應閾值分割",
+    "連通域分析"
+   ],
+   "ineffective_methods": [
+    "影像預處理與縮放",
+    "色彩與通道處理",
+    "邊緣檢測"
+   ]
+  },
+  "dendro-smithsonian-petrified-sequoia-rings": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "其他物體"
+   ],
+   "object_category": [
+    "其他物件",
+    "植物紋理"
+   ],
+   "image_conditions": [
+    "紋理雜亂",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "誤檢/誤框"
+   ],
+   "effective_methods": [
+    "對比度增強",
+    "輪廓檢測",
+    "霍夫圓檢測"
+   ],
+   "ineffective_methods": [
+    "形態學與分割",
+    "連通域分析",
+    "邊緣檢測",
+    "閾值分割"
+   ]
+  },
+  "seeds_calibration_scipython": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "植物與種子"
+   ],
+   "object_category": [
+    "小物體"
+   ],
+   "image_conditions": [
+    "物體密集重疊",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "目標黏連"
+   ],
+   "effective_methods": [
+    "分水嶺演算法",
+    "孔洞填充",
+    "形態學處理",
+    "距離變換",
+    "輪廓檢測",
+    "邊界框提取",
+    "閾值分割"
+   ],
+   "ineffective_methods": [
+    "連通域分析"
+   ]
+  },
+  "v2_b1g2_01_euro_coins_set_lowlight": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "其他物體"
+   ],
+   "object_category": [
+    "其他物件"
+   ],
+   "image_conditions": [],
+   "problems": [
+    "框位不準",
+    "邊緣裁切"
+   ],
+   "effective_methods": [
+    "中值模糊",
+    "伽瑪校正",
+    "參數調優",
+    "對比度增強",
+    "霍夫圓檢測",
+    "高斯模糊"
+   ],
+   "ineffective_methods": []
+  },
+  "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "其他物體"
+   ],
+   "object_category": [
+    "顏色"
+   ],
+   "image_conditions": [
+    "陰影"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測"
+   ],
+   "effective_methods": [
+    "HSV色彩遮罩",
+    "伽瑪校正",
+    "孔洞填充",
+    "形態學處理",
+    "輪廓檢測",
+    "連通域分析",
+    "邊界框提取",
+    "高斯模糊"
+   ],
+   "ineffective_methods": [
+    "色彩與通道處理",
+    "閾值分割"
+   ]
+  },
+  "v2_haze01_carpark_cars": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "乘用車",
+    "休旅車",
+    "貨車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "濃霧"
+   ],
+   "problems": [
+    "漏偵測"
+   ],
+   "effective_methods": [
+    "對比度增強",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "去霧與降噪",
+    "影像預處理與縮放",
+    "檢測結果過濾"
+   ]
+  },
+  "v2_ln02_candlelight_dinner_tomatoes": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "其他物體"
+   ],
+   "object_category": [
+    "小物體",
+    "顏色"
+   ],
+   "image_conditions": [
+    "物體密集重疊",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框"
+   ],
+   "effective_methods": [
+    "HSV色彩遮罩",
+    "分水嶺演算法",
+    "孔洞填充",
+    "形態學處理",
+    "輪廓檢測",
+    "連通域分析",
+    "霍夫圓檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "去霧與降噪",
+    "色彩與通道處理"
+   ]
+  },
+  "v2_ln05_capers_candlelight": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "植物與種子"
+   ],
+   "object_category": [
+    "圓形",
+    "顏色",
+    "食物"
+   ],
+   "image_conditions": [
+    "強烈反光",
+    "物體密集重疊",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "目標黏連"
+   ],
+   "effective_methods": [
+    "中值模糊",
+    "對比度增強",
+    "檢測結果處理",
+    "輪廓檢測",
+    "霍夫圓檢測"
+   ],
+   "ineffective_methods": [
+    "形態學與分割",
+    "色彩與通道處理",
+    "連通域分析"
+   ]
+  },
+  "v2_ln06_walnuts_candlelight": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "植物與種子"
+   ],
+   "object_category": [
+    "小物體"
+   ],
+   "image_conditions": [
+    "低對比",
+    "影像邊界問題",
+    "物體密集重疊",
+    "物體遮擋",
+    "紋理雜亂",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "漏偵測",
+    "目標黏連",
+    "誤檢/誤框",
+    "邊緣裁切"
+   ],
+   "effective_methods": [
+    "分水嶺演算法",
+    "孔洞填充",
+    "形態學處理",
+    "影像裁剪",
+    "檢測結果處理",
+    "距離變換",
+    "閾值分割"
+   ],
+   "ineffective_methods": [
+    "特徵檢測與識別",
+    "色彩與通道處理",
+    "連通域分析"
+   ]
+  },
+  "coco_motorcycle_203389": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "機車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [],
+   "problems": [
+    "多框問題",
+    "誤判類別",
+    "邊緣裁切",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "檢測結果處理",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "參數調優"
+   ]
+  },
+  "coco_bus_125572": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "巴士"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "影像邊界問題",
+    "物體密集重疊"
+   ],
+   "problems": [
+    "框位不準",
+    "目標黏連",
+    "邊緣裁切"
+   ],
+   "effective_methods": [
+    "檢測結果處理",
+    "深度學習檢測"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_bus_133819": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "巴士"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "影像邊界問題",
+    "物體遮擋"
+   ],
+   "problems": [
+    "框位不準",
+    "漏偵測",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "深度學習檢測"
+   ],
+   "ineffective_methods": [
+    "影像預處理與縮放",
+    "檢測結果過濾"
+   ]
+  },
+  "coco_car_126592": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "乘用車"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [
+    "影像邊界問題",
+    "物體遮擋",
+    "背景雜亂"
+   ],
+   "problems": [
+    "多框問題",
+    "框位不準",
+    "漏偵測",
+    "誤檢/誤框",
+    "重複偵測"
+   ],
+   "effective_methods": [
+    "影像縮放",
+    "檢測結果處理",
+    "深度學習檢測",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": [
+    "影像預處理與縮放"
+   ]
+  },
+  "coco_bus_171298": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "巴士"
+   ],
+   "object_category": [
+    "車輛"
+   ],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "深度學習檢測",
+    "輪廓檢測"
+   ],
+   "ineffective_methods": [
+    "形態學與分割",
+    "色彩與通道處理"
+   ]
+  },
+  "coco_truck_154000": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "貨車"
+   ],
+   "object_category": [],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "深度學習檢測",
+    "物件計數",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_truck_166391": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "貨車"
+   ],
+   "object_category": [],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "參數調優",
+    "檢測結果處理",
+    "深度學習檢測",
+    "物件計數",
+    "非極大值抑制"
+   ],
+   "ineffective_methods": []
+  },
+  "coco_bus_15338": {
+   "task_type": [
+    "目標偵測",
+    "計數"
+   ],
+   "target_object": [
+    "巴士"
+   ],
+   "object_category": [],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "深度學習檢測",
+    "物件計數"
+   ],
+   "ineffective_methods": []
+  },
+  "eight_of_diamonds_multi_template_matching_pyimagesearch": {
+   "task_type": [
+    "計數"
+   ],
+   "target_object": [
+    "標記與符號"
+   ],
+   "object_category": [
+    "其他物件"
+   ],
+   "image_conditions": [],
+   "problems": [],
+   "effective_methods": [
+    "HSV色彩遮罩",
+    "形態學處理",
+    "物件計數",
+    "輪廓檢測",
+    "邊界框提取"
+   ],
+   "ineffective_methods": []
+  }
+ },
+ "predictions": {
+  "goal": {
+   "coco_car_111086": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "休旅車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_car_166391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_293324": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "watershed_human_mitosis_skimage": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞"
+    ],
+    "object_category": [
+     "細胞"
+    ],
+    "image_conditions": [
+     "物體密集重疊"
+    ],
+    "problems": [
+     "目標黏連"
+    ]
+   },
+   "apples_hsv_shrishailsgajbhar": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "重複偵測"
+    ]
+   },
+   "bccd-00016-rbc-count": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞",
+     "紅血球"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "細胞"
+    ],
+    "image_conditions": [
+     "低對比",
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "bccd-00031-wbc-count": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞"
+    ],
+    "object_category": [
+     "小物體",
+     "細胞"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "bccd-00038-rbc-count": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞",
+     "紅血球"
+    ],
+    "object_category": [
+     "小物體",
+     "細胞"
+    ],
+    "image_conditions": [
+     "低對比",
+     "物體密集重疊",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_15517": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_car_124798": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_car_266981": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_car_309391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_motorcycle_19109": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "機車"
+    ],
+    "object_category": [
+     "機車",
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_motorcycle_245448": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "機車"
+    ],
+    "object_category": [
+     "機車",
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_123131": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_155341": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_169996": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_219271": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_vehicle_166391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "dendro-mark-twain-tree-amnh-crosssection": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "植物與種子"
+    ],
+    "object_category": [
+     "植物紋理"
+    ],
+    "image_conditions": [
+     "低對比",
+     "紋理雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "無法執行",
+     "目標黏連"
+    ]
+   },
+   "dendro-smithsonian-petrified-sequoia-rings": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "植物與種子"
+    ],
+    "object_category": [
+     "小物體",
+     "植物紋理"
+    ],
+    "image_conditions": [
+     "低對比",
+     "紋理雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "無法執行",
+     "目標黏連"
+    ]
+   },
+   "seeds_calibration_scipython": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "植物與種子"
+    ],
+    "object_category": [
+     "小物體",
+     "顏色"
+    ],
+    "image_conditions": [
+     "低對比",
+     "物體密集重疊",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "v2_b1g2_01_euro_coins_set_lowlight": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體"
+    ],
+    "image_conditions": [
+     "強烈反光",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "v2_haze01_carpark_cars": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "休旅車",
+     "巴士",
+     "機車",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標",
+     "陰影"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "v2_ln02_candlelight_dinner_tomatoes": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "v2_ln05_capers_candlelight": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "強烈反光",
+     "物體密集重疊",
+     "背景雜亂"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "重複偵測"
+    ]
+   },
+   "v2_ln06_walnuts_candlelight": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "重複偵測"
+    ]
+   },
+   "coco_motorcycle_203389": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "機車"
+    ],
+    "object_category": [
+     "機車",
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_125572": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_133819": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_car_126592": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_171298": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_154000": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_166391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_15338": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "eight_of_diamonds_multi_template_matching_pyimagesearch": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "標記與符號"
+    ],
+    "object_category": [
+     "小物體"
+    ],
+    "image_conditions": [
+     "文字干擾",
+     "背景雜亂"
+    ],
+    "problems": [
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   }
+  },
+  "goal+flow": {
+   "coco_car_111086": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_car_166391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_293324": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "watershed_human_mitosis_skimage": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞"
+    ],
+    "object_category": [
+     "細胞"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "apples_hsv_shrishailsgajbhar": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "顏色",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "bccd-00016-rbc-count": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞",
+     "紅血球"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "細胞"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "bccd-00031-wbc-count": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞"
+    ],
+    "object_category": [
+     "小物體",
+     "細胞"
+    ],
+    "image_conditions": [
+     "低對比",
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "bccd-00038-rbc-count": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "生物細胞",
+     "紅血球"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "細胞"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "coco_bus_15517": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_car_124798": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_car_266981": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_car_309391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_motorcycle_19109": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "機車"
+    ],
+    "object_category": [
+     "機車",
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_motorcycle_245448": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "機車"
+    ],
+    "object_category": [
+     "機車",
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_123131": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_155341": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_169996": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_219271": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_vehicle_166391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "dendro-mark-twain-tree-amnh-crosssection": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "植物與種子"
+    ],
+    "object_category": [
+     "植物紋理"
+    ],
+    "image_conditions": [
+     "低對比",
+     "紋理雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "無法執行",
+     "目標黏連"
+    ]
+   },
+   "dendro-smithsonian-petrified-sequoia-rings": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "植物與種子"
+    ],
+    "object_category": [
+     "小物體",
+     "植物紋理"
+    ],
+    "image_conditions": [
+     "低對比",
+     "紋理雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連"
+    ]
+   },
+   "seeds_calibration_scipython": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "植物與種子"
+    ],
+    "object_category": [
+     "小物體",
+     "顏色"
+    ],
+    "image_conditions": [
+     "低對比",
+     "物體密集重疊",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連"
+    ]
+   },
+   "v2_b1g2_01_euro_coins_set_lowlight": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體"
+    ],
+    "image_conditions": [
+     "低對比",
+     "強烈反光",
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "顏色",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "v2_haze01_carpark_cars": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "機車",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標",
+     "陰影"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "v2_ln02_candlelight_dinner_tomatoes": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "v2_ln05_capers_candlelight": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "圓形",
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "低對比",
+     "物體密集重疊",
+     "背景雜亂"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "v2_ln06_walnuts_candlelight": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "其他物體"
+    ],
+    "object_category": [
+     "小物體",
+     "食物"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "背景雜亂",
+     "輪廓模糊"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框"
+    ]
+   },
+   "coco_motorcycle_203389": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "機車"
+    ],
+    "object_category": [
+     "機車",
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_125572": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_133819": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_car_126592": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "乘用車",
+     "巴士",
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_171298": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "物體密集重疊",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_154000": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_truck_166391": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "貨車"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "coco_bus_15338": {
+    "task_type": [
+     "目標偵測",
+     "計數"
+    ],
+    "target_object": [
+     "巴士"
+    ],
+    "object_category": [
+     "車輛"
+    ],
+    "image_conditions": [
+     "尺寸差異大",
+     "物體遮擋",
+     "背景雜亂",
+     "遠處小目標"
+    ],
+    "problems": [
+     "漏偵測",
+     "目標黏連",
+     "誤判類別",
+     "重複偵測"
+    ]
+   },
+   "eight_of_diamonds_multi_template_matching_pyimagesearch": {
+    "task_type": [
+     "計數"
+    ],
+    "target_object": [
+     "標記與符號"
+    ],
+    "object_category": [
+     "小物體"
+    ],
+    "image_conditions": [
+     "低對比",
+     "文字干擾"
+    ],
+    "problems": [
+     "誤檢/誤框",
+     "重複偵測"
+    ]
+   }
+  }
+ },
+ "neighbours": {
+  "predicted:goal": {
+   "coco_car_111086": [
+    "coco_car_266981",
+    "coco_car_124798",
+    "coco_truck_293324"
+   ],
+   "coco_car_166391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_truck_293324": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_motorcycle_245448"
+   ],
+   "watershed_human_mitosis_skimage": [
+    "bccd-00016-rbc-count",
+    "bccd-00038-rbc-count",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "apples_hsv_shrishailsgajbhar": [
+    "coco_motorcycle_245448",
+    "v2_ln06_walnuts_candlelight",
+    "coco_car_111086"
+   ],
+   "bccd-00016-rbc-count": [
+    "v2_ln06_walnuts_candlelight",
+    "bccd-00038-rbc-count",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "bccd-00031-wbc-count": [
+    "coco_motorcycle_245448",
+    "apples_hsv_shrishailsgajbhar",
+    "bccd-00016-rbc-count"
+   ],
+   "bccd-00038-rbc-count": [
+    "v2_ln06_walnuts_candlelight",
+    "bccd-00016-rbc-count",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_bus_15517": [
+    "coco_car_266981",
+    "coco_motorcycle_245448",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_car_124798": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_truck_293324"
+   ],
+   "coco_car_266981": [
+    "coco_car_111086",
+    "coco_car_124798",
+    "coco_truck_293324"
+   ],
+   "coco_car_309391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_motorcycle_19109": [
+    "coco_motorcycle_245448",
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_motorcycle_245448": [
+    "coco_car_266981",
+    "coco_motorcycle_19109",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_truck_123131": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_truck_155341": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_truck_169996": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_truck_219271": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_motorcycle_245448"
+   ],
+   "coco_vehicle_166391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "dendro-mark-twain-tree-amnh-crosssection": [
+    "v2_ln06_walnuts_candlelight",
+    "dendro-smithsonian-petrified-sequoia-rings",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "dendro-smithsonian-petrified-sequoia-rings": [
+    "v2_ln06_walnuts_candlelight",
+    "dendro-mark-twain-tree-amnh-crosssection",
+    "coco_car_166391"
+   ],
+   "seeds_calibration_scipython": [
+    "v2_ln06_walnuts_candlelight",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "v2_b1g2_01_euro_coins_set_lowlight": [
+    "apples_hsv_shrishailsgajbhar",
+    "coco_motorcycle_245448",
+    "v2_ln06_walnuts_candlelight"
+   ],
+   "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": [
+    "apples_hsv_shrishailsgajbhar",
+    "coco_motorcycle_245448",
+    "v2_ln06_walnuts_candlelight"
+   ],
+   "v2_haze01_carpark_cars": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "v2_ln02_candlelight_dinner_tomatoes": [
+    "apples_hsv_shrishailsgajbhar",
+    "coco_motorcycle_245448",
+    "v2_ln06_walnuts_candlelight"
+   ],
+   "v2_ln05_capers_candlelight": [
+    "apples_hsv_shrishailsgajbhar",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "bccd-00016-rbc-count"
+   ],
+   "v2_ln06_walnuts_candlelight": [
+    "apples_hsv_shrishailsgajbhar",
+    "coco_motorcycle_245448",
+    "v2_ln02_candlelight_dinner_tomatoes"
+   ],
+   "coco_motorcycle_203389": [
+    "coco_motorcycle_245448",
+    "coco_car_266981",
+    "coco_motorcycle_19109"
+   ],
+   "coco_bus_125572": [
+    "coco_car_266981",
+    "coco_motorcycle_245448",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_bus_133819": [
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_111086"
+   ],
+   "coco_car_126592": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_bus_171298": [
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_111086"
+   ],
+   "coco_truck_154000": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_motorcycle_245448"
+   ],
+   "coco_truck_166391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_motorcycle_245448"
+   ],
+   "coco_bus_15338": [
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_111086"
+   ],
+   "eight_of_diamonds_multi_template_matching_pyimagesearch": [
+    "watershed_human_mitosis_skimage",
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_111086"
+   ]
+  },
+  "predicted:goal+flow": {
+   "coco_car_111086": [
+    "coco_car_266981",
+    "coco_car_124798",
+    "coco_truck_293324"
+   ],
+   "coco_car_166391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_truck_293324": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "watershed_human_mitosis_skimage": [
+    "bccd-00016-rbc-count",
+    "bccd-00038-rbc-count",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "apples_hsv_shrishailsgajbhar": [
+    "bccd-00016-rbc-count",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "v2_ln05_capers_candlelight"
+   ],
+   "bccd-00016-rbc-count": [
+    "bccd-00038-rbc-count",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "v2_ln06_walnuts_candlelight"
+   ],
+   "bccd-00031-wbc-count": [
+    "v2_ln06_walnuts_candlelight",
+    "bccd-00016-rbc-count",
+    "bccd-00038-rbc-count"
+   ],
+   "bccd-00038-rbc-count": [
+    "bccd-00016-rbc-count",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "v2_ln06_walnuts_candlelight"
+   ],
+   "coco_bus_15517": [
+    "coco_car_266981",
+    "coco_motorcycle_245448",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_car_124798": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_truck_293324"
+   ],
+   "coco_car_266981": [
+    "coco_car_111086",
+    "coco_car_124798",
+    "coco_truck_293324"
+   ],
+   "coco_car_309391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_motorcycle_19109": [
+    "coco_motorcycle_245448",
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_motorcycle_245448": [
+    "coco_car_266981",
+    "coco_motorcycle_19109",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_truck_123131": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_truck_155341": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_truck_169996": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_truck_219271": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_vehicle_166391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "dendro-mark-twain-tree-amnh-crosssection": [
+    "v2_ln06_walnuts_candlelight",
+    "dendro-smithsonian-petrified-sequoia-rings",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "dendro-smithsonian-petrified-sequoia-rings": [
+    "v2_ln06_walnuts_candlelight",
+    "coco_car_166391",
+    "dendro-mark-twain-tree-amnh-crosssection"
+   ],
+   "seeds_calibration_scipython": [
+    "v2_ln06_walnuts_candlelight",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "v2_ln05_capers_candlelight"
+   ],
+   "v2_b1g2_01_euro_coins_set_lowlight": [
+    "apples_hsv_shrishailsgajbhar",
+    "v2_ln06_walnuts_candlelight",
+    "v2_ln02_candlelight_dinner_tomatoes"
+   ],
+   "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": [
+    "bccd-00016-rbc-count",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "v2_ln05_capers_candlelight"
+   ],
+   "v2_haze01_carpark_cars": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "v2_ln02_candlelight_dinner_tomatoes": [
+    "apples_hsv_shrishailsgajbhar",
+    "v2_ln06_walnuts_candlelight",
+    "coco_motorcycle_245448"
+   ],
+   "v2_ln05_capers_candlelight": [
+    "v2_ln06_walnuts_candlelight",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "v2_ln06_walnuts_candlelight": [
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "apples_hsv_shrishailsgajbhar",
+    "bccd-00016-rbc-count"
+   ],
+   "coco_motorcycle_203389": [
+    "coco_motorcycle_245448",
+    "coco_car_266981",
+    "coco_motorcycle_19109"
+   ],
+   "coco_bus_125572": [
+    "coco_car_266981",
+    "coco_motorcycle_245448",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_bus_133819": [
+    "coco_car_266981",
+    "coco_motorcycle_245448",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_car_126592": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_bus_171298": [
+    "coco_car_266981",
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_111086"
+   ],
+   "coco_truck_154000": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_truck_166391": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_124798"
+   ],
+   "coco_bus_15338": [
+    "coco_car_266981",
+    "coco_car_111086",
+    "coco_car_124798"
+   ],
+   "eight_of_diamonds_multi_template_matching_pyimagesearch": [
+    "v2_ln06_walnuts_candlelight",
+    "coco_car_124798",
+    "watershed_human_mitosis_skimage"
+   ]
+  },
+  "gold_tags(upper)": {
+   "coco_car_111086": [
+    "coco_car_124798",
+    "coco_car_266981",
+    "coco_car_126592"
+   ],
+   "coco_car_166391": [
+    "coco_car_124798",
+    "coco_car_111086",
+    "coco_car_266981"
+   ],
+   "coco_truck_293324": [
+    "coco_motorcycle_19109",
+    "apples_hsv_shrishailsgajbhar",
+    "coco_bus_15517"
+   ],
+   "watershed_human_mitosis_skimage": [
+    "apples_hsv_shrishailsgajbhar",
+    "bccd-00016-rbc-count",
+    "bccd-00038-rbc-count"
+   ],
+   "apples_hsv_shrishailsgajbhar": [
+    "v2_ln06_walnuts_candlelight",
+    "coco_motorcycle_19109",
+    "v2_ln05_capers_candlelight"
+   ],
+   "bccd-00016-rbc-count": [
+    "bccd-00038-rbc-count",
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "v2_ln05_capers_candlelight"
+   ],
+   "bccd-00031-wbc-count": [
+    "bccd-00016-rbc-count",
+    "watershed_human_mitosis_skimage",
+    "bccd-00038-rbc-count"
+   ],
+   "bccd-00038-rbc-count": [
+    "bccd-00016-rbc-count",
+    "watershed_human_mitosis_skimage",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "coco_bus_15517": [
+    "coco_truck_293324",
+    "coco_car_111086",
+    "coco_car_124798"
+   ],
+   "coco_car_124798": [
+    "coco_car_111086",
+    "coco_car_266981",
+    "coco_car_126592"
+   ],
+   "coco_car_266981": [
+    "coco_car_111086",
+    "coco_car_124798",
+    "coco_car_126592"
+   ],
+   "coco_car_309391": [
+    "coco_car_124798",
+    "coco_car_266981",
+    "coco_car_111086"
+   ],
+   "coco_motorcycle_19109": [
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_124798",
+    "coco_car_126592"
+   ],
+   "coco_motorcycle_245448": [
+    "coco_motorcycle_19109",
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_126592"
+   ],
+   "coco_truck_123131": [
+    "coco_motorcycle_19109",
+    "coco_truck_293324",
+    "coco_bus_15517"
+   ],
+   "coco_truck_155341": [
+    "coco_car_111086",
+    "coco_truck_219271",
+    "coco_bus_125572"
+   ],
+   "coco_truck_169996": [
+    "coco_car_111086",
+    "coco_car_126592",
+    "coco_truck_219271"
+   ],
+   "coco_truck_219271": [
+    "coco_car_111086",
+    "coco_car_126592",
+    "coco_car_266981"
+   ],
+   "coco_vehicle_166391": [
+    "coco_car_111086",
+    "coco_car_124798",
+    "coco_car_266981"
+   ],
+   "dendro-mark-twain-tree-amnh-crosssection": [
+    "dendro-smithsonian-petrified-sequoia-rings",
+    "apples_hsv_shrishailsgajbhar",
+    "v2_ln06_walnuts_candlelight"
+   ],
+   "dendro-smithsonian-petrified-sequoia-rings": [
+    "dendro-mark-twain-tree-amnh-crosssection",
+    "v2_ln06_walnuts_candlelight",
+    "bccd-00016-rbc-count"
+   ],
+   "seeds_calibration_scipython": [
+    "v2_ln06_walnuts_candlelight",
+    "apples_hsv_shrishailsgajbhar",
+    "bccd-00016-rbc-count"
+   ],
+   "v2_b1g2_01_euro_coins_set_lowlight": [
+    "coco_bus_125572",
+    "coco_car_266981",
+    "dendro-smithsonian-petrified-sequoia-rings"
+   ],
+   "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": [
+    "v2_ln02_candlelight_dinner_tomatoes",
+    "bccd-00016-rbc-count",
+    "coco_bus_15517"
+   ],
+   "v2_haze01_carpark_cars": [
+    "coco_car_111086",
+    "coco_car_166391",
+    "coco_vehicle_166391"
+   ],
+   "v2_ln02_candlelight_dinner_tomatoes": [
+    "bccd-00016-rbc-count",
+    "v2_ln06_walnuts_candlelight",
+    "apples_hsv_shrishailsgajbhar"
+   ],
+   "v2_ln05_capers_candlelight": [
+    "apples_hsv_shrishailsgajbhar",
+    "bccd-00016-rbc-count",
+    "seeds_calibration_scipython"
+   ],
+   "v2_ln06_walnuts_candlelight": [
+    "apples_hsv_shrishailsgajbhar",
+    "coco_car_111086",
+    "coco_motorcycle_19109"
+   ],
+   "coco_motorcycle_203389": [
+    "coco_bus_15517",
+    "coco_motorcycle_19109",
+    "coco_truck_219271"
+   ],
+   "coco_bus_125572": [
+    "coco_motorcycle_19109",
+    "coco_bus_133819",
+    "coco_bus_15517"
+   ],
+   "coco_bus_133819": [
+    "coco_car_126592",
+    "coco_motorcycle_19109",
+    "coco_car_111086"
+   ],
+   "coco_car_126592": [
+    "coco_car_111086",
+    "coco_car_124798",
+    "coco_car_266981"
+   ],
+   "coco_bus_171298": [
+    "coco_bus_125572",
+    "coco_bus_133819",
+    "coco_bus_15517"
+   ],
+   "coco_truck_154000": [
+    "coco_car_111086",
+    "coco_car_166391",
+    "coco_truck_123131"
+   ],
+   "coco_truck_166391": [
+    "coco_car_111086",
+    "coco_car_166391",
+    "coco_truck_123131"
+   ],
+   "coco_bus_15338": [
+    "coco_bus_125572",
+    "coco_bus_133819",
+    "coco_bus_15517"
+   ],
+   "eight_of_diamonds_multi_template_matching_pyimagesearch": [
+    "dendro-mark-twain-tree-amnh-crosssection",
+    "dendro-smithsonian-petrified-sequoia-rings",
+    "v2_b1g2_01_euro_coins_set_lowlight"
+   ]
+  }
+ },
+ "key_nodes": {
+  "coco_car_111086": [
+   "cv.connected_components",
+   "cv.crop",
+   "cv.dnn_detect",
+   "cv.equalize_color",
+   "cv.gamma_correct",
+   "cv.grayscale",
+   "cv.resize",
+   "cv.threshold",
+   "flow.filter_detections",
+   "flow.iou_filter",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.sort_detections",
+   "flow.transform_detections"
+  ],
+  "coco_car_166391": [
+   "cv.crop",
+   "cv.dnn_detect",
+   "cv.resize",
+   "flow.filter_detections",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "coco_truck_293324": [
+   "cv.bounding_boxes",
+   "cv.color_mask_hsv",
+   "cv.connected_components_stats",
+   "cv.crop",
+   "cv.dnn_detect",
+   "cv.find_contours",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.hconcat",
+   "cv.morphology",
+   "cv.resize",
+   "cv.threshold",
+   "flow.detections_to_mask",
+   "flow.expand_detections",
+   "flow.filter_detections",
+   "flow.iou_filter",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "watershed_human_mitosis_skimage": [
+   "cv.connected_components",
+   "cv.crop",
+   "cv.distance_transform",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.local_maxima",
+   "cv.resize",
+   "cv.threshold_otsu",
+   "cv.watershed",
+   "flow.detections_to_mask",
+   "flow.transform_detections"
+  ],
+  "apples_hsv_shrishailsgajbhar": [
+   "cv.add_weighted",
+   "cv.bounding_boxes",
+   "cv.color_mask_hsv",
+   "cv.distance_transform",
+   "cv.dnn_detect",
+   "cv.fill_holes",
+   "cv.find_contours",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.morphology",
+   "cv.threshold",
+   "flow.expand_detections",
+   "flow.filter_detections",
+   "flow.nms"
+  ],
+  "bccd-00016-rbc-count": [
+   "cv.absdiff",
+   "cv.bitwise_images",
+   "cv.bounding_boxes",
+   "cv.color_mask_hsv",
+   "cv.connected_components",
+   "cv.distance_transform",
+   "cv.extract_hsv_channel",
+   "cv.fill_holes",
+   "cv.find_contours",
+   "cv.gaussian_blur",
+   "cv.hough_circles",
+   "cv.median_blur",
+   "cv.morphology",
+   "cv.normalize_image",
+   "cv.remove_small_objects",
+   "cv.split_channel",
+   "cv.threshold",
+   "cv.threshold_otsu",
+   "flow.expand_detections",
+   "flow.filter_detections",
+   "flow.iou_filter",
+   "flow.nms"
+  ],
+  "bccd-00031-wbc-count": [
+   "cv.bounding_boxes",
+   "cv.color_mask_hsv",
+   "cv.connected_components",
+   "cv.fill_holes",
+   "cv.find_contours",
+   "cv.gaussian_blur",
+   "cv.morphology",
+   "cv.remove_small_objects"
+  ],
+  "bccd-00038-rbc-count": [
+   "cv.adjust_hue",
+   "cv.bounding_boxes",
+   "cv.clahe",
+   "cv.color_mask_hsv",
+   "cv.fill_holes",
+   "cv.find_contours",
+   "cv.gaussian_blur",
+   "cv.hough_circles",
+   "cv.median_blur",
+   "cv.morphology",
+   "flow.iou_filter"
+  ],
+  "coco_bus_15517": [
+   "cv.crop",
+   "cv.dnn_detect",
+   "cv.resize",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "coco_car_124798": [
+   "cv.crop",
+   "cv.dnn_detect",
+   "cv.resize",
+   "flow.filter_detections",
+   "flow.iou_filter",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "coco_car_266981": [
+   "cv.dnn_detect"
+  ],
+  "coco_car_309391": [
+   "cv.crop",
+   "cv.dnn_detect",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "coco_motorcycle_19109": [
+   "cv.crop",
+   "cv.dnn_detect",
+   "flow.filter_detections",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "coco_motorcycle_245448": [
+   "cv.dnn_detect",
+   "cv.gamma_correct",
+   "flow.filter_detections",
+   "flow.merge_detections",
+   "flow.nms"
+  ],
+  "coco_truck_123131": [
+   "cv.dnn_detect",
+   "flow.filter_detections"
+  ],
+  "coco_truck_155341": [
+   "cv.dnn_detect",
+   "flow.expand_detections"
+  ],
+  "coco_truck_169996": [
+   "cv.dnn_detect"
+  ],
+  "coco_truck_219271": [
+   "cv.crop",
+   "cv.dnn_detect",
+   "cv.resize",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "coco_vehicle_166391": [
+   "cv.dnn_detect",
+   "cv.resize",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "dendro-mark-twain-tree-amnh-crosssection": [
+   "cv.adaptive_threshold",
+   "cv.bilateral_filter",
+   "cv.bounding_boxes",
+   "cv.canny",
+   "cv.clahe",
+   "cv.connected_components",
+   "cv.crop",
+   "cv.find_contours",
+   "cv.gamma_correct",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.median_blur",
+   "cv.morphology",
+   "cv.remove_small_objects",
+   "cv.threshold",
+   "flow.filter_detections",
+   "flow.transform_detections"
+  ],
+  "dendro-smithsonian-petrified-sequoia-rings": [
+   "cv.bounding_boxes",
+   "cv.canny",
+   "cv.clahe",
+   "cv.crop",
+   "cv.find_contours",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.median_blur",
+   "cv.morphology",
+   "cv.remove_small_objects",
+   "cv.sobel",
+   "cv.threshold",
+   "cv.threshold_otsu",
+   "flow.filter_contours",
+   "flow.filter_detections"
+  ],
+  "seeds_calibration_scipython": [
+   "cv.bounding_boxes",
+   "cv.find_contours",
+   "cv.gaussian_blur",
+   "cv.morphology",
+   "cv.split_channel",
+   "cv.threshold",
+   "flow.expand_detections"
+  ],
+  "v2_b1g2_01_euro_coins_set_lowlight": [
+   "cv.clahe",
+   "cv.gamma_correct",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.hough_circles",
+   "cv.median_blur"
+  ],
+  "v2_b2g0_01_three_tomatoes_dark_bg_lowlight": [
+   "cv.bounding_boxes",
+   "cv.brightness_contrast",
+   "cv.color_mask_hsv",
+   "cv.connected_components",
+   "cv.connected_components_stats",
+   "cv.fill_holes",
+   "cv.find_contours",
+   "cv.gamma_correct",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.morphology",
+   "cv.threshold_otsu"
+  ],
+  "v2_haze01_carpark_cars": [
+   "cv.clahe",
+   "cv.dnn_detect",
+   "flow.nms"
+  ],
+  "v2_ln02_candlelight_dinner_tomatoes": [
+   "cv.add_weighted",
+   "cv.bounding_boxes",
+   "cv.color_mask_hsv",
+   "cv.crop",
+   "cv.fill_holes",
+   "cv.find_contours",
+   "cv.hough_circles",
+   "cv.median_blur",
+   "cv.morphology",
+   "cv.threshold",
+   "flow.expand_detections",
+   "flow.filter_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "v2_ln05_capers_candlelight": [
+   "cv.crop",
+   "cv.gamma_correct",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.hough_circles",
+   "cv.median_blur",
+   "flow.filter_detections",
+   "flow.merge_detections",
+   "flow.nms",
+   "flow.transform_detections"
+  ],
+  "v2_ln06_walnuts_candlelight": [
+   "cv.color_mask_hsv",
+   "cv.connected_components",
+   "cv.crop",
+   "cv.distance_transform",
+   "cv.fill_holes",
+   "cv.gaussian_blur",
+   "cv.grayscale",
+   "cv.morphology",
+   "cv.remove_small_objects",
+   "cv.threshold",
+   "cv.watershed",
+   "flow.filter_detections"
+  ],
+  "coco_motorcycle_203389": [
+   "cv.dnn_detect",
+   "flow.largest_detection",
+   "flow.nms"
+  ],
+  "coco_bus_125572": [
+   "cv.dnn_detect",
+   "flow.filter_detections"
+  ],
+  "coco_bus_133819": [
+   "cv.dnn_detect"
+  ],
+  "coco_car_126592": [
+   "cv.dnn_detect",
+   "flow.filter_detections",
+   "flow.merge_detections",
+   "flow.nms"
+  ],
+  "coco_bus_171298": [
+   "cv.dnn_detect"
+  ],
+  "coco_truck_154000": [
+   "cv.dnn_detect",
+   "flow.nms"
+  ],
+  "coco_truck_166391": [
+   "cv.dnn_detect",
+   "flow.filter_detections",
+   "flow.nms"
+  ],
+  "coco_bus_15338": [
+   "cv.dnn_detect"
+  ],
+  "eight_of_diamonds_multi_template_matching_pyimagesearch": [
+   "cv.bounding_boxes",
+   "cv.color_mask_hsv",
+   "cv.crop",
+   "cv.find_contours",
+   "cv.morphology",
+   "flow.transform_detections"
+  ]
+ },
+ "report": {
+  "facets": {
+   "goal:task_type": {
+    "precision": 0.918918918918919,
+    "recall": 1.0,
+    "recall_shared_terms": 1.0,
+    "gold_terms": 60,
+    "unique_gold_terms": 0
+   },
+   "goal:target_object": {
+    "precision": 0.7391891891891891,
+    "recall": 0.8288288288288289,
+    "recall_shared_terms": 0.8288288288288289,
+    "gold_terms": 48,
+    "unique_gold_terms": 0
+   },
+   "goal:object_category": {
+    "precision": 0.6756756756756757,
+    "recall": 0.8198198198198199,
+    "recall_shared_terms": 0.8198198198198199,
+    "gold_terms": 44,
+    "unique_gold_terms": 1
+   },
+   "goal:image_conditions": {
+    "precision": 0.3698198198198198,
+    "recall": 0.6783783783783783,
+    "recall_shared_terms": 0.7509009009009009,
+    "gold_terms": 80,
+    "unique_gold_terms": 6
+   },
+   "goal:problems": {
+    "precision": 0.4436936936936936,
+    "recall": 0.5716216216216216,
+    "recall_shared_terms": 0.5671171171171171,
+    "gold_terms": 116,
+    "unique_gold_terms": 1
+   },
+   "goal+flow:task_type": {
+    "precision": 0.972972972972973,
+    "recall": 0.972972972972973,
+    "recall_shared_terms": 0.972972972972973,
+    "gold_terms": 60,
+    "unique_gold_terms": 0
+   },
+   "goal+flow:target_object": {
+    "precision": 0.7342342342342342,
+    "recall": 0.8108108108108109,
+    "recall_shared_terms": 0.8108108108108109,
+    "gold_terms": 48,
+    "unique_gold_terms": 0
+   },
+   "goal+flow:object_category": {
+    "precision": 0.6801801801801801,
+    "recall": 0.8468468468468469,
+    "recall_shared_terms": 0.8468468468468469,
+    "gold_terms": 44,
+    "unique_gold_terms": 1
+   },
+   "goal+flow:image_conditions": {
+    "precision": 0.331981981981982,
+    "recall": 0.6603603603603604,
+    "recall_shared_terms": 0.7364864864864865,
+    "gold_terms": 80,
+    "unique_gold_terms": 6
+   },
+   "goal+flow:problems": {
+    "precision": 0.49324324324324326,
+    "recall": 0.5837837837837837,
+    "recall_shared_terms": 0.5747747747747747,
+    "gold_terms": 116,
+    "unique_gold_terms": 1
+   }
+  },
+  "retrieval": {
+   "random": 0.7007473042883273,
+   "same_metric": 0.7745253050787115,
+   "predicted:goal": 0.8449310876555459,
+   "predicted:goal+flow": 0.8394613321857906,
+   "gold_tags(upper)": 0.8576243687698797
+  }
+ }
+}

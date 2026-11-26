@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import math
 import random
 import sys
 from collections import Counter, defaultdict
@@ -116,6 +117,58 @@ def build_library(train: list[dict]) -> tuple[PatternLibrary, dict]:
     return library, keys_by
 
 
+PAIRS = (("assist", "bigram"), ("assist", "frequency"), ("bigram", "frequency"))
+
+
+def sign_test_p(k: int, n: int) -> float:
+    """雙尾精確符號檢定（McNemar 精確檢定也是這個）：n 次不一致中有 k 次偏向其中一方。"""
+    if n == 0:
+        return 1.0
+    tail = sum(math.comb(n, i) for i in range(min(k, n - k) + 1)) / 2 ** n
+    return min(1.0, 2 * tail)
+
+
+def paired_comparison(per_step: list[dict], a: str, b: str, rounds: int = 10000, boot: int = 2000) -> dict:
+    """a 與 b 在同一批步驟上的成對比較。
+
+    - 逐步：前 k 名命中用 McNemar 精確檢定；名次用符號檢定（沒提出的名次當成無限大，兩者都沒提出算同名次）
+    - 以序列為單位（同一條序列的步驟彼此相關）：符號翻轉排列檢定與 bootstrap 95% 信賴區間，看前 3 名命中與 MRR 的差
+    """
+    out: dict = {}
+    for hit, k in (("hit1", 1), ("hit3", 3), ("hit5", 5)):
+        only_a = sum(1 for s in per_step if (s["ranks"][a] or 99999) <= k < (s["ranks"][b] or 99999))
+        only_b = sum(1 for s in per_step if (s["ranks"][b] or 99999) <= k < (s["ranks"][a] or 99999))
+        out[hit] = {"only_a": only_a, "only_b": only_b, "mcnemar_p": sign_test_p(only_a, only_a + only_b)}
+    a_better = sum(1 for s in per_step if (s["ranks"][a] or math.inf) < (s["ranks"][b] or math.inf))
+    b_better = sum(1 for s in per_step if (s["ranks"][b] or math.inf) < (s["ranks"][a] or math.inf))
+    out["rank"] = {"a_better": a_better, "b_better": b_better, "ties": len(per_step) - a_better - b_better,
+                   "sign_p": sign_test_p(a_better, a_better + b_better)}
+
+    episodes: dict[str, list[float]] = defaultdict(lambda: [0.0, 0.0, 0.0])  # 步數、前 3 名命中差、倒數名次差
+    for s in per_step:
+        ra, rb = s["ranks"][a], s["ranks"][b]
+        e = episodes[s["episode_id"]]
+        e[0] += 1
+        e[1] += (ra is not None and ra <= 3) - (rb is not None and rb <= 3)
+        e[2] += (1 / ra if ra else 0.0) - (1 / rb if rb else 0.0)
+    rows = list(episodes.values())
+    n_steps = sum(r[0] for r in rows)
+    rng = random.Random(0)
+    for metric, col in (("hit3_diff", 1), ("mrr_diff", 2)):
+        observed = sum(r[col] for r in rows)
+        extreme = sum(1 for _ in range(rounds)
+                      if abs(sum(r[col] if rng.random() < 0.5 else -r[col] for r in rows)) >= abs(observed) - 1e-12)
+        diffs = []
+        for _ in range(boot):
+            sample = [rows[rng.randrange(len(rows))] for _ in rows]
+            diffs.append(sum(r[col] for r in sample) / sum(r[0] for r in sample))
+        diffs.sort()
+        out[metric] = {"value": observed / n_steps, "ci95": [diffs[int(0.025 * boot)], diffs[int(0.975 * boot) - 1]],
+                       "episode_permutation_p": (extreme + 1) / (rounds + 1)}
+    out["episodes"] = len(rows)
+    return out
+
+
 def rank(candidates: list[dict], token_p: dict[str, float] | None, weight) -> list[tuple]:
     """分數 = token_p[符號] × 該候選在同符號候選中的權重比例；token_p 為 None 時只用權重。"""
     weights = {c["key"]: weight(c["key"]) + A for c in candidates}
@@ -138,11 +191,17 @@ def main() -> None:
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--labels", type=Path, default=None, help="cvflow_problem_labels.py 產生的問題類型")
     parser.add_argument("--out", type=Path, default=Path("cvflow_assist_cv_results.json"))
+    parser.add_argument("--steps-out", type=Path, default=None, help="另存每一步各排法的名次（JSONL），供其他分析使用")
+    parser.add_argument("--exclude-prefix", default="CVF2-",
+                        help="排除這個代號開頭的序列（預設排除 11/17 更新包，與 0.3 節原本的 155 條序列一致）；空字串表示不排除")
     args = parser.parse_args()
     label_file = json.loads(args.labels.read_text(encoding="utf-8")) if args.labels else {}
     service = KCoreService(make_session_factory(args.database_url))
     assist = AssistService(service)
     rows = load(service, args.case, label_file.get("labels", {}))
+    if args.exclude_prefix:
+        rows = [r for r in rows if not r["episode_id"].startswith(args.exclude_prefix)]
+    print(f"episodes {len(rows)}, steps {sum(len(r['steps']) for r in rows)}", flush=True)
     order = list(range(len(rows)))
     random.Random(0).shuffle(order)
 
@@ -153,6 +212,7 @@ def main() -> None:
     by_context = {name: {m: defaultdict(Counter) for m in ("assist", f"+{name}")} for name in CONTEXTS}
     covered = 0
     chosen_k = []
+    per_step: list[dict] = []
 
     for fold in range(args.folds):
         test_idx = set(order[fold::args.folds])
@@ -221,6 +281,9 @@ def main() -> None:
                 }
                 covered += key in rankings["assist"]
                 group = "labelled" if ctx["problem"] is not None else "unlabelled"
+                per_step.append({"episode_id": row["episode_id"], "fold": fold, "step": len(prefix) + 1, "op": step["op"],
+                                 "ranks": {name: (ordered.index(key) + 1 if key in ordered else None)
+                                           for name, ordered in rankings.items()}})
                 for name, ordered in rankings.items():
                     r = ordered.index(key) + 1 if key in ordered else None
                     hits = {"n": 1, "hit1": r == 1, "hit3": r is not None and r <= 3, "hit5": r is not None and r <= 5,
@@ -250,8 +313,11 @@ def main() -> None:
                                            "assist": by_context[name]["assist"][value]["hit3"] / by_context[name]["assist"][value]["n"],
                                            f"+{name}": by_context[name][f"+{name}"][value]["hit3"] / by_context[name][f"+{name}"][value]["n"]}
                                    for value in sorted(by_context[name]["assist"])} for name in CONTEXTS},
+        "paired": {f"{a} vs {b}": paired_comparison(per_step, a, b) for a, b in PAIRS},
     }
     args.out.write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
+    if args.steps_out:
+        args.steps_out.write_text("".join(json.dumps(s, ensure_ascii=False) + "\n" for s in per_step), encoding="utf-8")
     print(f"\nsteps={steps} coverage={covered / steps:.3f}")
     for g in groups:
         print(f"[{g}] steps={results['methods'][g]['assist']['steps']}")
@@ -265,6 +331,14 @@ def main() -> None:
         print(f"hit3 by {name}:")
         for value, v in results["hit3_by_context"][name].items():
             print(f"  {value:16s} steps={v['steps']:4d} assist={v['assist']:.2f} +{name}={v['+' + name]:.2f}")
+    print("paired comparisons:")
+    for pair, v in results["paired"].items():
+        print(f"  {pair:22s} hit3 only_a={v['hit3']['only_a']} only_b={v['hit3']['only_b']} p={v['hit3']['mcnemar_p']:.3f}"
+              f" | rank a>b={v['rank']['a_better']} b>a={v['rank']['b_better']} p={v['rank']['sign_p']:.3f}"
+              f" | hit3 diff={v['hit3_diff']['value']:+.3f} CI=[{v['hit3_diff']['ci95'][0]:+.3f}, {v['hit3_diff']['ci95'][1]:+.3f}]"
+              f" p={v['hit3_diff']['episode_permutation_p']:.3f}"
+              f" | mrr diff={v['mrr_diff']['value']:+.3f} CI=[{v['mrr_diff']['ci95'][0]:+.3f}, {v['mrr_diff']['ci95'][1]:+.3f}]"
+              f" p={v['mrr_diff']['episode_permutation_p']:.3f}")
     print(f"written {args.out}")
 
 

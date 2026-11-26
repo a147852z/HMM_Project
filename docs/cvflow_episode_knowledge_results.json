@@ -1,0 +1,4247 @@
+{
+ "prompt_version": "episode-knowledge-v2",
+ "model": "google/gemma-4-26b-a4b",
+ "episodes": [
+  {
+   "episode_id": "CVFLOW-codex-t-coco_motorcycle_19109-4060ff",
+   "teacher": "codex",
+   "steps": 9,
+   "truth": 12,
+   "counts": [
+    7,
+    9,
+    19,
+    16,
+    15,
+    16,
+    12,
+    17,
+    17,
+    12
+   ],
+   "passes": [
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "add_step",
+    "remove_step",
+    "param_tune",
+    "add_step",
+    "replace_step",
+    "replace_step",
+    "param_tune"
+   ],
+   "has_text": true,
+   "seconds": 50.8,
+   "prompt_chars": 11837,
+   "error": null,
+   "knowledge": {
+    "task_summary": "針對密集停放的機車進行計數與框選任務，目標是精確找出 12 輛機車。流程從單一影像偵測演進到使用多重重疊裁切區域（Crop）偵測，並透過調整 NMS 與增加尺寸篩選節點來解決漏框、合框及重複框的問題。",
+    "final_solution": "採用三區塊重疊裁切策略（左、中、右），降低各區塊的 conf_threshold 以捕捉遮擋物體，並在合併偵測結果後，透過 filter_detections 限制框的寬度範圍（min_w, max_w）以及使用較低的 nms_all (iou_threshold: 0.25) 來去除重疊重複框。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：單一影像偵測，conf_threshold=0.2, nms_threshold=0.45。",
+      "why": "建立基準線。",
+      "outcome": "count: 7, formal_score: pass (Note: count < ground_truth)"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "降低 detect_motorcycles 的 conf_threshold 至 0.12，提高 nms_threshold 至 0.65。",
+      "why": "解決遮擋導致的漏框與相鄰機車被合併的問題。",
+      "outcome": "count: 9, formal_score: pass (Note: count < ground_truth), comparison: count_closer"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "引入重疊裁切偵測機制（crop_left, crop_right），並將結果合併與進行 nms_all。",
+      "why": "避免密集機車在原圖中被合併成一個寬框，透過放大目標比例提升偵測率。",
+      "outcome": "count: 19, formal_score: fail, comparison: count_further"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "加入 filter_small (min_w/h) 與調整 nms_all iou_threshold 至 0.5。",
+      "why": "解決裁切合併後產生的重複框問題，並過濾不合理的碎片框。",
+      "outcome": "count: 16, formal_score: pass, comparison: count_closer"
+     },
+     {
+      "step": 4,
+      "operation_type": "remove_step",
+      "what": "移除 filter_small，並將 nms_all iou_threshold 調低至 0.35。",
+      "why": "嘗試透過更嚴格的 NMS 來合併重疊框。",
+      "outcome": "count: 15, formal_score: pass, comparison: count_closer"
+     },
+     {
+      "step": 5,
+      "operation_type": "param_tune",
+      "what": "將 nms_all iou_threshold 調回 0.5。",
+      "why": "觀察到先前版本可能存在重複框或碎片框，嘗試調整抑制強度。",
+      "outcome": "count: 16, formal_score: pass, comparison: count_further"
+     },
+     {
+      "step": 6,
+      "operation_type": "add_step",
+      "what": "在各裁切區塊加入 filter (min_w: 40, min_h: 50) 並將 nms_all iou_threshold 調回 0.35。",
+      "why": "透過分區過濾掉不完整的局部框，減少重複偵測的干擾。",
+      "outcome": "count: 12, formal_score: pass, comparison: count_closer"
+     },
+     {
+      "step": 7,
+      "operation_type": "replace_step",
+      "what": "將雙區塊改為三區塊重疊裁切（增加 crop_middle），並大幅降低各偵測節點 conf_threshold 至 0.08，nms_all iou_threshold 改為 0.45。",
+      "why": "提升密集區域的覆蓋率，讓機車在各區塊佔比更大。",
+      "outcome": "count: 17, formal_score: pass, comparison: count_further"
+     },
+     {
+      "step": 8,
+      "operation_type": "replace_step",
+      "what": "加入 filter_boxes (限制 max_w: 110) 並將 nms_all iou_threshold 調回 0.5。",
+      "why": "防止單一偵測框跨越多輛機車，並抑制重複框。",
+      "outcome": "count: 17, formal_score: pass, comparison: unclear"
+     },
+     {
+      "step": 9,
+      "operation_type": "param_tune",
+      "what": "調整 filter_boxes (min_w: 28) 並將 nms_all iou_threshold 調低至 0.25。",
+      "why": "針對左側與中間仍存在的明顯重複框，使用更嚴格的 IoU 門檻進行去重。",
+      "outcome": "count: 12, formal_score: pass, comparison: count_closer"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 2,
+      "description": "從單圖偵測轉向多重裁切區域偵測，解決了漏框問題但引入了大量重複框。"
+     },
+     {
+      "step": 6,
+      "description": "首次達到正確數量 (12)，但後續為了優化框的完整性與穩定性進行了結構調整。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "單一影像偵測",
+      "why_failed": "無法處理密集排列與遮擋，導致嚴重漏框 (count=7)。",
+      "evidence_steps": [
+       0,
+       1
+      ]
+     },
+     {
+      "approach": "僅使用重疊裁切但未有效去重",
+      "why_failed": "重複偵測同一物體導致數量爆增 (count=19)。",
+      "evidence_steps": [
+       2
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "密集排列或有遮擋的目標",
+      "action": "使用 cv.crop 建立重疊區域並降低 detect_motorcycles 的 conf_threshold。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       2,
+       7
+      ]
+     },
+     {
+      "condition": "多區塊偵測合併後產生重複框",
+      "action": "調低 nms_all 的 iou_threshold 或加入 filter_detections 限制 min_w/max_w。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       3,
+       6,
+       9
+      ]
+     },
+     {
+      "condition": "偵測框跨越多個目標",
+      "action": "在 filter_detections 中設定 max_w 參數。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       8
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold",
+       "cv.crop",
+       "detect_motorcycles"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "mixed",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": true,
+      "mentioned": [
+       "iou_threshold",
+       "max_w",
+       "min_w",
+       "nms_all"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "max_w"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "contradicted",
+     "supported"
+    ],
+    "bad_refs": 1
+   }
+  },
+  {
+   "episode_id": "CVFLOW-codex-r-coco_truck_293324-36777e",
+   "teacher": "codex",
+   "steps": 7,
+   "truth": 2,
+   "counts": [
+    7,
+    5,
+    8,
+    7,
+    5,
+    5,
+    7,
+    4
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "add_step",
+    "replace_step",
+    "replace_step",
+    "replace_step",
+    "replace_step",
+    "replace_step",
+    "add_step"
+   ],
+   "has_text": true,
+   "seconds": 52.3,
+   "prompt_chars": 35653,
+   "error": null,
+   "knowledge": {
+    "task_summary": "目標是偵測影像中的卡車數量（正解為 2 框）。流程演變過程主要在解決三個核心問題：1. 小尺寸物體辨識不足；2. 車輛被拆解成多個局部碎片框（如駕駛室與罐體分開）；3. 非卡車物體（如牽引車、地勤設備）的誤判。",
+    "final_solution": "目前流程仍未通過，最終版本嘗試透過左側分支使用遮罩合併（detections_to_mask）來處理局部框問題，並結合寬窄框分支與 IoU 門檻移除碎片，但仍無法精準達成目標。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：使用左右裁切、放大與偵測。",
+      "why": "嘗試透過局部放大提升小目標辨識率。",
+      "outcome": "count: 7, score: fail"
+     },
+     {
+      "step": 1,
+      "operation_type": "add_step",
+      "what": "加入 cv.resize (4x) 與 filter_width (max_w=64)。",
+      "why": "放大圖以利偵測，並嘗試用寬度限制排除跨車的大框。",
+      "outcome": "count: 5, score: fail (compared to v0: count 7 -> 5, expected: count_closer)"
+     },
+     {
+      "step": 2,
+      "operation_type": "replace_step",
+      "what": "將左側搜尋拆分為兩個重疊視窗 (crop_left_a/b)，並降低信心門檻至 0.15，移除 filter_width。",
+      "why": "解決漏抓白色車輛與油罐車部分框的問題，避免寬度限制誤刪真實卡車。",
+      "outcome": "count: 8, score: fail (compared to v1: count 5 -> 8, expected: count_further)"
+     },
+     {
+      "step": 3,
+      "operation_type": "replace_step",
+      "what": "引入寬框 (select_wide) 與窄框 (select_narrow) 分支，並使用 iou_filter (remove_inner_fragments) 移除小框。",
+      "why": "處理重複計數與碎片框問題（如罐體與駕駛室分開）。",
+      "outcome": "count: 7, score: fail (compared to v2: count 8 -> 7, expected: count_closer)"
+     },
+     {
+      "step": 4,
+      "operation_type": "replace_step",
+      "what": "加入基於座標的排除區 (exclude_tractor/trailer_region) 與 mask 處理。",
+      "why": "針對特定位置的牽引車與拖板進行硬性排除。",
+      "outcome": "count: 5, score: fail (compared to v3: count 7 -> 5, expected: count_closer)"
+     },
+     {
+      "step": 5,
+      "operation_type": "replace_step",
+      "what": "修正所有分支的座標回填邏輯，並改用原圖裁切後放大作為檢查圖。",
+      "why": "解決 v4 產生的負座標與框位偏移問題（座標轉換錯誤）。",
+      "outcome": "count: 5, score: fail (compared to v4: count 5 -> 5, expected: unclear)"
+     },
+     {
+      "step": 6,
+      "operation_type": "replace_step",
+      "what": "調整左側裁切範圍，並將 NMS 門檻調高至 0.6。",
+      "why": "嘗試釐清左側局部框與中央車頭的歸屬，減少重複計數。",
+      "outcome": "count: 7, score: fail (compared to v5: count 5 -> 7, expected: count_further)"
+     },
+     {
+      "step": 7,
+      "operation_type": "add_step",
+      "what": "左側分支加入 detections_to_mask 與連通輪廓合併，並維持中央分支的寬窄框邏輯。",
+      "why": "嘗試將左側拆散的零件框（槽罐與駕駛室）自動合成完整車身框。",
+      "outcome": "count: 4, score: fail (compared to v6: count 7 -> 4, expected: count_closer)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "從 v0 到 v1，透過放大與寬度限制嘗試過濾誤判，數量減少但仍未達標。"
+     },
+     {
+      "step": 5,
+      "description": "發現座標轉換邏輯錯誤導致框位完全偏移（出現負值），此為流程穩定性的關鍵轉折。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "使用單一寬度門檻 (filter_width)",
+      "why_failed": "可能誤刪較寬的真實卡車。",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "approach": "硬性排除特定區域 (exclusion_regions)",
+      "why_failed": "雖然減少了誤判，但若座標轉換不精準或門檻設定不當，仍無法解決核心的碎片框問題。",
+      "evidence_steps": [
+       4
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "物體被拆解為多個局部框時",
+      "action": "使用 flow.detections_to_mask 結合連通輪廓合併，或建立寬窄框分支並以 iou_filter (keep: no_overlap) 處理碎片。",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       3,
+       7
+      ]
+     },
+     {
+      "condition": "使用裁切與放大流程時",
+      "action": "必須嚴格檢查 restore_detections 的 scale 與 dx/dy 參數，確保座標回填公式為 x = x0 + x_zoom / sx。",
+      "expected_change": "unclear",
+      "evidence_steps": [
+       5
+      ]
+     },
+     {
+      "condition": "存在非目標物體（如牽引車）誤判時",
+      "action": "可使用 cv.draw_rectangle 建立排除區，並透過 flow.iou_filter 配合 candidate_centers 進行移除。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       4
+      ]
+     }
+    ],
+    "open_questions": [
+     "在 v7 中，左側合併後的框是否能正確涵蓋被裁切邊界截斷的車身？",
+     "目前的偵測器對於『牽引車』與『卡車』的特徵區分度是否已達極限？"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.detections_to_mask",
+       "keep"
+      ]
+     },
+     {
+      "action_check": "unsupported",
+      "direction_check": "n/a",
+      "effect_check": "unverifiable",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "scale"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "candidate_centers",
+       "cv.draw_rectangle",
+       "flow.iou_filter"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-codex-t-coco_bus_15517-254c7c",
+   "teacher": "codex",
+   "steps": 4,
+   "truth": 8,
+   "counts": [
+    5,
+    15,
+    13,
+    11,
+    7
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "add_step",
+    "param_tune",
+    "param_tune",
+    "remove_step"
+   ],
+   "has_text": true,
+   "seconds": 32.8,
+   "prompt_chars": 7969,
+   "error": null,
+   "knowledge": {
+    "task_summary": "針對影像中的公車進行偵測與計數，目標是找出 8 輛公車。流程經歷了從單一全圖偵測，到引入區域裁切（Crop）以提升遠處小目標偵測率，再到嘗試調整 NMS 與信心門檻的過程。",
+    "final_solution": "未達成目標（最終版數到 7 個，正解 8 個，且判分未通過）。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：全圖偵測。",
+      "why": "建立基準線。",
+      "outcome": "count: 5, ground_truth: 8, score: fail"
+     },
+     {
+      "step": 1,
+      "operation_type": "add_step",
+      "what": "引入區域裁切偵測（crop_left/middle/right）並降低 conf_threshold 至 0.15，最後合併結果。",
+      "why": "解決遠處小公車與遮擋問題，透過分區增加目標在影像中的佔比。",
+      "outcome": "count: 15, ground_truth: 8, score: fail (compared to v0: more_detections)"
+     },
+     {
+      "step": 2,
+      "operation_type": "param_tune",
+      "what": "調高所有偵測節點的 conf_threshold 至 0.25，並將 suppress_overlaps 的 iou_threshold 調低至 0.25。",
+      "why": "減少因降低門檻導致的誤框與重複框問題。",
+      "outcome": "count: 13, ground_truth: 8, score: fail (compared to v1: fewer_detections)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "重新調整裁切區域座標與大小，並將偵測門檻調回 0.15。",
+      "why": "嘗試優化分區範圍以應對密集車場的重疊問題。",
+      "outcome": "count: 11, ground_truth: 8, score: fail (compared to v2: more_detections)"
+     },
+     {
+      "step": 4,
+      "operation_type": "remove_step",
+      "what": "移除中間與右側的裁切偵測節點，僅保留左側大範圍裁切（crop_left）與全圖偵測。",
+      "why": "簡化流程，嘗試減少因分區過細導致的重複框或合併錯誤。",
+      "outcome": "count: 7, ground_truth: 8, score: fail (compared to v3: fewer_detections)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "從全圖偵測轉向「分區裁切 + 全圖」的混合策略，顯著增加了偵測數量（5 -> 15），但也引入了大量重複框與誤框。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "使用多個小區域裁切 (Crop) 並合併",
+      "why_failed": "雖然提升了召回率，但導致嚴重的重複偵測（同一輛車在不同區域被框到）與 NMS 無法有效處理密集遮擋下的重疊問題。",
+      "evidence_steps": [
+       1,
+       2,
+       3
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當目標物體在影像中佔比極小或分佈於特定區域時",
+      "action": "使用 cv.crop 進行局部放大偵測，但須搭配精確的 flow.transform_detections (dx, dy) 將座標還原。",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "condition": "當偵測結果出現大量重疊框（如一個大框包住小框）時",
+      "action": "調整 suppress_overlaps 的 iou_threshold 或在合併後加入邏輯判斷（如面積比例篩選）。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       2,
+       3
+      ]
+     }
+    ],
+    "open_questions": [
+     "第 4 版移除中間與右側裁切後，數量從 11 降至 7（低於正解 8），顯示單純靠左側大範圍裁切無法完全補足遺漏的目標，但保留多個小區域又會造成重複框，如何在『增加召回』與『減少重複』之間取得平衡？",
+     "是否有更有效的節點可以處理「車身片段」的合併問題（如紀錄中提到的需求）？"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.crop",
+       "flow.transform_detections"
+      ]
+     },
+     {
+      "action_check": "partial",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "iou_threshold",
+       "suppress_overlaps"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-codex-t-coco_car_266981-5fdf92",
+   "teacher": "codex",
+   "steps": 9,
+   "truth": 8,
+   "counts": [
+    3,
+    3,
+    31,
+    5,
+    0,
+    5,
+    5,
+    7,
+    6,
+    6
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [
+    "正解事後更正7"
+   ],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "add_step",
+    "replace_step",
+    "replace_step",
+    "param_tune",
+    "add_step",
+    "param_tune",
+    "param_tune"
+   ],
+   "has_text": true,
+   "seconds": 47.4,
+   "prompt_chars": 7574,
+   "error": null,
+   "knowledge": {
+    "task_summary": "目標是偵測影像中的汽車數量（detect_only），正解為 8 框。流程經歷了從單一模型到多模型合併，並多次調整信心門檻與 NMS 參數的過程。",
+    "final_solution": "尚未達成正式通過（最後一版數到 6 個，正解 8 個）。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程使用 yolox_s 模型。",
+      "why": "N/A",
+      "outcome": "count: 3, score: fail (target: 8)"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 detect_cars 的 conf_threshold 從 0.25 調降至 0.1。",
+      "why": "觀察到左側、右側及中間有車輛漏檢，嘗試降低門檻以捕捉遠處或部分遮擋的汽車。",
+      "outcome": "count: 3, score: fail (compared to v0: unclear)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "更換模型為 nanodet，提高 nms_threshold 至 0.6，並新增 overlay_cars 節點。",
+      "why": "降低門檻後框數未增加，改用不同模型嘗試取得不同候選框，並提高 NMS 減少相鄰車輛互相抑制。",
+      "outcome": "count: 31, score: fail (compared to v1: count_further)"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "新增 suppress_duplicates (flow.nms) 節點，iou_threshold 設為 0.4；將 detect_cars 的 conf_threshold 調回 0.25，nms_threshold 設為 0.4。",
+      "why": "解決 v2 中多個框重疊、反覆框住同一批車的問題，並提高信心門檻減少行人誤檢。",
+      "outcome": "count: 5, score: fail (compared to v2: count_closer)"
+     },
+     {
+      "step": 4,
+      "operation_type": "replace_step",
+      "what": "移除 detect_cars，改用 cv.hog_svm_detect (vehicle_hog)，設定 upscale 為 2。",
+      "why": "利用 HOG 特徵依車身梯度找框，並放大輸入以改善遠處小車偵測。",
+      "outcome": "count: 0, score: fail (compared to v3: count_further)"
+     },
+     {
+      "step": 5,
+      "operation_type": "replace_step",
+      "what": "移除 vehicle_hog，換回 cv.dnn_detect (nanodet)，conf_threshold 0.25, nms_threshold 0.3；將 suppress_duplicates 的 iou_threshold 調至 0.35。",
+      "why": "HOG 未能找到車輛。嘗試降低 nanodet 內部 NMS 門檻並配合 flow.nms 去除重疊框。",
+      "outcome": "count: 5, score: fail (compared to v4: count_closer)"
+     },
+     {
+      "step": 6,
+      "operation_type": "param_tune",
+      "what": "將 suppress_duplicates 的 iou_threshold 從 0.35 調回 0.4。",
+      "why": "觀察到中間有四個小框擠在一起且僅框到局部，嘗試調整 NMS 參數以處理碎片框與重疊問題。",
+      "outcome": "count: 5, score: fail (compared to v5: unclear)"
+     },
+     {
+      "step": 7,
+      "operation_type": "add_step",
+      "what": "新增 nanodet 模型與 flow.merge_detections 節點，將 YOLOX 與 Nanodet 的結果合併。",
+      "why": "觀察到 YOLOX 有漏框而 Nanodet 有碎框/重疊問題，嘗試透過合併兩者候選框來補足漏檢並減少重複。",
+      "outcome": "count: 7, score: fail (compared to v6: count_closer)"
+     },
+     {
+      "step": 8,
+      "operation_type": "param_tune",
+      "what": "將 suppress_duplicates 的 iou_threshold 從 0.4 調降至 0.25。",
+      "why": "觀察到左側大框與內小框重疊（重複計數），嘗試用較低的 IoU 門檻抑制重複框。",
+      "outcome": "count: 6, score: fail (compared to v7: count_further)"
+     },
+     {
+      "step": 9,
+      "operation_type": "param_tune",
+      "what": "將 detect_cars 與 nanodet 的 conf_threshold 同時調降至 0.2，nanodet nms_threshold 調至 0.45。",
+      "why": "觀察到遮擋區（x=175–235）仍有疑似未框出的車輛，嘗試降低門檻補足漏檢。",
+      "outcome": "count: 6, score: fail (compared to v8: unclear)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 2,
+      "description": "從低門檻偵測轉向模型更換與 NMS 管理，導致數量從 3 暴增至 31。"
+     },
+     {
+      "step": 7,
+      "description": "引入多模型合併策略 (Merge Detections)，使數量最接近正解 (7/8)。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "cv.hog_svm_detect",
+      "why_failed": "在該場景下完全無法偵測到車輛 (count: 0)。",
+      "evidence_steps": [
+       4
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當出現大量重疊框（重複計數）時",
+      "action": "調整 flow.nms 的 iou_threshold 或檢視偵測器本身的 nms_threshold。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       3,
+       8
+      ]
+     },
+     {
+      "condition": "當出現漏檢（特別是遠處或遮擋物）時",
+      "action": "降低 cv.dnn_detect 的 conf_threshold 或使用 flow.merge_detections 合併不同模型結果。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       1,
+       7,
+       9
+      ]
+     }
+    ],
+    "open_questions": [
+     "在第 9 版降低門檻後，為何數量沒有增加反而維持 6 個？是否因為 NMS 過於強勢將新出的框過濾掉了？",
+     "合併 YOLOX 與 Nanodet 後（第 7 版），具體的漏檢位置在哪裡？"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 0.5,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.nms",
+       "iou_threshold",
+       "nms_threshold"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "partial",
+      "actually_closer": 0.3333333333333333,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold",
+       "cv.dnn_detect",
+       "flow.merge_detections"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-codex-t-coco_truck_169996-3aefea",
+   "teacher": "codex",
+   "steps": 4,
+   "truth": 2,
+   "counts": [
+    2,
+    2,
+    2,
+    1,
+    1
+   ],
+   "passes": [
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "param_tune",
+    "add_step",
+    "param_tune"
+   ],
+   "has_text": true,
+   "seconds": 29.2,
+   "prompt_chars": 3277,
+   "error": null,
+   "knowledge": {
+    "task_summary": "任務目標為計算影像中卡車的總數（count_and_boxes），正解為 2 框。",
+    "final_solution": "初始流程透過 cv.dnn_detect 偵測 truck 並計數，在第 0 版即達到正確結果。後續修改嘗試透過調整信心門檻與增加尺寸篩選來排除誤判的白色廂型車，但導致漏掉正解物體而未通過。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程 (Initial Version)",
+      "why": "建立基礎偵測與計數流程",
+      "outcome": "count: 2, ground_truth: 2, result: pass"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 truck_detect 的 conf_threshold 從 0.2 提高至 0.35",
+      "why": "嘗試排除被誤判為 truck 的白色廂型車，並檢查左側貨車是否仍能被偵測。",
+      "outcome": "count: 2, ground_truth: 2, result: pass (compared to step 0: count_closer/no change in score)"
+     },
+     {
+      "step": 2,
+      "operation_type": "param_tune",
+      "what": "將 truck_detect 的 conf_threshold 從 0.35 提高至 0.6",
+      "why": "前兩輪提高門檻仍保留兩個框，嘗試進一步排除白色廂型車。",
+      "outcome": "count: 2, ground_truth: 2, result: pass (compared to step 1: count_closer/no change in score)"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "新增 truck_filter 節點 (flow.filter_detections)，設定 min_w 為 200",
+      "why": "提高信心門檻仍無法排除寬度僅 154 像素的白色廂型車，改用最小框寬篩選以保留寬度 270 像素的貨車。",
+      "outcome": "count: 1, ground_truth: 2, result: fail (compared to step 2: count_further)"
+     },
+     {
+      "step": 4,
+      "operation_type": "param_tune",
+      "what": "重設 truck_filter 的部分參數（min_score, min_h 等）為未設定狀態",
+      "why": "觀察到左側貨車框仍包含多餘物體，且白色廂型車已被排除。",
+      "outcome": "count: 1, ground_truth: 2, result: fail (compared to step 3: unclear)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 3,
+      "description": "從依賴信心門檻（conf_threshold）轉向依賴幾何尺寸篩選（min_w），導致偵測數量從 2 降至 1，造成漏判。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "透過提高 cv.dnn_detect 的 conf_threshold 來排除誤判物體",
+      "why_failed": "白色廂型車的信心分數可能仍高於設定門檻，或提高門檻會同時影響到目標物體的偵測。",
+      "evidence_steps": [
+       1,
+       2
+      ]
+     },
+     {
+      "approach": "透過增加 flow.filter_detections 的 min_w 參數來排除誤判物體",
+      "why_failed": "該篩選條件過於嚴苛，導致正解中的卡車也被排除（或無法滿足條件）。",
+      "evidence_steps": [
+       3,
+       4
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當物體類別外觀極其相似時（如卡車與廂型車）",
+      "action": "cv.dnn_detect 的 conf_threshold 可能無法有效區分特定誤判，需考慮結合幾何特徵或增加其他分類節點。",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       1,
+       2
+      ]
+     },
+     {
+      "condition": "使用 flow.filter_detections 的 min_w 或 min_h 進行篩選時",
+      "action": "需謹慎評估正解物體的尺寸範圍，避免因設定過大導致漏判。",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       3
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold",
+       "cv.dnn_detect"
+      ]
+     },
+     {
+      "action_check": "unverifiable",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": []
+     }
+    ],
+    "failed_attempts": [
+     "contradicted",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-codex-t-coco_motorcycle_245448-644148",
+   "teacher": "codex",
+   "steps": 9,
+   "truth": 2,
+   "counts": [
+    2,
+    2,
+    5,
+    5,
+    6,
+    6,
+    4,
+    6,
+    7,
+    5
+   ],
+   "passes": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "add_step",
+    "param_tune",
+    "param_tune",
+    "param_tune",
+    "add_step",
+    "replace_step",
+    "replace_step"
+   ],
+   "has_text": true,
+   "seconds": 54.6,
+   "prompt_chars": 14436,
+   "error": null,
+   "knowledge": {
+    "task_summary": "針對影像中的機車進行偵測與計數，目標是精確找出所有機車。由於場景包含前景大型機車與背景車庫內密集的小型機車，挑戰在於如何避免將相鄰小車合併成一框，同時防止重複偵測或誤判背景零件。",
+    "final_solution": "尚未達成（最終版仍未通過）。目前的策略是結合「整圖偵測」與「多區域 ROI 裁切放大偵測」，並透過座標轉換與 NMS 去重來整合結果。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：load_image -> detect_motorcycles (yolox_s) -> count_motorcycles",
+      "why": "建立基準線。",
+      "outcome": "count: 2, ground_truth: 2, score: pass"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "降低 detect_motorcycles 的 conf_threshold (0.2 -> 0.15) 並提高 nms_threshold (0.45 -> 0.6)。",
+      "why": "觀察到車庫內小機車被併成一框，希望透過降低信心門檻增加候選框，並提高 NMS 門檻減少合併。",
+      "outcome": "count: 2, ground_truth: 2, score: fail (註：數量雖對但未通過，可能為框的精確率問題)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "加入 crop_garage -> detect_garage -> restore_coords -> merge -> deduplicate 流程。",
+      "why": "解決車庫內機車太小或被併成一框的問題，透過 ROI 偵測增加解析度。",
+      "outcome": "count: 5, ground_truth: 2, score: fail (數量偏多)"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "在 crop_garage 後加入 upscale_garage (cv.resize)，並調整 restore_coords 的 scale 與 detect_garage 的 conf_threshold。",
+      "why": "車庫機車排列密集，透過放大裁切圖提升偵測品質，並嘗試解決重複計數問題。",
+      "outcome": "count: 5, ground_truth: 2, score: fail (數量偏多)"
+     },
+     {
+      "step": 4,
+      "operation_type": "param_tune",
+      "what": "調整 crop_garage 的範圍（縮小以避開人員與前景機車），並調整 deduplicate 的 iou_threshold (0.5 -> 0.65)。",
+      "why": "避免 ROI 包含不相關物體造成誤判。",
+      "outcome": "count: 6, ground_truth: 2, score: fail (數量偏多)"
+     },
+     {
+      "step": 5,
+      "operation_type": "param_tune",
+      "what": "調整 crop_garage 範圍、upscale_garage 尺寸及 deduplicate 的 iou_threshold (0.65 -> 0.45)。",
+      "why": "嘗試完整涵蓋車庫開口，並透過更嚴格的 NMS 合併重複框。",
+      "outcome": "count: 6, ground_truth: 2, score: fail (數量偏多)"
+     },
+     {
+      "step": 6,
+      "operation_type": "param_tune",
+      "what": "調整 crop_garage 範圍、detect_garage 的 conf/nms 以及 upscale_garage 尺寸。",
+      "why": "提高放大倍率並調整偵測參數，試圖讓每輛機車各保留一框。",
+      "outcome": "count: 4, ground_truth: 2, score: fail (數量偏多)"
+     },
+     {
+      "step": 7,
+      "operation_type": "add_step",
+      "what": "新增 crop_bay_right -> upscale_bay_right -> detect_bay_right -> restore_bay_right 流程，並使用 merge_full。",
+      "why": "將單一車庫 ROI 分解為更精確的區域偵測（兩個開口），增加小車辨識率。",
+      "outcome": "count: 6, ground_truth: 2, score: fail (數量偏多)"
+     },
+     {
+      "step": 8,
+      "operation_type": "replace_step",
+      "what": "新增 crop_glass_area 流程，並加入 filter_small 節點。",
+      "why": "針對玻璃後方區域進行專門偵測，並嘗試過濾掉不符合條件的小框。",
+      "outcome": "count: 7, ground_truth: 2, score: fail (數量偏多)"
+     },
+     {
+      "step": 9,
+      "operation_type": "replace_step",
+      "what": "收緊三個 ROI (crop_bay_right, crop_garage, crop_glass_area) 的範圍，並將 upscale 倍率改為 fx=4, fy=4。",
+      "why": "精確鎖定可見機車位置，透過大幅放大提升小目標偵測能力，同時降低各區域偵測門檻。",
+      "outcome": "count: 5, ground_truth: 2, score: fail (數量偏多)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 2,
+      "description": "從單一整圖偵測轉向「ROI 裁切 + 局部偵測」的混合架構，這是應對密集小目標的核心策略。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "單純調整全圖偵測參數 (Step 1)",
+      "why_failed": "無法解決小目標被併框或解析度不足的問題。",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "approach": "過度增加 ROI 或降低門檻導致重複計數 (Step 2-9)",
+      "why_failed": "雖然增加了偵測機會，但不同區域的框或同一輛車的不同部分產生的框在合併時未能有效去重。",
+      "evidence_steps": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當目標物體密集且尺寸差異大時",
+      "action": "使用 cv.crop 鎖定特定區域並搭配 cv.resize (upscale) 增加局部解析度。",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       2,
+       3
+      ]
+     },
+     {
+      "condition": "當偵測結果出現大量重疊框時",
+      "action": "調整 flow.nms 的 iou_threshold 或使用 flow.merge_detections。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       5,
+       6
+      ]
+     },
+     {
+      "condition": "當 ROI 包含過多背景或干擾物時",
+      "action": "精確調整 cv.crop 的 x, y, w, h 參數以收緊範圍。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       4,
+       9
+      ]
+     }
+    ],
+    "open_questions": [
+     "為何在第 0 版（初始流程）數量與正解一致但正式判分卻是「未通過」？（註：根據規則，正式判分不看數量，可能代表框的精確率不足）",
+     "目前的重複計數問題，究竟是因為 NMS 門檻太低、ROI 重疊過多，還是不同偵測節點對同一物體的判定差異所致？"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.crop",
+       "cv.resize"
+      ]
+     },
+     {
+      "action_check": "partial",
+      "direction_check": "n/a",
+      "effect_check": "partial",
+      "actually_closer": 0.5,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.merge_detections",
+       "flow.nms",
+       "iou_threshold"
+      ]
+     },
+     {
+      "action_check": "unsupported",
+      "direction_check": "n/a",
+      "effect_check": "partial",
+      "actually_closer": 0.5,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.crop"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-codex-t-coco_car_166391-dae1bb",
+   "teacher": "codex",
+   "steps": 5,
+   "truth": 6,
+   "counts": [
+    5,
+    6,
+    6,
+    6,
+    6,
+    8
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [
+    "正解事後更正8"
+   ],
+   "ops": [
+    "add_step",
+    "remove_step",
+    "param_tune",
+    "replace_step",
+    "replace_step"
+   ],
+   "has_text": true,
+   "seconds": 42.4,
+   "prompt_chars": 7216,
+   "error": null,
+   "knowledge": {
+    "task_summary": "目標是偵測影像中的汽車數量（總共 6 輛）。經過多次嘗試，從單一 DNN 模型調整到結合 HOG 方法，最後採用局部裁切放大偵測的策略，雖然檢出數量增加，但始終未能通過正式判分。",
+    "final_solution": "未達成目標。最終版本透過在特定區域（白色 SUV 附近）進行 cv.crop 與 cv.resize 後再進行 cv.dnn_detect 的方式來補足漏檢，但導致數量過多（8 個）且仍未通過正式判分。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：使用 yolox_s 模型，conf_threshold 0.18。",
+      "why": "基準版本。",
+      "outcome": "count: 5, ground_truth: 6, score: fail"
+     },
+     {
+      "step": 1,
+      "operation_type": "add_step",
+      "what": "增加 upscale (2x), filter_small (min_w:8, min_h:6), deduplicate (nms), restore_coordinates；並將 detect_cars 的 conf_threshold 調降至 0.12。",
+      "why": "解決遠處小目標與低對比車輛漏檢問題，並去除重複框。",
+      "outcome": "count: 6, ground_truth: 6, score: fail (比較第 0 版：count_closer)"
+     },
+     {
+      "step": 2,
+      "operation_type": "remove_step",
+      "what": "移除 filter_small；將 upscale 改為指定解析度 (1920x1281)；將 detect_cars 的 conf_threshold 調降至 0.08；調整 restore_coordinates scale 為 0.333。",
+      "why": "嘗試透過更大倍率的放大與更低的門檻來捕捉白色 SUV 與中央貨車。",
+      "outcome": "count: 6, ground_truth: 6, score: fail (比較第 1 版：unclear)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "將 upscale 的參數改為 fx=3, fy=3。",
+      "why": "進一步放大影像以增加小車偵測機會。",
+      "outcome": "count: 6, ground_truth: 6, score: fail (比較第 2 版：unclear)"
+     },
+     {
+      "step": 4,
+      "operation_type": "replace_step",
+      "what": "移除 upscale 與 restore_coordinates；新增 hog_vehicles (cv.hog_svm_detect) 與 merge_candidates；將 detect_cars 的 conf_threshold 調降至 0.04。",
+      "why": "結合 DNN 與 HOG 兩種偵測器以互相補足漏檢（特別是中間與遠處車輛）。",
+      "outcome": "count: 6, ground_truth: 6, score: fail (比較第 3 版：unclear)"
+     },
+     {
+      "step": 5,
+      "operation_type": "replace_step",
+      "what": "移除 hog_vehicles；新增針對特定區域的流程：crop_white_car -> enlarge_crop -> detect_crop -> restore_crop_coords；並將 deduplicate 的 iou_threshold 調降至 0.4。",
+      "why": "全圖放大效果有限，改用局部裁切（x:420, y:310）並放大該區域進行偵測，以解決白色 SUV 漏檢問題。",
+      "outcome": "count: 8, ground_truth: 6, score: fail (比較第 4 版：count_further)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "引入影像放大（upscale）與降低信心門檻（conf_threshold）作為處理小目標與低對比物體的標準手段。"
+     },
+     {
+      "step": 4,
+      "description": "嘗試多模型融合策略（DNN + HOG），試圖透過不同演算法的特性互補來提升召回率。"
+     },
+     {
+      "step": 5,
+      "description": "從全圖處理轉向局部 ROI（感興趣區域）處理，針對特定漏檢目標進行精準放大偵測。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "降低全局 conf_threshold",
+      "why_failed": "雖然增加了候選框，但未能有效解決特定位置（如白色 SUV）的漏檢問題，且可能引入雜訊。",
+      "evidence_steps": [
+       1,
+       2,
+       4
+      ]
+     },
+     {
+      "approach": "局部裁切偵測",
+      "why_failed": "雖然補回了目標，但導致數量超出正解（8 > 6），且正式判分仍未通過（可能精確率不足）。",
+      "evidence_steps": [
+       5
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當遠處小目標或低對比物體漏檢時",
+      "action": "調整 detect_cars 的 conf_threshold 或增加 upscale 節點。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "condition": "當特定位置物體持續漏檢且全圖放大無效時",
+      "action": "使用 cv.crop 鎖定目標區域，配合 cv.resize 放大後再進行偵測。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       5
+      ]
+     },
+     {
+      "condition": "當需要合併不同演算法的結果時",
+      "action": "使用 flow.merge_detections 結合多個偵測節點，並搭配 flow.nms 去除重疊框。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       4
+      ]
+     }
+    ],
+    "open_questions": [
+     "第 5 版雖然數量增加到 8 個，但正式判分仍未通過，具體失敗原因（是精確率 Precision 太低還是召回率 Recall 不足）在紀錄中不明確。",
+     "中央貨車是否應被歸類為 car，導致偵測器結果與正解定義不一致，紀錄中僅有設計者的猜測。"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "wrong",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold",
+       "detect_cars",
+       "upscale"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.crop",
+       "cv.resize"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.merge_detections",
+       "flow.nms"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb",
+   "teacher": "gemini",
+   "steps": 9,
+   "truth": 12,
+   "counts": [
+    6,
+    8,
+    6,
+    9,
+    7,
+    14,
+    7,
+    7,
+    7,
+    9
+   ],
+   "passes": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "param_tune",
+    "param_tune",
+    "param_tune",
+    "add_step",
+    "remove_step",
+    "param_tune",
+    "param_tune"
+   ],
+   "has_text": true,
+   "seconds": 50.8,
+   "prompt_chars": 10903,
+   "error": null,
+   "knowledge": {
+    "task_summary": "目標是計算影像中機車的總數（count_and_boxes），正解為 12 框。流程演進重點在於處理密集停放、嚴重遮擋以及陰影導致的特徵不明顯問題，並試圖平衡「漏檢」與「重複偵測/碎片框」之間的矛盾。",
+    "final_solution": "第 9 版（數到 9 個，正式判分：通過）",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程 (v0)",
+      "why": "建立基礎偵測流程。",
+      "outcome": "count: 6, score: pass"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "調低 conf_threshold (0.25 -> 0.15)，調高 nms_threshold (0.45 -> 0.6)",
+      "why": "解決遮擋導致的漏檢，並避免緊鄰車輛互相抑制。",
+      "outcome": "count: 8, score: pass (compared to v0: count_closer)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "新增 filter 節點 (min_w: 35)，並調低 conf_threshold (0.15 -> 0.1) 與 nms_threshold (0.6 -> 0.4)",
+      "why": "嘗試過濾邊緣碎框，同時應對陰影下特徵較暗的機車。",
+      "outcome": "count: 6, score: pass (compared to v1: count_further)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "調低 conf_threshold (0.1 -> 0.08)，調高 nms_threshold (0.4 -> 0.65)",
+      "why": "應對密集重疊遮擋導致的置信度偏低，以及避免並排車輛被誤刪。",
+      "outcome": "count: 9, score: pass (compared to v2: count_closer)"
+     },
+     {
+      "step": 4,
+      "operation_type": "param_tune",
+      "what": "調低 conf_threshold (0.08 -> 0.05)，調高 nms_threshold (0.65 -> 0.55)，並在 filter 加入 min_h: 60, min_w: 45",
+      "why": "召回遮棚下深色機車，同時抑制重複檢測的重疊框。",
+      "outcome": "count: 7, score: pass (compared to v3: count_further)"
+     },
+     {
+      "step": 5,
+      "operation_type": "param_tune",
+      "what": "調低 conf_threshold (0.05 -> 0.03)，調高 nms_threshold (0.55 -> 0.7)，並放寬 filter (min_w: 20, min_h: 40)",
+      "why": "極力召回暗處與車縫間的機車。",
+      "outcome": "count: 14, score: fail (compared to v4: count_further)"
+     },
+     {
+      "step": 6,
+      "operation_type": "add_step",
+      "what": "新增 nms 節點 (iou_threshold: 0.5)，並調整 filter (min_w: 45, min_h: 65, aspect_min: 0.35)",
+      "why": "消除重複檢測與碎片框，解決 v5 過度偵測的問題。",
+      "outcome": "count: 7, score: pass (compared to v5: count_further)"
+     },
+     {
+      "step": 7,
+      "operation_type": "remove_step",
+      "what": "移除 nms 節點，調低 conf_threshold (0.05 -> 0.04)，調高 nms_threshold (0.55 -> 0.6)，放寬 filter (min_w: 30, aspect_min: 0.2)",
+      "why": "嘗試重新找回被抑制的機車。",
+      "outcome": "count: 7, score: pass (compared to v6: unclear)"
+     },
+     {
+      "step": 8,
+      "operation_type": "param_tune",
+      "what": "調低 conf_threshold (0.04 -> 0.05)，調整 filter (min_w: 48)",
+      "why": "應對陰影與深色機車召回問題。",
+      "outcome": "count: 7, score: pass (compared to v7: unclear)"
+     },
+     {
+      "step": 9,
+      "operation_type": "param_tune",
+      "what": "調低 conf_threshold (0.05 -> 0.02)，調高 nms_threshold (0.6 -> 0.7)，調整 filter (aspect_min: 0.35)",
+      "why": "極度降低門檻以召回遠處與遮擋機車，並透過高 NMS 避免密集車輛互相抑制。",
+      "outcome": "count: 9, score: pass (compared to v8: count_closer)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 5,
+      "description": "當 conf_threshold 與 filter 門檻過低時，導致數量從 7 飆升至 14 並造成正式判分未通過（誤框路人與碎片）。"
+     },
+     {
+      "step": 6,
+      "description": "引入獨立的 nms 節點嘗試解決重複檢測問題，但隨後的參數調整顯示在極低門檻下，單純靠 filter 可能難以兼顧召回與精準。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "過度放寬 conf_threshold 與 filter 尺寸 (v5)",
+      "why_failed": "導致誤框路人、背景碎片及重複檢測，數量遠超正解。",
+      "evidence_steps": [
+       5
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "密集且重疊的目標物 (如並排機車)",
+      "action": "提高 nms_threshold / iou_threshold",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       1,
+       3,
+       9
+      ]
+     },
+     {
+      "condition": "暗處或遮擋導致特徵不明顯的目標物",
+      "action": "調低 conf_threshold",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       1,
+       3,
+       5,
+       9
+      ]
+     },
+     {
+      "condition": "出現局部碎片框或重複檢測同一物體",
+      "action": "增加 filter 節點的 min_w / min_h 或引入 nms 節點",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       2,
+       4,
+       6
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "iou_threshold",
+       "nms_threshold"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 0.0,
+      "led_to_pass": true,
+      "mentioned": [
+       "filter",
+       "min_h",
+       "min_w",
+       "nms"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-coco_vehicle_166391-d5d1cb",
+   "teacher": "gemini",
+   "steps": 3,
+   "truth": 8,
+   "counts": [
+    7,
+    8,
+    11,
+    8
+   ],
+   "passes": [
+    true,
+    false,
+    false,
+    false
+   ],
+   "flags": [
+    "正解事後更正8"
+   ],
+   "ops": [
+    "param_tune",
+    "param_tune",
+    "add_step"
+   ],
+   "has_text": true,
+   "seconds": 27.2,
+   "prompt_chars": 3884,
+   "error": null,
+   "knowledge": {
+    "task_summary": "從影像中偵測並計算所有車輛（汽車與卡車），目標正解為 8 框。",
+    "final_solution": "使用 cv.dnn_detect (YOLOX-S) 進行語意偵測，透過調低 conf_threshold 以捕捉低對比度的深色車輛，並加入 flow.nms 節點處理多類別（car, truck, bus）可能產生的重複框問題。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：使用 YOLOX-S，conf_threshold=0.25，class_filter='car,truck'。",
+      "why": "建立基準線。",
+      "outcome": "count: 7, formal_score: pass (Note: count < ground_truth but passed)"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 det_vehicle 的 conf_threshold 從 0.25 調降至 0.15，並擴充 class_filter 加入 'bus'。",
+      "why": "解決深色車身與路面對比度低導致的漏檢問題（觀察到左側有深色車輛未被框出）。",
+      "outcome": "count: 8, formal_score: fail (Note: count matches ground_truth but failed due to other reasons not specified in logs)"
+     },
+     {
+      "step": 2,
+      "operation_type": "param_tune",
+      "what": "將 det_vehicle 的 conf_threshold 從 0.15 進一步調降至 0.08。",
+      "why": "解決第四車道深色車輛因對比過低仍未被偵測到的問題。",
+      "outcome": "count: 11, formal_score: fail (Note: count > ground_truth due to false positives/duplicates)"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "在 det_vehicle 與 count_veh/draw_overlay 之間加入 flow.nms 節點，設定 iou_threshold=0.5。",
+      "why": "解決因擴充類別（car, truck, bus）導致同一輛車產生多個重疊框的問題（觀察到左側三輛車重複框選）。",
+      "outcome": "count: 8, formal_score: fail (Note: count matches ground_truth but failed)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "從漏檢（7框）轉向找回目標（8框），但隨後在第2版因門檻過低導致多框（11框）。"
+     },
+     {
+      "step": 3,
+      "description": "透過引入 NMS 解決了重複偵測的問題，使數量回到正確的 8 框。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "單純調低 conf_threshold",
+      "why_failed": "雖然找回了漏檢目標，但會導致同一物體因多個類別同時命中而產生重複框（第2版）。",
+      "evidence_steps": [
+       2
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當偵測器包含多個可能重疊的類別時（如 car 與 truck）",
+      "action": "應在輸出前加入 flow.nms 節點以去除重複框。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       3
+      ]
+     },
+     {
+      "condition": "當目標物與背景對比度極低時",
+      "action": "應調低 cv.dnn_detect 的 conf_threshold。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       1,
+       2
+      ]
+     }
+    ],
+    "open_questions": [
+     "第 0 版與第 3 版的 count 皆為接近正解，但正式判分皆為「未通過」，其具體失敗原因（如框的精確率或召回率是否達標）在紀錄中未說明。"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.nms"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 0.5,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold",
+       "cv.dnn_detect"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-coco_car_126592-a317c9",
+   "teacher": "gemini",
+   "steps": 7,
+   "truth": 8,
+   "counts": [
+    6,
+    null,
+    4,
+    6,
+    5,
+    7,
+    6,
+    7
+   ],
+   "passes": [
+    true,
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "add_step",
+    "param_tune",
+    "add_step",
+    "param_tune",
+    "param_tune"
+   ],
+   "has_text": true,
+   "seconds": 47.7,
+   "prompt_chars": 9789,
+   "error": null,
+   "knowledge": {
+    "task_summary": "透過調整深度學習偵測模型 (YOLOX-S) 的信心度門檻、NMS 閾值，並結合多類別（car 與 truck）分支偵測與幾何過濾，解決複雜背景下車輛漏檢與重複框的問題。",
+    "final_solution": "採用 car 與 truck 雙分支偵測後進行合併 (merge_detections)，並使用極低的信心度門檻 (conf_threshold ≈ 0.03) 以召回陰影與遮擋物體，同時透過精細調整 NMS 閾值 (nms_threshold/iou_threshold) 來消除重複框，最後利用 filter_detections 根據最小寬高進行雜訊剔除。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程使用單一 car 類別偵測，conf_threshold=0.25, nms_threshold=0.45。",
+      "why": "建立基準線。",
+      "outcome": "count: 6, score: pass (Note: 正解 8 框)"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 car_detector 的 conf_threshold 調低至 0.2，nms_threshold 調高至 0.55。",
+      "why": "嘗試召回陰影與遮擋車輛，並避免相鄰車輛被誤壓制。",
+      "outcome": "count: null, score: fail (無法執行)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "新增 filter_boxes (min_h: 25, min_w: 30)；調整 car_detector 為 conf_threshold: 0.22, nms_threshold: 0.24。",
+      "why": "針對重複框與背景碎片進行過濾，並嘗試修正偵測參數。",
+      "outcome": "count: 4, score: pass (比較第 1 版無法執行，數量從 6 降至 4，效果 count_further)"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "新增 nms_filter (iou_threshold: 0.2)；調整 car_detector 為 conf_threshold: 0.18, nms_threshold: 0.35，並移除 class_filter。",
+      "why": "解決重複框問題並嘗試召回漏檢車輛。",
+      "outcome": "count: 6, score: pass (比較第 2 版，數量從 4 增至 6，效果 count_closer)"
+     },
+     {
+      "step": 4,
+      "operation_type": "param_tune",
+      "what": "將 car_detector conf_threshold 調低至 0.15；在 filter_boxes 加入 label: 'car' 並調整 min_w/min_h。",
+      "why": "排除 stop sign 誤檢，並嘗試召回藍白皮卡與深色車輛。",
+      "outcome": "count: 5, score: pass (比較第 3 版，數量從 6 降至 5，效果 count_further)"
+     },
+     {
+      "step": 5,
+      "operation_type": "add_step",
+      "what": "新增 detect_truck 分支與 merge_detections 節點；調整 car_detector conf_threshold 至 0.12，nms_filter iou_threshold 改為 0.45。",
+      "why": "解決單一 car 類別導致卡車被漏檢的問題，並修正 NMS 過低壓制相鄰車輛的問題。",
+      "outcome": "count: 7, score: fail (比較第 4 版，數量從 5 增至 7，效果 count_closer)"
+     },
+     {
+      "step": 6,
+      "operation_type": "param_tune",
+      "what": "將 car_detector 與 detect_truck 的 conf_threshold 調降至 0.05，nms_threshold 調降至 0.22；調整 nms_filter iou_threshold 為 0.35。",
+      "why": "極度降低門檻以召回深色與縫隙車輛，並加強 NMS 以消除重複框。",
+      "outcome": "count: 6, score: pass (比較第 5 版，數量從 7 降至 6，效果 count_further)"
+     },
+     {
+      "step": 7,
+      "operation_type": "param_tune",
+      "what": "將 car_detector conf_threshold 調低至 0.03，nms_threshold 調低至 0.18；調整 nms_filter iou_threshold 為 0.5。",
+      "why": "進一步降低門檻召回漏檢物體，並透過更低的 NMS 閾值合併重複框。",
+      "outcome": "count: 7, score: pass (比較第 6 版，數量從 6 增至 7，效果 count_closer)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 5,
+      "description": "引入雙分支偵測（car + truck）是提升召回率的關鍵轉折點。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "單一類別 (car) 偵測",
+      "why_failed": "無法涵蓋所有車型（如 truck），導致數量受限。",
+      "evidence_steps": [
+       1,
+       4
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當畫面中存在不同類型的目標（如 car 與 truck）時",
+      "action": "應建立多分支偵測節點並使用 merge_detections 合併結果。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       5
+      ]
+     },
+     {
+      "condition": "當目標位於陰影或被部分遮擋時",
+      "action": "應大幅調低 cv.dnn_detect 的 conf_threshold。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       3,
+       5,
+       6,
+       7
+      ]
+     },
+     {
+      "condition": "當同一物體出現重複框時",
+      "action": "應調低 nms_threshold 或 iou_threshold。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       2,
+       3,
+       6,
+       7
+      ]
+     },
+     {
+      "condition": "當偵測到非目標物（如 stop sign）時",
+      "action": "應在 filter_detections 中明確指定 label 或調整類別過濾參數。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       4
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "merge_detections"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "partial",
+      "actually_closer": 0.75,
+      "led_to_pass": true,
+      "mentioned": [
+       "conf_threshold",
+       "cv.dnn_detect"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "mixed",
+      "effect_check": "partial",
+      "actually_closer": 0.6666666666666666,
+      "led_to_pass": true,
+      "mentioned": [
+       "iou_threshold",
+       "nms_threshold"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "label"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "contradicted"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-gemini-r-coco_car_111086-a351c0",
+   "teacher": "gemini",
+   "steps": 9,
+   "truth": 12,
+   "counts": [
+    11,
+    13,
+    16,
+    11,
+    13,
+    14,
+    10,
+    11,
+    14,
+    14
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [
+    "正解事後更正9"
+   ],
+   "ops": [
+    "add_step",
+    "add_step",
+    "add_step",
+    "remove_step",
+    "add_step",
+    "replace_step",
+    "replace_step",
+    "add_step",
+    "param_tune"
+   ],
+   "has_text": true,
+   "seconds": 64.1,
+   "prompt_chars": 15773,
+   "error": null,
+   "knowledge": {
+    "task_summary": "目標是計算影像中汽車的總數（count_and_boxes），正解為 12 框。流程演變經歷了從基礎偵測到加入前處理遮罩、對比度增強、以及後處理 NMS 與過濾節點的複雜調整過程。",
+    "final_solution": "尚未達成正式通過（所有版本均未通過）。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：load_image -> dnn_detect (conf: 0.25, nms: 0.45) -> count_cars & overlay_cars",
+      "why": "建立基準線。",
+      "outcome": "count: 11, ground_truth: 12, status: fail"
+     },
+     {
+      "step": 1,
+      "operation_type": "add_step",
+      "what": "加入 filter_cars (min_w: 25, min_h: 15, max_h: 110)；調低 dnn_detect conf 至 0.15，提高 nms 至 0.5。",
+      "why": "為召回陰影中深色車輛並過濾紅色貨櫃等大型誤檢物件。",
+      "outcome": "count: 13, ground_truth: 12, status: fail (comparison: count increases from 11 to 13, closer to GT but still failed due to precision/recall requirements)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "加入 clahe (clip: 2.0)；調低 dnn_detect conf 至 0.12，調整 filter_cars 高度範圍。",
+      "why": "透過增強對比度改善左下角暗部檢測，並嘗試召回陰影車輛。",
+      "outcome": "count: 16, ground_truth: 12, status: fail (comparison: count increases from 13 to 16, count_further)"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "加入 mask_top 與 mask_container (黑框遮罩)；調高 dnn_detect conf 至 0.15，調緊 nms 至 0.25；調整 clahe clip 為 1.5。",
+      "why": "排除上方船體與左側貨櫃的背景誤檢，並透過調緊 NMS 消除重複雙框。",
+      "outcome": "count: 11, ground_truth: 12, status: fail (comparison: count decreases from 16 to 11, count_closer)"
+     },
+     {
+      "step": 4,
+      "operation_type": "remove_step",
+      "what": "移除 filter_cars；調低 dnn_detect conf 至 0.1，放寬 nms 至 0.4；調整遮罩範圍與 clahe clip 為 3.0。",
+      "why": "避免遮罩裁切到邊緣車輛或行李架，並透過提高對比度與降低門檻召回漏檢車輛。",
+      "outcome": "count: 13, ground_truth: 12, status: fail (comparison: count increases from 11 to 13, count_closer)"
+     },
+     {
+      "step": 5,
+      "operation_type": "add_step",
+      "what": "加入 nms (iou: 0.25)；調低 dnn_detect conf 至 0.08，調整遮罩範圍。",
+      "why": "消除重複框（碎片框），並縮減貨櫃遮罩以避免裁切到底部陰影車輛。",
+      "outcome": "count: 14, ground_truth: 12, status: fail (comparison: count increases from 13 to 14, count_further)"
+     },
+     {
+      "step": 6,
+      "operation_type": "replace_step",
+      "what": "將 clahe 替換為 equalize_color；擴大 mask_container 範圍以覆蓋貨櫃邊角；調整 nms iou 至 0.3。",
+      "why": "避免灰階化導致紅色小車特徵消失，並消除貨櫃邊角的誤檢。",
+      "outcome": "count: 10, ground_truth: 12, status: fail (comparison: count decreases from 14 to 10, count_closer)"
+     },
+     {
+      "step": 7,
+      "operation_type": "replace_step",
+      "what": "將 equalize_color 替換為 gamma_correct (gamma: 0.75)；調整遮罩範圍。",
+      "why": "透過 Gamma 校正提亮陰影並保留 RGB 色彩，防止小紅車失真。",
+      "outcome": "count: 11, ground_truth: 12, status: fail (comparison: count increases from 10 to 11, count_closer)"
+     },
+     {
+      "step": 8,
+      "operation_type": "add_step",
+      "what": "加入 mask_ship_hull、filter_detections (面積過濾) 與 sort_detections (依面積排序)；調低 dnn_detect conf 至 0.06。",
+      "why": "增加多層遮罩排除船身誤檢，並透過面積排序與 NMS 處理碎框問題。",
+      "outcome": "count: 14, ground_truth: 12, status: fail (comparison: count increases from 11 to 14, count_further)"
+     },
+     {
+      "step": 9,
+      "operation_type": "param_tune",
+      "what": "調整 filter_detections (限制 max_w: 175)；調整 gamma 為 0.65；將 sort_detections 改為依 score 排序。",
+      "why": "限制最大寬度以拆分合併的大框，並改用分數排序以讓完整車體優先於碎片框。",
+      "outcome": "count: 14, ground_truth: 12, status: fail (comparison: count remains 14, unclear)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "調低 conf_threshold 與調整 nms_threshold 以解決漏檢與遮擋問題。"
+     },
+     {
+      "step": 3,
+      "description": "使用 cv.draw_rectangle (mask) 排除非目標區域（船體、貨櫃）。"
+     },
+     {
+      "step": 5,
+      "description": "加入 flow.nms 處理重複框。"
+     },
+     {
+      "step": 6,
+      "description": "使用 cv.equalize_color 代替 clahe 以保留色彩特徵（針對紅色車輛）。"
+     },
+     {
+      "step": 8,
+      "description": "結合 sort_detections 與 NMS 來處理碎框與合併框。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "使用 CLAHE (灰階化傾向)",
+      "why_failed": "可能導致特定顏色（如紅色小車）的色彩特徵消失，造成漏檢。",
+      "evidence_steps": [
+       6
+      ]
+     },
+     {
+      "approach": "過度遮罩",
+      "why_failed": "遮罩範圍若未精準控制，會裁切到邊緣或陰影處的目標車輛。",
+      "evidence_steps": [
+       4,
+       7,
+       8
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當目標物顏色鮮豔且在暗部時",
+      "action": "優先使用 cv.gamma_correct 或 cv.equalize_color 以保留 RGB 色彩特徵，避免使用會趨向灰階的對比度增強法。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       6,
+       7
+      ]
+     },
+     {
+      "condition": "當出現背景誤檢（如船體、貨櫃）時",
+      "action": "使用 cv.draw_rectangle 建立多層 ROI 遮罩。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       3,
+       8
+      ]
+     },
+     {
+      "condition": "當出現重複框或碎框時",
+      "action": "在偵測後加入 flow.nms 並搭配 sort_detections (依 score 或 area) 來優化結果。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       5,
+       8,
+       9
+      ]
+     },
+     {
+      "condition": "當出現兩個目標被合併成一個大框時",
+      "action": "在 flow.filter_detections 設定 max_w 或 max_h 參數。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       9
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "partial",
+      "actually_closer": 0.5,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.equalize_color",
+       "cv.gamma_correct"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "partial",
+      "actually_closer": 0.5,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.draw_rectangle"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.nms",
+       "sort_detections"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.filter_detections",
+       "max_h",
+       "max_w"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-coco_car_111086-eaac09",
+   "teacher": "gemini",
+   "steps": 9,
+   "truth": 12,
+   "counts": [
+    7,
+    9,
+    10,
+    17,
+    7,
+    8,
+    17,
+    11,
+    18,
+    10
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [
+    "正解事後更正9"
+   ],
+   "ops": [
+    "add_step",
+    "add_step",
+    "param_tune",
+    "add_step",
+    "remove_step",
+    "param_tune",
+    "add_step",
+    "add_step",
+    "remove_step"
+   ],
+   "has_text": true,
+   "seconds": 58.2,
+   "prompt_chars": 16993,
+   "error": null,
+   "knowledge": {
+    "task_summary": "任務目標是計算影像中汽車的總數（count_and_boxes），正解為 12 框。流程演變重點在於處理強烈陰影、密集並排車輛、以及排除背景誤檢（如貨櫃、船身、行人）。",
+    "final_solution": "尚未達成正式通過（最終版數到 10 個，正解 12 個）。目前的策略是使用 cv.dnn_detect (YOLOX-S) 並搭配極低的信心度門檻 (0.02)、cv.crop 排除上方干擾、flow.filter_detections 設定尺寸限制，以及 flow.nms 處理重複框。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程：使用 YOLOX-S 進行檢測與計數。",
+      "why": "建立基準線。",
+      "outcome": "count: 7, score: fail"
+     },
+     {
+      "step": 1,
+      "operation_type": "add_step",
+      "what": "調低 conf_threshold (0.25→0.15) 與放寬 nms_threshold (0.45→0.55)，並加入 flow.filter_detections。",
+      "why": "解決漏檢（陰影與深色車）及誤檢（大型貨櫃）問題。",
+      "outcome": "count: 9, score: fail (compared to v0: count_closer)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "加入 cv.crop (y=100) 與 flow.transform_detections，進一步調低 conf_threshold (0.15→0.08)。",
+      "why": "排除上方船身與碼頭誤檢，並嘗試召回邊緣與陰影車輛。",
+      "outcome": "count: 10, score: fail (compared to v1: count_closer)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "調整 cv.crop 起點 (y=120)，調低 conf_threshold (0.08→0.05) 並放寬 nms_threshold (0.5→0.6)。",
+      "why": "更徹底排除上方干擾，並解決密集車輛被抑制的問題。",
+      "outcome": "count: 17, score: fail (compared to v2: count_further)"
+     },
+     {
+      "step": 4,
+      "operation_type": "add_step",
+      "what": "加入 flow.nms (iou=0.35) 與更嚴格的尺寸過濾 (min_w/h, max_w)。",
+      "why": "抑制重複框、碎片框與跨越多車的巨型陰影框。",
+      "outcome": "count: 7, score: fail (compared to v3: count_further)"
+     },
+     {
+      "step": 5,
+      "operation_type": "remove_step",
+      "what": "移除 flow.nms，調高 conf_threshold (0.07→0.2) 並維持 nms_threshold (0.45)。",
+      "why": "嘗試找回因過濾太嚴格而漏掉的車輛。",
+      "outcome": "count: 8, score: fail (compared to v4: count_closer)"
+     },
+     {
+      "step": 6,
+      "operation_type": "param_tune",
+      "what": "將 class_filter 改為 'car,truck' 並調低 conf_threshold (0.2→0.05)。",
+      "why": "解決部分車輛被誤判為 truck 而導致的漏檢問題。",
+      "outcome": "count: 17, score: fail (compared to v5: count_further)"
+     },
+     {
+      "step": 7,
+      "operation_type": "add_step",
+      "what": "加入 flow.nms (iou=0.4) 並調低 conf_threshold (0.05→0.03)。",
+      "why": "解決 car 與 truck 同一目標重複框的問題，並召回更多邊緣車輛。",
+      "outcome": "count: 11, score: fail (compared to v6: count_closer)"
+     },
+     {
+      "step": 8,
+      "operation_type": "add_step",
+      "what": "加入 cv.resize (放大解析度) 並調高 flow.nms 的 iou_threshold (0.4→0.55)。",
+      "why": "細化特徵以拆分並排車輛，避免 NMS 過度抑制。",
+      "outcome": "count: 18, score: fail (compared to v7: count_further)"
+     },
+     {
+      "step": 9,
+      "operation_type": "remove_step",
+      "what": "移除 cv.resize，將 class_filter 鎖定為 'car'，收緊 flow.nms iou (0.55→0.35) 並加入面積限制。",
+      "why": "排除 truck 誤檢（貨櫃）與重複框、碎片框。",
+      "outcome": "count: 10, score: fail (compared to v8: count_further)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 3,
+      "description": "極低信心度門檻導致數量暴增（17個），顯示模型在低門檻下會產生大量雜訊或重複框。"
+     },
+     {
+      "step": 4,
+      "description": "過度使用 NMS 與尺寸限制導致召回率大幅下降（從 17 降到 7）。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "極低信心度 (conf < 0.05) + 多類別 (car, truck)",
+      "why_failed": "會導致同一個目標被不同標籤重複框選，且容易產生碎片框與陰影誤檢。",
+      "evidence_steps": [
+       6,
+       7,
+       8
+      ]
+     },
+     {
+      "approach": "嚴格尺寸過濾 + 低 IoU NMS",
+      "why_failed": "會把相鄰且重疊度高的真實車輛當作重複框或異常框而剔除。",
+      "evidence_steps": [
+       4,
+       9
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "密集並排物體",
+      "action": "提高 flow.nms 的 iou_threshold 或使用 cv.resize 增加解析度以利拆分。",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       8
+      ]
+     },
+     {
+      "condition": "跨類別重複檢測 (如 car 與 truck 同時框到同一輛車)",
+      "action": "在後處理加入 flow.nms 並設定適當的 iou_threshold。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       7
+      ]
+     },
+     {
+      "condition": "陰影或背光導致漏檢",
+      "action": "調低 cv.dnn_detect 的 conf_threshold 並配合 cv.crop 排除非目標區域。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       1,
+       2
+      ]
+     },
+     {
+      "condition": "背景誤檢 (如貨櫃、行人)",
+      "action": "使用 flow.filter_detections 設定 aspect_min, min_w, min_h, max_w 或將 class_filter 鎖定。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       1,
+       4,
+       9
+      ]
+     }
+    ],
+    "open_questions": [
+     "如何同時達成高召回率（抓到邊緣與陰影車）與低誤檢率（不抓貨櫃與重複框），目前的參數調整似乎存在強烈的負相關。",
+     "畫面最右側被裁切的車輛是否能透過增加解析度或特定的 crop 策略被有效偵測。"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "iou_threshold"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "iou_threshold"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold",
+       "cv.dnn_detect"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "partial",
+      "actually_closer": 0.6666666666666666,
+      "led_to_pass": false,
+      "mentioned": [
+       "aspect_min",
+       "class_filter",
+       "max_w",
+       "min_h",
+       "min_w"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4",
+   "teacher": "gemini",
+   "steps": 7,
+   "truth": 2,
+   "counts": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    5,
+    2,
+    3
+   ],
+   "passes": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "param_tune",
+    "param_tune",
+    "add_step",
+    "param_tune",
+    "add_step"
+   ],
+   "has_text": true,
+   "seconds": 47.7,
+   "prompt_chars": 9006,
+   "error": null,
+   "knowledge": {
+    "task_summary": "使用多模型整合策略與影像增強技術，解決在複雜背景、人員遮擋及暗處陰影環境下，微小或低對比度機車目標的偵測問題。",
+    "final_solution": "採用 YOLOX-S 與 NanoDet 雙模型並行偵測架構，結合 cv.gamma_correct 提亮暗部細節，透過 flow.merge_detections 合併結果，並利用 flow.filter_detections (尺寸過濾) 與 flow.nms (重疊抑制) 來精準篩選目標。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程使用單一 YOLOX-S 模型。",
+      "why": "建立基準線。",
+      "outcome": "count: 2, score: pass (註：此處紀錄顯示 count 與正解一致但後續修改顯示有漏檢，應為初始狀態已達標或紀錄偏差)"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "調低 detect_motorcycle 的 conf_threshold (0.25 -> 0.15) 與 nms_threshold (0.45 -> 0.55)。",
+      "why": "背景暗處機車易被漏檢，且並排機車可能因重疊被 NMS 抑制。",
+      "outcome": "count: 2, score: fail (比較第 0 版：數量未變，但正式判分由 pass 轉為 fail，顯示原先雖數到 2 但框的品質或召回率不符標準)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "在偵測前加入 gamma_enhance (gamma: 0.6) 節點。",
+      "why": "提升暗部對比與細節，解決背景車庫深色機車漏檢問題。",
+      "outcome": "count: 2, score: pass (比較第 1 版：數量未變，正式判分由 fail 轉為 pass)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "大幅調低 detect_motorcycle 的 conf_threshold (0.15 -> 0.05) 與 nms_threshold (0.55 -> 0.6)，並微調 gamma (0.6 -> 0.65)。",
+      "why": "嘗試召回尺寸極小且置信度低的黑色機車。",
+      "outcome": "count: 2, score: fail (比較第 2 版：數量未變，正式判分由 pass 轉為 fail)"
+     },
+     {
+      "step": 4,
+      "operation_type": "param_tune",
+      "what": "將 detect_motorcycle 的 conf_threshold 極度調低至 0.02。",
+      "why": "嘗試解決極低對比度下的召回問題。",
+      "outcome": "count: 2, score: fail (比較第 3 版：數量未變，正式判分維持 fail)"
+     },
+     {
+      "step": 5,
+      "operation_type": "add_step",
+      "what": "引入第二模型 det_nanodet，並加入 merge_dets 與 nms_filter 節點進行雙模型整合。",
+      "why": "單一模型對微小暗色特徵有極限，利用 NanoDet 不同感受野特性互補召回。",
+      "outcome": "count: 5, score: fail (比較第 4 版：數量由 2 變 5 [more_detections]，正式判分維持 fail)"
+     },
+     {
+      "step": 6,
+      "operation_type": "param_tune",
+      "what": "提高 det_nanodet 與 detect_motorcycle 的 conf_threshold (至 0.45)，並調低 nms_filter 的 iou_threshold (至 0.3)。",
+      "why": "濾除包含行人的低分誤檢框與重複的重疊框。",
+      "outcome": "count: 2, score: pass (比較第 5 版：數量由 5 變 2 [fewer_detections]，正式判分由 fail 轉為 pass)"
+     },
+     {
+      "step": 7,
+      "operation_type": "add_step",
+      "what": "加入 filter_large (尺寸過濾) 節點，並微調各參數（gamma: 0.7, conf_threshold, nms_threshold）。",
+      "why": "透過尺寸上限過濾異常大框（如包含行人的框），同時嘗試召回漏檢的機車。",
+      "outcome": "count: 3, score: pass (比較第 6 版：數量由 2 變 3 [more_detections]，正式判分維持 pass)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 5,
+      "description": "從單一模型轉向雙模型 (YOLOX-S + NanoDet) 整合策略，解決了單一模型無法召回微小目標的瓶頸。"
+     },
+     {
+      "step": 6,
+      "description": "透過提高信心門檻與降低 NMS 閾值，成功解決了多模型合併後產生的誤檢 (包含行人) 與重複框問題。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "單純調低 conf_threshold",
+      "why_failed": "雖然嘗試極低門檻 (0.02)，但仍無法解決模型對微小暗色特徵的感應能力問題，且容易引發誤檢。",
+      "evidence_steps": [
+       3,
+       4
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當單一偵測器在極低門檻下仍無法召回微小或暗處目標時",
+      "action": "引入不同架構的偵測器 (如 NanoDet) 並使用 flow.merge_detections 進行整合。",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       5
+      ]
+     },
+     {
+      "condition": "當多模型合併後出現包含非目標物體 (如行人) 的大型誤檢框時",
+      "action": "加入 flow.filter_detections 並設定 max_w 與 max_h 參數。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       7
+      ]
+     },
+     {
+      "condition": "當偵測結果出現大量重複框或重疊碎片時",
+      "action": "調低 flow.nms 的 iou_threshold。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       6
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.merge_detections"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.filter_detections",
+       "max_h",
+       "max_w"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": true,
+      "mentioned": [
+       "flow.nms",
+       "iou_threshold"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-opus-t-coco_motorcycle_245448-ac2cb3",
+   "teacher": "opus",
+   "steps": 3,
+   "truth": 2,
+   "counts": [
+    2,
+    2,
+    5,
+    4
+   ],
+   "passes": [
+    true,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "add_step"
+   ],
+   "has_text": false,
+   "seconds": 27.2,
+   "prompt_chars": 2237,
+   "error": null,
+   "knowledge": {
+    "task_summary": "計算影像中機車的總數量（detect_only）。",
+    "final_solution": "尚未達成目標，目前流程仍無法通過正式判分。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程",
+      "why": "N/A",
+      "outcome": "count: 2, ground_truth: 2, pass: true"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 conf_threshold 從 0.25 調降至 0.1",
+      "why": "N/A",
+      "outcome": "count: 2, ground_truth: 2, pass: false"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "新增局部區域裁切 (c1)、放大 (c2)、偵測 (c3)、座標轉換 (c4)、合併 (m1) 與 NMS (m2) 的流程，並將 n2 恢復為 conf_threshold: 0.25",
+      "why": "N/A",
+      "outcome": "count: 5, ground_truth: 2, pass: false"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "在 c2 與 c4 之間新增 flow.filter_detections (c5)，參數為 max_h: 150",
+      "why": "N/A",
+      "outcome": "count: 4, ground_truth: 2, pass: false"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "降低偵測門檻值 (conf_threshold) 可能導致精確率下降，即使數量與正解一致但仍未通過判分（可能產生了不符合規範的誤判框）。比較第 0 版與第 1 版：數量相同 (2)，正式判分由通過變為未通過，expected_change: unclear (因數量未變，無法從數量判斷精確率變化)。"
+     },
+     {
+      "step": 2,
+      "description": "引入局部裁切與放大流程後，偵測到的數量大幅增加。比較第 1 版與第 2 版：數量由 2 變為 5，正式判分未通過，expected_change: count_further。"
+     },
+     {
+      "step": 3,
+      "description": "使用高度過濾 (flow.filter_detections) 來減少偵測框。比較第 2 版與第 3 版：數量由 5 變為 4，正式判分未通過，expected_change: count_closer。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "降低 conf_threshold",
+      "why_failed": "雖然數量維持在正解數值，但精確率不足以通過正式判分。",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "approach": "局部裁切放大偵測 (Crop & Resize)",
+      "why_failed": "導致過多誤判框（數量從 2 增加到 5）。",
+      "evidence_steps": [
+       2
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當降低 conf_threshold 時",
+      "action": "cv.dnn_detect.conf_threshold",
+      "expected_change": "unclear",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "condition": "當增加局部偵測流程時",
+      "action": "cv.crop / cv.resize",
+      "expected_change": "count_further",
+      "evidence_steps": [
+       2
+      ]
+     },
+     {
+      "condition": "使用高度過濾來減少框數時",
+      "action": "flow.filter_detections.max_h",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       3
+      ]
+     }
+    ],
+    "open_questions": [
+     "第 1 版雖然數量為 2，但未通過判分，具體的錯誤原因（是召回率不足還是精確率不夠）在紀錄中不明確。",
+     "第 2 版增加的偵測框是否來自於裁切區域內的誤判，或是原圖其他位置的重複偵測？"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "unsupported",
+      "direction_check": "n/a",
+      "effect_check": "unverifiable",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.dnn_detect"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.crop",
+       "cv.resize"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.filter_detections"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-opus-t-coco_car_126592-7f4b18",
+   "teacher": "opus",
+   "steps": 3,
+   "truth": 8,
+   "counts": [
+    6,
+    6,
+    13,
+    8
+   ],
+   "passes": [
+    true,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "add_step"
+   ],
+   "has_text": false,
+   "seconds": 27.1,
+   "prompt_chars": 2109,
+   "error": null,
+   "knowledge": {
+    "task_summary": "計算圖片中汽車的總數（目標數量：8）",
+    "final_solution": "第 3 版流程包含影像放大、多類別偵測（car 與 truck）、合併結果並進行 NMS，最終達到與正解一致的數量。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程 (n1:load -> n2:detect(conf=0.3) -> n3:count/n4:overlay)",
+      "why": "N/A",
+      "outcome": "數量 6, 正解 8, 正式判分: 通過"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 conf_threshold 從 0.3 調降至 0.15 (第 1 版)",
+      "why": "N/A",
+      "outcome": "數量 6, 正解 8, 正式判分: 未通過 (比較第 0 版：數量不變，判分由通過轉為未通過)"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "新增 n5(cv.resize, scale=2.0) 與 n6(flow.transform_detections, scale=0.5)，並將 n2 的 conf_threshold 改為 0.2 且移除 class_filter (第 2 版)",
+      "why": "N/A",
+      "outcome": "數量 13, 正解 8, 正式判分: 未通過 (比較第 1 版：數量由 6 變 13，判定為 more_detections)"
+     },
+     {
+      "step": 3,
+      "operation_type": "add_step",
+      "what": "新增 n7(dnn_detect: truck), n8(merge_detections), n9(nms: iou=0.5)，並將 n2 恢復 class_filter 為 car (第 3 版)",
+      "why": "N/A",
+      "outcome": "數量 8, 正解 8, 正式判分: 未通過 (比較第 2 版：數量由 13 變 8，判定為 count_closer)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "降低信心門檻（conf_threshold）卻沒有增加偵測到的數量，且導致正式判分從通過變為未通過。"
+     },
+     {
+      "step": 2,
+      "description": "透過放大影像與調整參數後，偵測數量大幅增加，但偏離正解。"
+     },
+     {
+      "step": 3,
+      "description": "結合不同類別（car 與 truck）的偵測結果並進行合併與 NMS，使數量達到與正解一致。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "單純降低 conf_threshold",
+      "why_failed": "在第 1 版中，調降門檻未提升數量，反而導致判分失敗。",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "approach": "放大影像並移除類別限制",
+      "why_failed": "在第 2 版中，雖然偵測量增加，但產生過多誤判（數量 13 > 正解 8）。",
+      "evidence_steps": [
+       2
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當目標物包含不同類別時",
+      "action": "使用 flow.merge_detections 合併多個 cv.dnn_detect 的結果（例如同時偵測 car 與 truck）",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       3
+      ]
+     },
+     {
+      "condition": "當合併不同來源的偵測框時",
+      "action": "加入 flow.nms 節點以處理重疊框",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       3
+      ]
+     }
+    ],
+    "open_questions": [
+     "第 0 版雖然數量只有 6 (少於正解 8)，但正式判分卻是「通過」，其判定標準為何？",
+     "第 3 版數量達到 8 與正解一致，但正式判分仍為「未通過」，是否代表框的精確率或召回率不達標？"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.dnn_detect",
+       "flow.merge_detections"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.nms"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-opus-t-coco_truck_219271-256cd6",
+   "teacher": "opus",
+   "steps": 4,
+   "truth": 3,
+   "counts": [
+    3,
+    3,
+    3,
+    3,
+    4
+   ],
+   "passes": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "add_step",
+    "param_tune"
+   ],
+   "has_text": false,
+   "seconds": 18.7,
+   "prompt_chars": 2846,
+   "error": null,
+   "knowledge": {
+    "task_summary": "在影像中偵測卡車數量（目標為 3 框）。",
+    "final_solution": "第 0 版初始流程已能達成目標，後續修改包含調整信心門檻、加入影像縮放與裁切、以及多路徑偵測合併等嘗試。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "將 n2 (cv.dnn_detect) 的 conf_threshold 從 0.25 調降至 0.12",
+      "why": "未提及",
+      "outcome": "第 0 版與第 1 版數量皆為 3，正式判分均為通過。效果不明顯（unclear）。"
+     },
+     {
+      "step": 1,
+      "operation_type": "add_step",
+      "what": "引入影像縮放 (n5: cv.resize) 與偵測結果座標轉換 (n6: flow.transform_detections)，並將 n2 的 conf_threshold 調回 0.2",
+      "why": "未提及",
+      "outcome": "第 1 版與第 2 版數量皆為 3，正式判分均為通過。效果不明顯（unclear）。"
+     },
+     {
+      "step": 2,
+      "operation_type": "add_step",
+      "what": "建立多路徑偵測流程：包含影像裁切 (n7: cv.crop) 後進行縮放與二次偵測 (n9: cv.dnn_detect)，最後透過合併 (n11: flow.merge_detections) 與 NMS (n12: flow.nms) 整合結果",
+      "why": "未提及",
+      "outcome": "第 2 版與第 3 版數量皆為 3，正式判分均為通過。效果不明顯（unclear）。"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "將 n9 (cv.dnn_detect) 的 conf_threshold 調降至 0.1 並移除 class_filter",
+      "why": "未提及",
+      "outcome": "第 3 版與第 4 版數量從 3 變為 4，正式判分仍為通過。結果 count_further（離答案更遠）。"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 4,
+      "description": "降低偵測門檻並移除類別過濾會導致誤判增加，使數量偏離正解。"
+     }
+    ],
+    "failed_attempts": [],
+    "lessons": [
+     {
+      "condition": "當需要提高偵測率但避免誤判時",
+      "action": "調整 cv.dnn_detect 的 conf_threshold，過低的門檻或移除 class_filter 會導致 count_further。",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       4
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     false,
+     true,
+     false
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "class_filter",
+       "conf_threshold",
+       "cv.dnn_detect"
+      ]
+     }
+    ],
+    "failed_attempts": [],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-haiku-t-coco_bus_15517-65b190",
+   "teacher": "haiku",
+   "steps": 3,
+   "truth": 8,
+   "counts": [
+    5,
+    7,
+    15,
+    12
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "add_step",
+    "param_tune"
+   ],
+   "has_text": false,
+   "seconds": 21.7,
+   "prompt_chars": 1967,
+   "error": null,
+   "knowledge": {
+    "task_summary": "目標是偵測圖片中的公車數量（detect_only），正解為 8 框。",
+    "final_solution": "無",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "將 n2 (cv.dnn_detect) 的 conf_threshold 從 0.25 調降至 0.05",
+      "why": "未提及",
+      "outcome": "第 1 版比第 0 版數量增加（5 -> 7），但仍未通過正式判分。count_closer (7 vs 8)。"
+     },
+     {
+      "step": 1,
+      "operation_type": "add_step",
+      "what": "新增局部區域偵測流程：n5(cv.crop) -> n6(cv.dnn_detect) -> n7(flow.transform_detections) -> n8(flow.merge_detections) -> n9(flow.nms)",
+      "why": "未提及",
+      "outcome": "第 2 版比第 1 版數量大幅增加（7 -> 15），但仍未通過正式判分。count_further (15 vs 8)。"
+     },
+     {
+      "step": 2,
+      "operation_type": "param_tune",
+      "what": "將 n9 (flow.nms) 的 iou_threshold 從 0.5 調降至 0.3",
+      "why": "未提及",
+      "outcome": "第 3 版比第 2 版數量減少（15 -> 12），但仍未通過正式判分。count_closer (12 vs 8)。"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "降低信心門檻（conf_threshold）能增加偵測到的數量，使其更接近正解。"
+     },
+     {
+      "step": 2,
+      "description": "引入局部裁剪（cv.crop）與合併偵測結果（flow.merge_detections）會導致偵測數量激增，可能產生過多重複或錯誤框。"
+     },
+     {
+      "step": 3,
+      "description": "調降 NMS 的門檻（iou_threshold）可以減少重疊的框，進而降低偵測總數。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "單純降低 conf_threshold",
+      "why_failed": "雖然數量增加接近正解，但仍未達到正式判分標準（精確率或召回率不足）。",
+      "evidence_steps": [
+       0,
+       1
+      ]
+     },
+     {
+      "approach": "局部區域偵測並合併",
+      "why_failed": "引入 crop 與 merge 後數量失控（15 個），顯示可能產生大量重複框或誤判。",
+      "evidence_steps": [
+       2
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當偵測數量低於正解時",
+      "action": "降低 cv.dnn_detect 的 conf_threshold",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "condition": "當偵測數量過多（重複框）時",
+      "action": "調低 flow.nms 的 iou_threshold",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       3
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     false,
+     false
+    ],
+    "lessons": [
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "conf_threshold",
+       "cv.dnn_detect"
+      ]
+     },
+     {
+      "action_check": "supported",
+      "direction_check": "ok",
+      "effect_check": "supported",
+      "actually_closer": 1.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "flow.nms",
+       "iou_threshold"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 1
+   }
+  },
+  {
+   "episode_id": "CVFLOW-haiku-t-coco_motorcycle_203389-a80d5b",
+   "teacher": "haiku",
+   "steps": 4,
+   "truth": 2,
+   "counts": [
+    2,
+    2,
+    9,
+    2,
+    2
+   ],
+   "passes": [
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "param_tune",
+    "param_tune",
+    "param_tune"
+   ],
+   "has_text": false,
+   "seconds": 23.7,
+   "prompt_chars": 1456,
+   "error": null,
+   "knowledge": {
+    "task_summary": "計算圖片中機車的總數量 (count_and_boxes)，目標正解為 2 框。",
+    "final_solution": "目前所有版本均未通過正式判分（精確率或召回率 < 0.8）。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程 (n1:load_image -> n2:yolox_s(conf:0.25, class:motorcycle) -> n3:count, n4:overlay)",
+      "why": "N/A",
+      "outcome": "count: 2, ground_truth: 2, score: fail"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 conf_threshold 從 0.25 調降至 0.1",
+      "why": "N/A",
+      "outcome": "count: 2, ground_truth: 2, score: fail (compared to v0: count remains same)"
+     },
+     {
+      "step": 2,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 class_filter 清空 (移除類別過濾)",
+      "why": "N/A",
+      "outcome": "count: 9, ground_truth: 2, score: fail (compared to v1: count_further)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 model 更換為 nanodet，並恢復 class_filter 為 motorcycle",
+      "why": "N/A",
+      "outcome": "count: 2, ground_truth: 2, score: fail (compared to v2: count_closer)"
+     },
+     {
+      "step": 4,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 model 改回 yolox_s，conf_threshold 設為 0.25",
+      "why": "N/A",
+      "outcome": "count: 2, ground_truth: 2, score: fail (compared to v3: unclear)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 2,
+      "description": "移除 class_filter 會導致偵測數量大幅增加（從 2 變 9），顯示原先的類別過濾確實限制了偵測範圍，但移除後引入了大量非目標物體。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "調整信心門檻 (conf_threshold) 或更換模型 (nanodet vs yolox_s)",
+      "why_failed": "雖然偵測數量與正解一致（count=2），但正式判分仍未通過，代表現有的框在精確率 (precision) 或召回率 (recall) 上未達 0.8 的標準。",
+      "evidence_steps": [
+       1,
+       3,
+       4
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當 count 與 ground_truth 相符但正式判分仍為 fail 時",
+      "action": "檢查偵測框的品質（精確率）或確認是否有漏掉未被列入正解但符合條件的物體（召回率）。",
+      "expected_change": "unclear",
+      "evidence_steps": [
+       0,
+       1,
+       3,
+       4
+      ]
+     }
+    ],
+    "open_questions": [
+     "既然所有版本的 count 都等於正解框數 (2)，為何正式判分皆未通過？是否為偵測框的位置偏移過大導致精確率不足，或是模型漏掉了某些雖然在圖中但沒被列入正解的物體（依規則不扣分，但可能影響召回率判定邏輯）？",
+     "第 4 版相較於第 3 版的變動效果為何？"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "unverifiable",
+      "direction_check": "n/a",
+      "effect_check": "unverifiable",
+      "actually_closer": 0.3333333333333333,
+      "led_to_pass": false,
+      "mentioned": []
+     }
+    ],
+    "failed_attempts": [
+     "supported"
+    ],
+    "bad_refs": 1
+   }
+  },
+  {
+   "episode_id": "CVFLOW-sonnet-t-v2_b2g0_01_three_tomatoes_da-514786",
+   "teacher": "sonnet",
+   "steps": 3,
+   "truth": 3,
+   "counts": [
+    3,
+    0,
+    3,
+    1
+   ],
+   "passes": [
+    true,
+    false,
+    true,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "param_tune",
+    "param_tune"
+   ],
+   "has_text": false,
+   "seconds": 24.5,
+   "prompt_chars": 1454,
+   "error": null,
+   "knowledge": {
+    "task_summary": "計算圖片中番茄的總數並標註邊界框 (count_and_boxes)，目標數量為 3。",
+    "final_solution": "n1:io.load_image -> n2:cv.gamma_correct(gamma=2.5) -> n3:cv.grayscale -> n4:cv.gaussian_blur(ksize=15) -> n5:cv.threshold_otsu -> n6:cv.morphology(op='close', ksize=25, iterations=2, kernel_shape='ellipse') -> n7:cv.fill_holes -> n8:cv.find_contours(mode='external', min_area=20000) -> n9:cv.bounding_boxes(label='tomato') -> n10:flow.count -> n11:flow.overlay_detections",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "Initial version (n0)",
+      "why": "N/A",
+      "outcome": "count: 3, score: pass"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "Update n5 (cv.threshold) with thresh=62 and type='binary'",
+      "why": "N/A",
+      "outcome": "count: 0, score: fail (compared to step 0: fewer_detections)"
+     },
+     {
+      "step": 2,
+      "operation_type": "param_tune",
+      "what": "Update n2 (gamma=2.5) and reset n5 back to cv.threshold_otsu",
+      "why": "N/A",
+      "outcome": "count: 3, score: pass (compared to step 1: more_detections)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "Update n5 to cv.threshold_triangle",
+      "why": "N/A",
+      "outcome": "count: 1, score: fail (compared to step 2: fewer_detections)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "將 n5 從 Otsu threshold 改為手動設定參數的 binary threshold，導致偵測數量從 3 降至 0，顯示該閾值設定不當或破壞了分割效果。"
+     },
+     {
+      "step": 2,
+      "description": "透過調整 n2 的 gamma 值（由 0.4 改為 2.5）並恢復 n5 為 Otsu threshold，成功找回正確的偵測數量。"
+     },
+     {
+      "step": 3,
+      "description": "將 n5 更換為 triangle threshold 後，偵測數量從 3 降至 1，顯示此演算法在此情境下效果不佳。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "Manual binary thresholding (n5)",
+      "why_failed": "The specific parameters (thresh=62) led to zero detections.",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "approach": "Triangle thresholding (n5)",
+      "why_failed": "Reduced the number of detected objects from 3 to 1.",
+      "evidence_steps": [
+       3
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "When manual thresholding fails to detect objects",
+      "action": "Revert n5 to cv.threshold_otsu or adjust gamma in n2",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       1,
+       2
+      ]
+     },
+     {
+      "condition": "When selecting thresholding algorithms",
+      "action": "Prefer cv.threshold_otsu over cv.threshold_triangle for this specific lighting/contrast",
+      "expected_change": "count_closer",
+      "evidence_steps": [
+       3
+      ]
+     }
+    ],
+    "open_questions": []
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "partial",
+      "direction_check": "n/a",
+      "effect_check": "partial",
+      "actually_closer": 0.5,
+      "led_to_pass": true,
+      "mentioned": [
+       "cv.threshold_otsu",
+       "gamma"
+      ]
+     },
+     {
+      "action_check": "unsupported",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": [
+       "cv.threshold_otsu"
+      ]
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  },
+  {
+   "episode_id": "CVFLOW-sonnet-t-coco_car_126592-60a4d7",
+   "teacher": "sonnet",
+   "steps": 3,
+   "truth": 8,
+   "counts": [
+    6,
+    6,
+    4,
+    6
+   ],
+   "passes": [
+    true,
+    false,
+    false,
+    false
+   ],
+   "flags": [],
+   "ops": [
+    "param_tune",
+    "param_tune",
+    "param_tune"
+   ],
+   "has_text": false,
+   "seconds": 22.3,
+   "prompt_chars": 1089,
+   "error": null,
+   "knowledge": {
+    "task_summary": "在影像中偵測汽車數量（detect_only），目標為找出 8 輛車。",
+    "final_solution": "紀錄中未達成最終目標，目前最佳版本為第 0 版與第 3 版（數到 6 個，且為唯一通過正式判分的版本）。",
+    "timeline": [
+     {
+      "step": 0,
+      "operation_type": "param_tune",
+      "what": "初始流程",
+      "why": "N/A",
+      "outcome": "count: 6, ground_truth: 8, score: pass"
+     },
+     {
+      "step": 1,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 conf_threshold 從 0.25 調降至 0.12 (第 1 版)",
+      "why": "N/A",
+      "outcome": "count: 6, ground_truth: 8, score: fail (比較第 0 版：數量不變，但判分由 pass 轉為 fail)"
+     },
+     {
+      "step": 2,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 model 改為 nanodet 並將 conf_threshold 調至 0.2 (第 2 版)",
+      "why": "N/A",
+      "outcome": "count: 4, ground_truth: 8, score: fail (比較第 1 版：數量減少，判分仍為 fail)"
+     },
+     {
+      "step": 3,
+      "operation_type": "param_tune",
+      "what": "將 n2 的 model 改回 yolox_s 並將 conf_threshold 調至 0.12 (第 3 版)",
+      "why": "N/A",
+      "outcome": "count: 6, ground_truth: 8, score: fail (比較第 2 版：數量增加，但判分仍為 fail)"
+     }
+    ],
+    "turning_points": [
+     {
+      "step": 1,
+      "description": "降低信心門檻（conf_threshold）雖然維持了偵測數量，卻導致正式判分從通過變為未通過。"
+     }
+    ],
+    "failed_attempts": [
+     {
+      "approach": "降低 conf_threshold (第 1 版)",
+      "why_failed": "雖然數量與初始版相同，但精確率或召回率可能因門檻過低而未達標（導致判分由 pass 變 fail）。",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "approach": "更換模型為 nanodet (第 2 版)",
+      "why_failed": "偵測數量大幅下降，且未通過判分。",
+      "evidence_steps": [
+       2
+      ]
+     }
+    ],
+    "lessons": [
+     {
+      "condition": "當降低 conf_threshold 時",
+      "action": "n2.conf_threshold",
+      "expected_change": "more_detections",
+      "evidence_steps": [
+       1
+      ]
+     },
+     {
+      "condition": "更換模型為 nanodet 時",
+      "action": "n2.model",
+      "expected_change": "fewer_detections",
+      "evidence_steps": [
+       2
+      ]
+     }
+    ],
+    "open_questions": [
+     "第 1 版在數量與初始版相同的情況下，為何正式判分會從 pass 變成 fail？（推測可能是因為低門檻引入了錯誤框，導致精確率下降）",
+     "第 3 版的參數組合（yolox_s + 0.12）與第 1 版完全一致，但紀錄中未說明兩者在執行結果上的差異，僅標註判分皆為 fail。"
+    ]
+   },
+   "check": {
+    "timeline": [
+     true,
+     true,
+     true
+    ],
+    "lessons": [
+     {
+      "action_check": "unverifiable",
+      "direction_check": "n/a",
+      "effect_check": "contradicted",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": []
+     },
+     {
+      "action_check": "unverifiable",
+      "direction_check": "n/a",
+      "effect_check": "supported",
+      "actually_closer": 0.0,
+      "led_to_pass": false,
+      "mentioned": []
+     }
+    ],
+    "failed_attempts": [
+     "supported",
+     "supported"
+    ],
+    "bad_refs": 0
+   }
+  }
+ ],
+ "passed_lessons": [
+  {
+   "id": "4060ff-1",
+   "episode": "CVFLOW-codex-t-coco_motorcycle_19109-4060ff",
+   "condition": "密集排列或有遮擋的目標",
+   "action": "使用 cv.crop 建立重疊區域並降低 detect_motorcycles 的 conf_threshold。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    2,
+    7
+   ]
+  },
+  {
+   "id": "36777e-1",
+   "episode": "CVFLOW-codex-r-coco_truck_293324-36777e",
+   "condition": "物體被拆解為多個局部框時",
+   "action": "使用 flow.detections_to_mask 結合連通輪廓合併，或建立寬窄框分支並以 iou_filter (keep: no_overlap) 處理碎片。",
+   "expected_change": "count_closer",
+   "evidence_steps": [
+    3,
+    7
+   ]
+  },
+  {
+   "id": "36777e-3",
+   "episode": "CVFLOW-codex-r-coco_truck_293324-36777e",
+   "condition": "存在非目標物體（如牽引車）誤判時",
+   "action": "可使用 cv.draw_rectangle 建立排除區，並透過 flow.iou_filter 配合 candidate_centers 進行移除。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    4
+   ]
+  },
+  {
+   "id": "5fdf92-1",
+   "episode": "CVFLOW-codex-t-coco_car_266981-5fdf92",
+   "condition": "當出現大量重疊框（重複計數）時",
+   "action": "調整 flow.nms 的 iou_threshold 或檢視偵測器本身的 nms_threshold。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    3,
+    8
+   ]
+  },
+  {
+   "id": "5fdf92-2",
+   "episode": "CVFLOW-codex-t-coco_car_266981-5fdf92",
+   "condition": "當出現漏檢（特別是遠處或遮擋物）時",
+   "action": "降低 cv.dnn_detect 的 conf_threshold 或使用 flow.merge_detections 合併不同模型結果。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    1,
+    7,
+    9
+   ]
+  },
+  {
+   "id": "dae1bb-2",
+   "episode": "CVFLOW-codex-t-coco_car_166391-dae1bb",
+   "condition": "當特定位置物體持續漏檢且全圖放大無效時",
+   "action": "使用 cv.crop 鎖定目標區域，配合 cv.resize 放大後再進行偵測。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    5
+   ]
+  },
+  {
+   "id": "9327cb-1",
+   "episode": "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb",
+   "condition": "密集且重疊的目標物 (如並排機車)",
+   "action": "提高 nms_threshold / iou_threshold",
+   "expected_change": "count_closer",
+   "evidence_steps": [
+    1,
+    3,
+    9
+   ]
+  },
+  {
+   "id": "9327cb-2",
+   "episode": "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb",
+   "condition": "暗處或遮擋導致特徵不明顯的目標物",
+   "action": "調低 conf_threshold",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    1,
+    3,
+    5,
+    9
+   ]
+  },
+  {
+   "id": "9327cb-3",
+   "episode": "CVFLOW-gemini-t-coco_motorcycle_19109-9327cb",
+   "condition": "出現局部碎片框或重複檢測同一物體",
+   "action": "增加 filter 節點的 min_w / min_h 或引入 nms 節點",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "id": "d5d1cb-1",
+   "episode": "CVFLOW-gemini-t-coco_vehicle_166391-d5d1cb",
+   "condition": "當偵測器包含多個可能重疊的類別時（如 car 與 truck）",
+   "action": "應在輸出前加入 flow.nms 節點以去除重複框。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    3
+   ]
+  },
+  {
+   "id": "d5d1cb-2",
+   "episode": "CVFLOW-gemini-t-coco_vehicle_166391-d5d1cb",
+   "condition": "當目標物與背景對比度極低時",
+   "action": "應調低 cv.dnn_detect 的 conf_threshold。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "a317c9-1",
+   "episode": "CVFLOW-gemini-t-coco_car_126592-a317c9",
+   "condition": "當畫面中存在不同類型的目標（如 car 與 truck）時",
+   "action": "應建立多分支偵測節點並使用 merge_detections 合併結果。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    5
+   ]
+  },
+  {
+   "id": "a317c9-2",
+   "episode": "CVFLOW-gemini-t-coco_car_126592-a317c9",
+   "condition": "當目標位於陰影或被部分遮擋時",
+   "action": "應大幅調低 cv.dnn_detect 的 conf_threshold。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    3,
+    5,
+    6,
+    7
+   ]
+  },
+  {
+   "id": "a317c9-4",
+   "episode": "CVFLOW-gemini-t-coco_car_126592-a317c9",
+   "condition": "當偵測到非目標物（如 stop sign）時",
+   "action": "應在 filter_detections 中明確指定 label 或調整類別過濾參數。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    4
+   ]
+  },
+  {
+   "id": "a351c0-1",
+   "episode": "CVFLOW-gemini-r-coco_car_111086-a351c0",
+   "condition": "當目標物顏色鮮豔且在暗部時",
+   "action": "優先使用 cv.gamma_correct 或 cv.equalize_color 以保留 RGB 色彩特徵，避免使用會趨向灰階的對比度增強法。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    6,
+    7
+   ]
+  },
+  {
+   "id": "a351c0-2",
+   "episode": "CVFLOW-gemini-r-coco_car_111086-a351c0",
+   "condition": "當出現背景誤檢（如船體、貨櫃）時",
+   "action": "使用 cv.draw_rectangle 建立多層 ROI 遮罩。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    3,
+    8
+   ]
+  },
+  {
+   "id": "eaac09-2",
+   "episode": "CVFLOW-gemini-t-coco_car_111086-eaac09",
+   "condition": "跨類別重複檢測 (如 car 與 truck 同時框到同一輛車)",
+   "action": "在後處理加入 flow.nms 並設定適當的 iou_threshold。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    7
+   ]
+  },
+  {
+   "id": "eaac09-3",
+   "episode": "CVFLOW-gemini-t-coco_car_111086-eaac09",
+   "condition": "陰影或背光導致漏檢",
+   "action": "調低 cv.dnn_detect 的 conf_threshold 並配合 cv.crop 排除非目標區域。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "eaac09-4",
+   "episode": "CVFLOW-gemini-t-coco_car_111086-eaac09",
+   "condition": "背景誤檢 (如貨櫃、行人)",
+   "action": "使用 flow.filter_detections 設定 aspect_min, min_w, min_h, max_w 或將 class_filter 鎖定。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    1,
+    4,
+    9
+   ]
+  },
+  {
+   "id": "789cc4-1",
+   "episode": "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4",
+   "condition": "當單一偵測器在極低門檻下仍無法召回微小或暗處目標時",
+   "action": "引入不同架構的偵測器 (如 NanoDet) 並使用 flow.merge_detections 進行整合。",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    5
+   ]
+  },
+  {
+   "id": "789cc4-3",
+   "episode": "CVFLOW-gemini-t-coco_motorcycle_245448-789cc4",
+   "condition": "當偵測結果出現大量重複框或重疊碎片時",
+   "action": "調低 flow.nms 的 iou_threshold。",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    6
+   ]
+  },
+  {
+   "id": "ac2cb3-2",
+   "episode": "CVFLOW-opus-t-coco_motorcycle_245448-ac2cb3",
+   "condition": "當增加局部偵測流程時",
+   "action": "cv.crop / cv.resize",
+   "expected_change": "count_further",
+   "evidence_steps": [
+    2
+   ]
+  },
+  {
+   "id": "ac2cb3-3",
+   "episode": "CVFLOW-opus-t-coco_motorcycle_245448-ac2cb3",
+   "condition": "使用高度過濾來減少框數時",
+   "action": "flow.filter_detections.max_h",
+   "expected_change": "count_closer",
+   "evidence_steps": [
+    3
+   ]
+  },
+  {
+   "id": "7f4b18-1",
+   "episode": "CVFLOW-opus-t-coco_car_126592-7f4b18",
+   "condition": "當目標物包含不同類別時",
+   "action": "使用 flow.merge_detections 合併多個 cv.dnn_detect 的結果（例如同時偵測 car 與 truck）",
+   "expected_change": "count_closer",
+   "evidence_steps": [
+    3
+   ]
+  },
+  {
+   "id": "7f4b18-2",
+   "episode": "CVFLOW-opus-t-coco_car_126592-7f4b18",
+   "condition": "當合併不同來源的偵測框時",
+   "action": "加入 flow.nms 節點以處理重疊框",
+   "expected_change": "count_closer",
+   "evidence_steps": [
+    3
+   ]
+  },
+  {
+   "id": "65b190-1",
+   "episode": "CVFLOW-haiku-t-coco_bus_15517-65b190",
+   "condition": "當偵測數量低於正解時",
+   "action": "降低 cv.dnn_detect 的 conf_threshold",
+   "expected_change": "more_detections",
+   "evidence_steps": [
+    1
+   ]
+  },
+  {
+   "id": "65b190-2",
+   "episode": "CVFLOW-haiku-t-coco_bus_15517-65b190",
+   "condition": "當偵測數量過多（重複框）時",
+   "action": "調低 flow.nms 的 iou_threshold",
+   "expected_change": "fewer_detections",
+   "evidence_steps": [
+    3
+   ]
+  }
+ ],
+ "merge": {
+  "answer": {
+   "rules": [
+    {
+     "condition": "目標物位於暗處、陰影、背光或與背景對比度極低時",
+     "action": "調低 cv.dnn_detect 的 conf_threshold；若顏色鮮豔可優先使用 cv.gamma_correct 或 cv.equalize_color 以保留色彩特徵，避免使用趨向灰階的對比度增強法。",
+     "expected_change": "more_detections",
+     "lesson_ids": [
+      "9327cb-2",
+      "d5d1cb-2",
+      "a317c9-2",
+      "a351c0-1",
+      "eaac09-3"
+     ]
+    },
+    {
+     "condition": "目標物被遮擋、密集排列或出現漏檢時",
+     "action": "使用 cv.crop 建立重疊區域或鎖定目標區域並配合 cv.resize 放大；降低 conf_threshold；或引入不同架構的偵測器（如 NanoDet）並使用 flow.merge_detections 合併結果。",
+     "expected_change": "more_detections",
+     "lesson_ids": [
+      "4060ff-1",
+      "5fdf92-2",
+      "dae1bb-2",
+      "9327cb-2",
+      "a317c9-2",
+      "eaac09-3",
+      "789cc4-1"
+     ]
+    },
+    {
+     "condition": "畫面中存在不同類型的目標（如 car 與 truck）時",
+     "action": "建立多分支偵測節點並使用 flow.merge_detections 合併結果。",
+     "expected_change": "more_detections",
+     "lesson_ids": [
+      "a317c9-1"
+     ]
+    },
+    {
+     "condition": "出現大量重複框、重疊框或跨類別重複檢測時",
+     "action": "在後處理加入 flow.nms 節點，並根據需求調整 iou_threshold 或偵測器本身的 nms_threshold。",
+     "expected_change": "fewer_detections",
+     "lesson_ids": [
+      "5fdf92-1",
+      "d5d1cb-1",
+      "eaac09-2",
+      "7f4b18-2",
+      "65b190-2"
+     ]
+    },
+    {
+     "condition": "目標物被拆解為多個局部碎片框或重複檢測同一物體時",
+     "action": "使用 flow.detections_to_mask 結合連通輪廓合併，或建立寬窄框分支並以 iou_filter (keep: no_overlap) 處理；亦可增加 filter 節點的 min_w / min_h 或引入 nms 節點。",
+     "expected_change": "count_closer",
+     "lesson_ids": [
+      "36777e-1",
+      "9327cb-3"
+     ]
+    },
+    {
+     "condition": "出現背景誤檢（如牽引車、船體、貨櫃、行人或 stop sign）時",
+     "action": "使用 cv.draw_rectangle 建立排除區或多層 ROI 遮罩；透過 flow.iou_filter 配合 candidate_centers 進行移除；或在 filter_detections 中明確指定 label、調整類別過濾參數，以及設定 aspect_min, min_w, min_h, max_w。",
+     "expected_change": "fewer_detections",
+     "lesson_ids": [
+      "36777e-3",
+      "a317c9-4",
+      "a351c0-2",
+      "eaac09-4"
+     ]
+    },
+    {
+     "condition": "密集且重疊的目標物 (如並排機車)",
+     "action": "提高 nms_threshold / iou_threshold。",
+     "expected_change": "count_closer",
+     "lesson_ids": [
+      "9327cb-1"
+     ]
+    },
+    {
+     "condition": "合併不同來源或類別的偵測框時",
+     "action": "使用 flow.merge_detections 合併結果，並加入 flow.nms 處理重疊框。",
+     "expected_change": "count_closer",
+     "lesson_ids": [
+      "7f4b18-1",
+      "7f4b18-2"
+     ]
+    },
+    {
+     "condition": "增加局部偵測流程時",
+     "action": "使用 cv.crop / cv.resize。",
+     "expected_change": "count_further",
+     "lesson_ids": [
+      "ac2cb3-2"
+     ]
+    },
+    {
+     "condition": "需要透過高度過濾來減少框數時",
+     "action": "使用 flow.filter_detections.max_h。",
+     "expected_change": "count_closer",
+     "lesson_ids": [
+      "ac2cb3-3"
+     ]
+    }
+   ],
+   "conflicts": [
+    "針對「重複框/重疊框」問題：[5fdf92-1], [d5d1cb-1], [eaac09-2], [7f4b18-2], [65b190-2] 建議調低 (lower) iou_threshold 以減少重複；但 [9327cb-1] 在處理密集重疊目標時建議提高 (higher) nms/iou_threshold 以達到 count_closer 的效果。"
+   ]
+  },
+  "seconds": 34.0
+ },
+ "rules": [
+  {
+   "condition": "目標物位於暗處、陰影、背光或與背景對比度極低時",
+   "action": "調低 cv.dnn_detect 的 conf_threshold；若顏色鮮豔可優先使用 cv.gamma_correct 或 cv.equalize_color 以保留色彩特徵，避免使用趨向灰階的對比度增強法。",
+   "expected_change": "more_detections",
+   "lesson_ids": [
+    "9327cb-2",
+    "d5d1cb-2",
+    "a317c9-2",
+    "a351c0-1",
+    "eaac09-3"
+   ],
+   "valid_lesson_ids": [
+    "9327cb-2",
+    "d5d1cb-2",
+    "a317c9-2",
+    "a351c0-1",
+    "eaac09-3"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 5
+  },
+  {
+   "condition": "目標物被遮擋、密集排列或出現漏檢時",
+   "action": "使用 cv.crop 建立重疊區域或鎖定目標區域並配合 cv.resize 放大；降低 conf_threshold；或引入不同架構的偵測器（如 NanoDet）並使用 flow.merge_detections 合併結果。",
+   "expected_change": "more_detections",
+   "lesson_ids": [
+    "4060ff-1",
+    "5fdf92-2",
+    "dae1bb-2",
+    "9327cb-2",
+    "a317c9-2",
+    "eaac09-3",
+    "789cc4-1"
+   ],
+   "valid_lesson_ids": [
+    "4060ff-1",
+    "5fdf92-2",
+    "dae1bb-2",
+    "9327cb-2",
+    "a317c9-2",
+    "eaac09-3",
+    "789cc4-1"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 7
+  },
+  {
+   "condition": "畫面中存在不同類型的目標（如 car 與 truck）時",
+   "action": "建立多分支偵測節點並使用 flow.merge_detections 合併結果。",
+   "expected_change": "more_detections",
+   "lesson_ids": [
+    "a317c9-1"
+   ],
+   "valid_lesson_ids": [
+    "a317c9-1"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 1
+  },
+  {
+   "condition": "出現大量重複框、重疊框或跨類別重複檢測時",
+   "action": "在後處理加入 flow.nms 節點，並根據需求調整 iou_threshold 或偵測器本身的 nms_threshold。",
+   "expected_change": "fewer_detections",
+   "lesson_ids": [
+    "5fdf92-1",
+    "d5d1cb-1",
+    "eaac09-2",
+    "7f4b18-2",
+    "65b190-2"
+   ],
+   "valid_lesson_ids": [
+    "5fdf92-1",
+    "d5d1cb-1",
+    "eaac09-2",
+    "7f4b18-2",
+    "65b190-2"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 5
+  },
+  {
+   "condition": "目標物被拆解為多個局部碎片框或重複檢測同一物體時",
+   "action": "使用 flow.detections_to_mask 結合連通輪廓合併，或建立寬窄框分支並以 iou_filter (keep: no_overlap) 處理；亦可增加 filter 節點的 min_w / min_h 或引入 nms 節點。",
+   "expected_change": "count_closer",
+   "lesson_ids": [
+    "36777e-1",
+    "9327cb-3"
+   ],
+   "valid_lesson_ids": [
+    "36777e-1",
+    "9327cb-3"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 2
+  },
+  {
+   "condition": "出現背景誤檢（如牽引車、船體、貨櫃、行人或 stop sign）時",
+   "action": "使用 cv.draw_rectangle 建立排除區或多層 ROI 遮罩；透過 flow.iou_filter 配合 candidate_centers 進行移除；或在 filter_detections 中明確指定 label、調整類別過濾參數，以及設定 aspect_min, min_w, min_h, max_w。",
+   "expected_change": "fewer_detections",
+   "lesson_ids": [
+    "36777e-3",
+    "a317c9-4",
+    "a351c0-2",
+    "eaac09-4"
+   ],
+   "valid_lesson_ids": [
+    "36777e-3",
+    "a317c9-4",
+    "a351c0-2",
+    "eaac09-4"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 4
+  },
+  {
+   "condition": "密集且重疊的目標物 (如並排機車)",
+   "action": "提高 nms_threshold / iou_threshold。",
+   "expected_change": "count_closer",
+   "lesson_ids": [
+    "9327cb-1"
+   ],
+   "valid_lesson_ids": [
+    "9327cb-1"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 1
+  },
+  {
+   "condition": "合併不同來源或類別的偵測框時",
+   "action": "使用 flow.merge_detections 合併結果，並加入 flow.nms 處理重疊框。",
+   "expected_change": "count_closer",
+   "lesson_ids": [
+    "7f4b18-1",
+    "7f4b18-2"
+   ],
+   "valid_lesson_ids": [
+    "7f4b18-1",
+    "7f4b18-2"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 1
+  },
+  {
+   "condition": "增加局部偵測流程時",
+   "action": "使用 cv.crop / cv.resize。",
+   "expected_change": "count_further",
+   "lesson_ids": [
+    "ac2cb3-2"
+   ],
+   "valid_lesson_ids": [
+    "ac2cb3-2"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 1
+  },
+  {
+   "condition": "需要透過高度過濾來減少框數時",
+   "action": "使用 flow.filter_detections.max_h。",
+   "expected_change": "count_closer",
+   "lesson_ids": [
+    "ac2cb3-3"
+   ],
+   "valid_lesson_ids": [
+    "ac2cb3-3"
+   ],
+   "unknown_ids": [],
+   "support_episodes": 1
+  }
+ ]
+}
