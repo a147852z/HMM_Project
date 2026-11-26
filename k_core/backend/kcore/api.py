@@ -13,6 +13,7 @@ from .conversion import ConversionService
 from .conversion.service import ClientFactory
 from .database import make_session_factory
 from .encoding import ALLOWED_FIELDS, FeatureSchema
+from .fsm import StateMachineService
 from .hmm.training import TrainingConfig
 from .service import KCoreError, KCoreService
 
@@ -156,6 +157,26 @@ def build_assist_router(assist: AssistService) -> APIRouter:
     @router.get("/aov/assist-evaluation")
     def evaluation(case_id: str, model_version_id: str = "active") -> dict[str, Any]:
         return assist.evaluate(case_id, model_version_id)
+
+    return router
+
+
+def build_state_machine_router(machines: StateMachineService) -> APIRouter:
+    router = APIRouter(prefix="/api/v1/cases/{case_id}")
+
+    @router.get("/episodes/{episode_id}/state-machine")
+    def state_machine(case_id: str, episode_id: str,
+                      granularity: Literal["full", "structure", "category"] = "structure",
+                      model_version_id: str = "active") -> dict[str, Any]:
+        """一條演變過程的有限狀態機：狀態＝流程圖（依粒度合併），轉移＝修改；有模型時附上隱藏狀態。"""
+        return machines.episode(case_id, episode_id, granularity, model_version_id)
+
+    @router.get("/tasks/{task_id}/state-machine")
+    def task_state_machine(case_id: str, task_id: str,
+                           granularity: Literal["full", "structure", "category"] = "structure",
+                           model_version_id: str = "active") -> dict[str, Any]:
+        """同一題（work_order_id 相同）所有演變過程合併的有限狀態機：每條演變過程一個泳道，共用的狀態就是路線交會。"""
+        return machines.task(case_id, task_id, granularity, model_version_id)
 
     return router
 
@@ -327,4 +348,5 @@ def create_app(database_url: str | None = None, llm_client_factory: ClientFactor
     app.include_router(build_router(service))
     app.include_router(build_conversion_router(conversions))
     app.include_router(build_assist_router(AssistService(service)))
+    app.include_router(build_state_machine_router(StateMachineService(service)))
     return app

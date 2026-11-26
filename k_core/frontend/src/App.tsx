@@ -12,9 +12,10 @@ import { DocumentsPage } from './pages/DocumentsPage'
 import { ProfilesPage } from './pages/ProfilesPage'
 import { ResearchPage } from './pages/ResearchPage'
 import { ReviewView } from './pages/ReviewView'
+import { StateMachinePage } from './pages/StateMachinePage'
 import type { CaseInfo } from './types'
 
-export type Page = 'research' | 'assist' | 'conversions' | 'documents' | 'profiles'
+export type Page = 'research' | 'fsm' | 'assist' | 'conversions' | 'documents' | 'profiles'
 
 const CASE_KEY = 'kcore.caseId'
 
@@ -57,7 +58,7 @@ export function App() {
       const fromHash = readHash()
       // #case/<案例代號> 直接開啟該案例；#review/<轉換代號> 依轉換代號推得案例
       // #case/<案例代號>/<分頁> 也可以直接開啟指定分頁，例如 #case/CVFLOW/assist
-      const caseHash = /^#case\/([^/]+)(?:\/(research|assist|conversions|documents|profiles))?$/.exec(window.location.hash)
+      const caseHash = /^#case\/([^/]+)(?:\/(research|fsm|assist|conversions|documents|profiles))?$/.exec(window.location.hash)
       if (caseHash?.[2]) setPage(caseHash[2] as Page)
       const hashCase = caseHash
         ? list.find((item) => item.case_id === decodeURIComponent(caseHash[1]))?.case_id
@@ -101,6 +102,7 @@ export function App() {
         {caseId && !openConversion && (
           <Tabs value={page} onChange={(_, value: Page) => setPage(value)} sx={{ px: 2 }}>
             <Tab value="research" label="模型研究" />
+            <Tab value="fsm" label="狀態機" />
             <Tab value="assist" label="生成協助測試" />
             <Tab value="conversions" label="轉換與審核" />
             <Tab value="documents" label="原始文件" />
@@ -123,6 +125,7 @@ export function App() {
           <ConversionsPage caseId={caseId} onOpen={setOpenConversion} onNavigate={setPage} />
         )}
         {caseId && !openConversion && page === 'research' && <ResearchPage caseId={caseId} />}
+        {caseId && !openConversion && page === 'fsm' && <StateMachinePage caseId={caseId} />}
         {caseId && !openConversion && page === 'assist' && <AssistPage caseId={caseId} />}
         {caseId && !openConversion && page === 'documents' && <DocumentsPage caseId={caseId} />}
         {caseId && !openConversion && page === 'profiles' && <ProfilesPage caseId={caseId} />}

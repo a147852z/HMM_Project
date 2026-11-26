@@ -1,6 +1,6 @@
 import type {
   AssistEvaluation, AssistResult, CaseInfo, Conversion, ConversionDetail, DocumentInfo, EpisodeDetail, EpisodeSummary, ModelAnalysis, ModelSummary,
-  Profile, ProfileInput, ProfileTestResult, ReplayResult,
+  Granularity, Profile, ProfileInput, ProfileTestResult, ReplayResult, StateMachine, TaskStateMachine,
 } from './types'
 
 const BASE = '/api/v1'
@@ -58,6 +58,14 @@ export const api = {
   replay: (caseId: string, modelId: string, episodeId: string) =>
     request<ReplayResult>(`${c(caseId)}/models/${encodeURIComponent(modelId)}/replay`,
       json('POST', { episode_id: episodeId, top_k: 5 })),
+
+  stateMachine: (caseId: string, episodeId: string, granularity: Granularity) =>
+    request<StateMachine>(`${c(caseId)}/episodes/${encodeURIComponent(episodeId)}/state-machine`
+      + `?granularity=${granularity}`),
+
+  taskStateMachine: (caseId: string, taskId: string, granularity: Granularity) =>
+    request<TaskStateMachine>(`${c(caseId)}/tasks/${encodeURIComponent(taskId)}/state-machine`
+      + `?granularity=${granularity}`),
 
   assistEvaluation: (caseId: string) => request<AssistEvaluation>(`${c(caseId)}/aov/assist-evaluation`),
   assist: (caseId: string, episodeId: string, prefixLength: number, usePreviousResult = false) =>

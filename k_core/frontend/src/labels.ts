@@ -41,6 +41,8 @@ const CATEGORY_LABEL: Record<string, string> = {
   postprocess: '後處理', output: '輸出', other: '其他', none: '無',
 }
 
+export const categoryLabel = (category: string) => CATEGORY_LABEL[category] ?? category
+
 /** 觀測符號（例如 param_tune|detect）轉成中文；未知的部分保留原文。 */
 export function tokenLabel(token: string): string {
   if (token === '__UNK__') return '未見過的組合'

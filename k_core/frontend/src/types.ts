@@ -301,3 +301,113 @@ export interface AssistEvaluation {
   by_operation: Record<string, { steps: number; covered: number; hit3: number; coverage: number; assist_hit3: number }>
   episodes: { episode_id: string; events: number; assist_hit3: number | null }[]
 }
+
+// ------------------------------------------------------------------ 有限狀態機（一條演變過程）
+export type Granularity = 'full' | 'structure' | 'category'
+
+export interface FsmState {
+  id: string
+  order: number
+  summary: string[]
+  n_nodes: number
+  visits: number[]
+  version_ids: string[]
+  hidden_states: Record<string, number>
+  is_start: boolean
+  is_final: boolean
+}
+
+export interface FsmEvent {
+  step: number
+  from_version: number
+  to_version: number
+  event_id: string
+  operation_type: string
+  activity_type: string | null
+  change: Change
+  reason: string | null
+  token?: string
+  hidden_state?: string
+  posterior?: Record<string, number>
+  hidden_transition?: { from: string | null; to: string; probability: number }
+  model_probability?: number
+  model_rank?: number
+}
+
+export interface FsmTransition {
+  id: string
+  source: string
+  target: string
+  count: number
+  probability: number
+  self_loop: boolean
+  operations: Record<string, number>
+  hidden_states: Record<string, number>
+  events: FsmEvent[]
+}
+
+export interface StateMachine {
+  case_id: string
+  episode_id: string
+  work_order_id: string | null
+  teacher: string | null
+  request: string | null
+  granularity: Granularity
+  path: string[]
+  states: FsmState[]
+  transitions: FsmTransition[]
+  versions: { index: number; version_id: string; state: string; nodes: AoVNode[]; edges: AoVEdge[] }[]
+  stats: { versions: number; states: number; transitions: number; self_loop_steps: number; revisits: number }
+  hmm: null | {
+    model_version_id: string
+    states: string[]
+    method: string
+    top_observations: Record<string, { observation: string; probability: number }[]>
+  }
+}
+
+// ------------------------------------------------------------------ 有限狀態機（同一題所有演變過程）
+export interface TaskFsmState extends Omit<FsmState, 'visits' | 'version_ids'> {
+  lane: number
+  column: number
+  visits: { episode_id: string; version: number }[]
+  episodes: string[]
+  starts: string[]
+  finals: string[]
+}
+
+export interface TaskFsmEvent extends FsmEvent {
+  episode_id: string
+  lane: number
+}
+
+export interface TaskFsmTransition extends Omit<FsmTransition, 'events'> {
+  episodes: string[]
+  events: TaskFsmEvent[]
+}
+
+export interface TaskFsmLane {
+  episode_id: string
+  lane: number
+  teacher: string | null
+  scope: string | null
+  run: string | null
+  path: string[]
+  events: number
+  versions: { index: number; version_id: string; state: string; nodes: AoVNode[]; edges: AoVEdge[] }[]
+}
+
+export interface TaskStateMachine {
+  case_id: string
+  task_id: string
+  request: string | null
+  granularity: Granularity
+  episodes: TaskFsmLane[]
+  states: TaskFsmState[]
+  transitions: TaskFsmTransition[]
+  stats: {
+    episodes: number; versions: number; states: number; transitions: number; shared_states: number
+    self_loop_steps: number; revisits: number
+  }
+  hmm: StateMachine['hmm']
+}
