@@ -176,6 +176,21 @@ function pointAtY(p0: Point, c1: Point, c2: Point, p3: Point, y: number, from: n
   return best
 }
 
+/**
+ * 標籤互相重疊時錯開：依序試原位、下移 20px、上移 20px、下移 40px⋯，用第一個不重疊的位置。
+ * 自迴圈的標籤位置固定（在框上方）先放，其他依序放。
+ */
+const LABEL_OFFSETS = [0, 20, -20, 40, -40, 60, -60, 80, -80]
+function placeLabels<T extends { x: number; y: number; w: number; fixed: boolean }>(labels: T[]): T[] {
+  const placed: T[] = []
+  const overlaps = (a: T, b: T) => Math.abs(a.x - b.x) < (a.w + b.w) / 2 + 2 && Math.abs(a.y - b.y) < 19
+  for (const label of [...labels].sort((a, b) => Number(b.fixed) - Number(a.fixed))) {
+    const offset = LABEL_OFFSETS.find((dy) => !placed.some((p) => overlaps(p, { ...label, y: label.y + dy }))) ?? 0
+    placed.push({ ...label, y: label.y + offset })
+  }
+  return placed
+}
+
 const cubic = (p0: Point, c1: Point, c2: Point, p3: Point) =>
   `M ${p0.x} ${p0.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${p3.x} ${p3.y}`
 
@@ -360,13 +375,14 @@ function TeacherDiagram({ machine, states, colorBy, showProb, showHidden, select
           )
         })}
 
-        {transitions.filter((t) => selection && related(t)).map((t) => {
+        {placeLabels(transitions.filter((t) => selection && related(t)).map((t) => {
           const shape = shapes.get(t.id)!
           // 選了狀態時，標籤放在靠近這個狀態的那一端；選了轉移時放在中間
-          const label = !selectedState ? shape.mid
+          const at = !selectedState ? shape.mid
             : t.target === selectedState && t.source !== selectedState ? shape.in : shape.out
           const text = labelText(t)
-          const w = textWidth(text, 10) + 12
+          return { t, text, x: at.x, y: at.y, w: textWidth(text, 10) + 12, fixed: t.self_loop }
+        })).map(({ t, text, w, ...label }) => {
           return (
             <g key={`${t.id}-label`} style={{ cursor: 'pointer' }} onClick={() => onSelect({ kind: 'transition', id: t.id, index: 0 })}>
               <rect x={label.x - w / 2} y={label.y - 9} width={w} height={18} rx={5}
