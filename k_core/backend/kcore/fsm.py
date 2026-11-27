@@ -8,10 +8,13 @@
 
 轉移機率＝這條演變過程裡，從同一個狀態出去的修改中，走這條轉移的比例。
 
-兩種範圍：
+三種範圍：
 - 單一演變過程（StateMachineService.episode）：一位解題者解一題的過程。
 - 同一題的所有演變過程（StateMachineService.task）：work_order_id 相同的演變過程合併，
   轉移機率改用所有演變過程累計；每個狀態記下最早走到它的演變過程（lane）與當時是第幾版（column），供泳道圖排版。
+- 同一個解題 AI 的所有演變過程（StateMachineService.teacher）：跨題目合併，看這個 AI 習慣的路線；
+  每個狀態另外統計這個狀態的版本通過判分的比例，以及走到這裡的演變過程最後通過的比例。
+  不同題目的完整流程圖幾乎不會相同，所以這個範圍適合用「節點類別」的粒度。
 
 有可用的模型時，另外標示模型內部的看法（只用於呈現，不影響其他功能）：
 - 每次修改由哪個隱藏狀態產生：Viterbi 路徑，以及用整條序列推算的後驗機率。
@@ -28,6 +31,7 @@ from typing import Any
 import numpy as np
 from sqlalchemy import select
 
+from .assist import result_label
 from .database import EpisodeRecord, WorkflowSnapshotRecord
 from .encoding import UNKNOWN, FeatureSchema, event_token
 from .hmm.hybrid import DEFAULT_PREDICTOR
@@ -278,6 +282,144 @@ def build_task_state_machine(episodes: list[dict[str, Any]], granularity: str,
     }
 
 
+def _rate(passed: int, judged: int) -> float | None:
+    return passed / judged if judged else None
+
+
+def build_teacher_state_machine(episodes: list[dict[str, Any]], granularity: str,
+                                schema: FeatureSchema | None = None) -> dict[str, Any]:
+    """同一個解題 AI 的所有演變過程（跨題目）合併成一個狀態機。
+
+    episodes 的每個元素與 build_task_state_machine 相同，另外有：
+    - work_order_id：題目代號。
+    - results：第 i 版的執行結果，"pass"／"fail"／"error"（無法執行）／None（沒有判分，例如沒有標準答案的照片題）。
+    - final_ok：最後一版是否通過；沒有判分時為 None。
+    沒有修改的演變過程也納入：起點就是最後一版。
+
+    column＝最早在第幾版走到這個狀態；狀態依 column 排序，同一欄經過次數多的在前，依序編號。
+    first_reach＝走到這個狀態的演變過程，平均在第幾版第一次走到（起點是 0），供畫面由左到右排版。
+    每個狀態統計：經過幾次、幾條演變過程、幾題；這個狀態的版本的執行結果；從這裡開始、停在這裡的次數；
+    兩種通過率，都只用有判分的演變過程（final_ok 不是 None）計算，因為沒有標準答案的題目無從通過：
+    - pass_rate：這個狀態的版本通過判分的比例（無法執行算沒通過，個別沒有判分的版本不算）。
+    - reached_pass_rate：走到這裡的演變過程，最後通過的比例。
+    轉移另外統計修改後那一版的執行結果，以及修改後通過的比例（算法同 pass_rate）。
+    """
+    if granularity not in GRANULARITIES:
+        raise KCoreError("invalid_granularity", f"granularity must be one of {list(GRANULARITIES)}", 422)
+    if not episodes:
+        raise KCoreError("teacher_not_found", "no episodes for this solver", 404)
+    keyed: list[list[str]] = []
+    first: dict[str, tuple[int, int]] = {}
+    visits: Counter = Counter()
+    for number, episode in enumerate(episodes):
+        if len(episode["versions"]) != len(episode["events"]) + 1:
+            raise KCoreError("invalid_episode", f"{episode['episode_id']}: versions must be one more than events", 422)
+        keys = [state_key(nodes, edges, granularity, schema) for _, nodes, edges in episode["versions"]]
+        keyed.append(keys)
+        for index, key in enumerate(keys):
+            visits[key] += 1
+            if key not in first or (index, number) < first[key]:
+                first[key] = (index, number)
+    order = sorted(first, key=lambda key: (first[key][0], -visits[key], first[key][1]))
+    ids = {key: f"S{n}" for n, key in enumerate(order, start=1)}
+
+    states: dict[str, dict[str, Any]] = {}
+    for n, key in enumerate(order, start=1):
+        column, number = first[key]
+        _, nodes, edges = episodes[number]["versions"][column]
+        states[ids[key]] = {
+            "id": ids[key], "order": n, "column": column, "summary": state_summary(nodes, edges, granularity, schema),
+            "n_nodes": len(nodes),
+            "example": {"episode_id": episodes[number]["episode_id"], "version": column, "nodes": nodes, "edges": edges},
+            "visits": 0, "episodes": [], "tasks": [], "results": Counter(), "hidden_states": Counter(),
+            "starts": 0, "finals": 0, "final_results": Counter(), "judged_versions": 0, "passed_versions": 0,
+            "reached_judged": 0, "reached_passed": 0, "first_reach": 0.0,
+        }
+
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    outgoing: Counter = Counter()
+    self_loops = revisits = 0
+    rows = []
+    for episode, keys in zip(episodes, keyed, strict=True):
+        eid, task = episode["episode_id"], episode.get("work_order_id")
+        steps = episode.get("model_steps")
+        results = episode.get("results") or [None] * len(keys)
+        judged = episode.get("final_ok") is not None
+        path = [ids[key] for key in keys]
+        for index, state_id in enumerate(path):
+            state = states[state_id]
+            state["visits"] += 1
+            state["results"][results[index] or "unjudged"] += 1
+            if judged and results[index] is not None:
+                state["judged_versions"] += 1
+                state["passed_versions"] += results[index] == "pass"
+            if index > 0 and steps:
+                state["hidden_states"][steps[index - 1]["hidden_state"]] += 1
+        for state_id in dict.fromkeys(path):
+            state = states[state_id]
+            state["first_reach"] += path.index(state_id)  # 先加總，最後除以演變過程數
+            state["episodes"].append(eid)
+            if task is not None and task not in state["tasks"]:
+                state["tasks"].append(task)
+            if judged:
+                state["reached_judged"] += 1
+                state["reached_passed"] += bool(episode["final_ok"])
+        states[path[0]]["starts"] += 1
+        states[path[-1]]["finals"] += 1
+        states[path[-1]]["final_results"][results[-1] or "unjudged"] += 1
+        for t, event in enumerate(episode["events"]):
+            item = {"episode_id": eid, "work_order_id": task, "step": t + 1, "from_version": t, "to_version": t + 1,
+                    "operation_type": event["operation_type"], "activity_type": event.get("activity_type"),
+                    "reason": event.get("reason"), "result": results[t + 1], "judged": judged}
+            if steps:
+                item.update(steps[t])
+            grouped[(path[t], path[t + 1])].append(item)
+            outgoing[path[t]] += 1
+        self_loops += sum(1 for t in range(len(path) - 1) if path[t] == path[t + 1])
+        revisits += sum(1 for t in range(1, len(path)) if path[t] != path[t - 1] and path[t] in path[:t])
+        rows.append({"episode_id": eid, "work_order_id": task, "scope": episode.get("scope"), "run": episode.get("run"),
+                     "path": path, "events": len(episode["events"]), "results": results,
+                     "final_ok": episode.get("final_ok")})
+
+    transitions = []
+    pairs = sorted(grouped, key=lambda pair: (states[pair[0]]["order"], states[pair[1]]["order"]))
+    for number, (source, target) in enumerate(pairs, start=1):
+        items = grouped[(source, target)]
+        after = [item["result"] for item in items if item["judged"] and item["result"] is not None]
+        transitions.append({
+            "id": f"T{number}", "source": source, "target": target, "count": len(items),
+            "probability": len(items) / outgoing[source], "self_loop": source == target,
+            "operations": dict(Counter(item["operation_type"] for item in items)),
+            "hidden_states": dict(Counter(item["hidden_state"] for item in items if item.get("hidden_state"))),
+            "results": dict(Counter(item["result"] or "unjudged" for item in items)),
+            "pass_rate": _rate(sum(1 for r in after if r == "pass"), len(after)),
+            "episodes": list(dict.fromkeys(item["episode_id"] for item in items)),
+            "tasks": len({item["work_order_id"] for item in items}),
+            "events": items,
+        })
+    for state in states.values():
+        state["first_reach"] /= len(state["episodes"])
+        state["pass_rate"] = _rate(state["passed_versions"], state["judged_versions"])
+        state["reached_pass_rate"] = _rate(state["reached_passed"], state["reached_judged"])
+        state["results"] = dict(state["results"])
+        state["final_results"] = dict(state["final_results"])
+        state["hidden_states"] = dict(state["hidden_states"])
+        state["is_start"] = state["starts"] > 0
+        state["is_final"] = state["finals"] > 0
+    judged = [row for row in rows if row["final_ok"] is not None]
+    return {
+        "granularity": granularity, "episodes": rows,
+        "states": sorted(states.values(), key=lambda s: s["order"]),
+        "transitions": transitions,
+        "stats": {"episodes": len(rows), "tasks": len({row["work_order_id"] for row in rows}),
+                  "versions": sum(len(e["versions"]) for e in episodes), "steps": sum(len(e["events"]) for e in episodes),
+                  "states": len(states), "transitions": len(transitions),
+                  "shared_states": sum(1 for s in states.values() if len(s["tasks"]) > 1),
+                  "self_loop_steps": self_loops, "revisits": revisits,
+                  "judged_episodes": len(judged), "passed_episodes": sum(1 for row in judged if row["final_ok"])},
+    }
+
+
 SCOPE_ORDER = {"tasks": 0, "retake": 1}  # CVflow：第一次考試在前，補考在後；其他案例沒有這個欄位
 
 
@@ -335,10 +477,14 @@ class StateMachineService:
             for step, token in zip(model_steps, raw, strict=True):
                 step["token"] = token
         info = episode.initial_context or {}
-        return {"episode_id": episode.episode_id, "teacher": info.get("teacher"), "scope": info.get("scope"),
-                "run": info.get("run"), "request": info.get("request"),
+        provenance = episode.provenance or {}
+        results = [result_label(provenance.get("first_version_result")),
+                   *[result_label((e.attributes or {}).get("result")) for e in records]]
+        return {"episode_id": episode.episode_id, "work_order_id": episode.work_order_id, "teacher": info.get("teacher"),
+                "scope": info.get("scope"), "run": info.get("run"), "request": info.get("request"),
                 "versions": [(initial.version_id, initial.nodes, initial.edges), *replay.snapshots],
-                "events": events, "model_steps": model_steps}
+                "events": events, "model_steps": model_steps, "results": results,
+                "final_ok": (provenance.get("outcome") or {}).get("final_ok")}
 
     def episode(self, case_id: str, episode_id: str, granularity: str = "structure",
                 model_version_id: str = "active") -> dict[str, Any]:
@@ -378,4 +524,26 @@ class StateMachineService:
             result = build_task_state_machine(data, granularity, context["schema"] if context else None)
             result.update({"case_id": case_id, "task_id": task_id, "request": data[0]["request"] if data else None,
                            "hmm": self._hmm_info(context)})
+            return result
+
+    def teacher(self, case_id: str, teacher: str, granularity: str = "category",
+                model_version_id: str = "active") -> dict[str, Any]:
+        """同一個解題 AI（initial_context.teacher）所有演變過程合併的狀態機，跨題目。"""
+        if granularity not in GRANULARITIES:
+            raise KCoreError("invalid_granularity", f"granularity must be one of {list(GRANULARITIES)}", 422)
+        with self.core.session_factory() as session:
+            self.core._case(session, case_id)
+            episodes = [e for e in session.scalars(select(EpisodeRecord).where(EpisodeRecord.case_id == case_id))
+                        if (e.initial_context or {}).get("teacher") == teacher]
+            if not episodes:
+                raise KCoreError("teacher_not_found", f"no episodes solved by {teacher} in case {case_id}", 404)
+
+            def episode_key(e: EpisodeRecord):
+                info = e.initial_context or {}
+                return (SCOPE_ORDER.get(info.get("scope"), 9), e.work_order_id or "", e.started_at, e.episode_id)
+
+            context = self._model_context(session, case_id, model_version_id)
+            data = [self._load(session, e, context) for e in sorted(episodes, key=episode_key)]
+            result = build_teacher_state_machine(data, granularity, context["schema"] if context else None)
+            result.update({"case_id": case_id, "teacher": teacher, "hmm": self._hmm_info(context)})
             return result

@@ -178,6 +178,13 @@ def build_state_machine_router(machines: StateMachineService) -> APIRouter:
         """同一題（work_order_id 相同）所有演變過程合併的有限狀態機：每條演變過程一個泳道，共用的狀態就是路線交會。"""
         return machines.task(case_id, task_id, granularity, model_version_id)
 
+    @router.get("/teachers/{teacher}/state-machine")
+    def teacher_state_machine(case_id: str, teacher: str,
+                              granularity: Literal["full", "structure", "category"] = "category",
+                              model_version_id: str = "active") -> dict[str, Any]:
+        """同一個解題 AI 所有演變過程（跨題目）合併的有限狀態機，附每個狀態的通過率。"""
+        return machines.teacher(case_id, teacher, granularity, model_version_id)
+
     return router
 
 

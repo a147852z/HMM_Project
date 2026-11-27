@@ -1,6 +1,6 @@
 import type {
   AssistEvaluation, AssistResult, CaseInfo, Conversion, ConversionDetail, DocumentInfo, EpisodeDetail, EpisodeSummary, ModelAnalysis, ModelSummary,
-  Granularity, Profile, ProfileInput, ProfileTestResult, ReplayResult, StateMachine, TaskStateMachine,
+  Granularity, Profile, ProfileInput, ProfileTestResult, ReplayResult, StateMachine, TaskStateMachine, TeacherStateMachine,
 } from './types'
 
 const BASE = '/api/v1'
@@ -65,6 +65,10 @@ export const api = {
 
   taskStateMachine: (caseId: string, taskId: string, granularity: Granularity) =>
     request<TaskStateMachine>(`${c(caseId)}/tasks/${encodeURIComponent(taskId)}/state-machine`
+      + `?granularity=${granularity}`),
+
+  teacherStateMachine: (caseId: string, teacher: string, granularity: Granularity) =>
+    request<TeacherStateMachine>(`${c(caseId)}/teachers/${encodeURIComponent(teacher)}/state-machine`
       + `?granularity=${granularity}`),
 
   assistEvaluation: (caseId: string) => request<AssistEvaluation>(`${c(caseId)}/aov/assist-evaluation`),

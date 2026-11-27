@@ -411,3 +411,97 @@ export interface TaskStateMachine {
   }
   hmm: StateMachine['hmm']
 }
+
+// ------------------------------------------------------------------ 有限狀態機（同一個解題 AI 的所有題目）
+/** 一個版本的執行結果；unjudged＝沒有判分（例如沒有標準答案的照片題）。 */
+export type FsmResult = 'pass' | 'fail' | 'error' | 'unjudged'
+
+export interface TeacherFsmState {
+  id: string
+  order: number
+  column: number
+  /** 走到這個狀態的解題，平均在第幾版第一次走到（起點是 0） */
+  first_reach: number
+  summary: string[]
+  n_nodes: number
+  example: { episode_id: string; version: number; nodes: AoVNode[]; edges: AoVEdge[] }
+  visits: number
+  episodes: string[]
+  tasks: string[]
+  results: Partial<Record<FsmResult, number>>
+  hidden_states: Record<string, number>
+  starts: number
+  finals: number
+  final_results: Partial<Record<FsmResult, number>>
+  judged_versions: number
+  passed_versions: number
+  reached_judged: number
+  reached_passed: number
+  /** 這個狀態的版本通過判分的比例（只算有判分的解題） */
+  pass_rate: number | null
+  /** 走到這裡的解題，最後通過的比例（只算有判分的解題） */
+  reached_pass_rate: number | null
+  is_start: boolean
+  is_final: boolean
+}
+
+export interface TeacherFsmEvent {
+  episode_id: string
+  work_order_id: string | null
+  step: number
+  from_version: number
+  to_version: number
+  operation_type: string
+  activity_type: string | null
+  reason: string | null
+  result: Exclude<FsmResult, 'unjudged'> | null
+  judged: boolean
+  token?: string
+  hidden_state?: string
+  posterior?: Record<string, number>
+  hidden_transition?: { from: string | null; to: string; probability: number }
+  model_probability?: number
+  model_rank?: number
+}
+
+export interface TeacherFsmTransition {
+  id: string
+  source: string
+  target: string
+  count: number
+  probability: number
+  self_loop: boolean
+  operations: Record<string, number>
+  hidden_states: Record<string, number>
+  results: Partial<Record<FsmResult, number>>
+  /** 修改後那一版通過判分的比例（只算有判分的解題） */
+  pass_rate: number | null
+  episodes: string[]
+  tasks: number
+  events: TeacherFsmEvent[]
+}
+
+export interface TeacherFsmEpisode {
+  episode_id: string
+  work_order_id: string | null
+  scope: string | null
+  run: string | null
+  path: string[]
+  events: number
+  results: (Exclude<FsmResult, 'unjudged'> | null)[]
+  final_ok: boolean | null
+}
+
+export interface TeacherStateMachine {
+  case_id: string
+  teacher: string
+  granularity: Granularity
+  episodes: TeacherFsmEpisode[]
+  states: TeacherFsmState[]
+  transitions: TeacherFsmTransition[]
+  stats: {
+    episodes: number; tasks: number; versions: number; steps: number; states: number; transitions: number
+    shared_states: number; self_loop_steps: number; revisits: number; judged_episodes: number; passed_episodes: number
+  }
+  hmm: StateMachine['hmm']
+}

@@ -145,3 +145,83 @@ def test_task_state_machine_service(service):
     assert all(t["count"] == 2 and len(t["episodes"]) == 2 for t in machine["transitions"])
     with pytest.raises(KCoreError):
         StateMachineService(service).task("TASK", "NO-SUCH-TASK")
+
+
+# ------------------------------------------------------------------ 同一個解題 AI 的所有演變過程
+def solver_run(episode_id, task, *graphs, ops=None, results=None, final_ok=None):
+    data = lane(episode_id, *graphs, ops=ops)
+    data.update({"work_order_id": task, "results": results or [None] * len(graphs), "final_ok": final_ok})
+    return data
+
+
+def test_teacher_merges_tasks_and_counts_pass_rates():
+    from kcore.fsm import build_teacher_state_machine
+
+    episodes = [
+        solver_run("A", "T1", V_HSV, V_HSV_TUNED, V_DNN, ops=["param_tune", "strategy_switch"],
+                   results=["fail", "fail", "pass"], final_ok=True),
+        solver_run("B", "T2", V_DNN, V_HSV, ops=["strategy_switch"], results=["fail", "error"], final_ok=False),
+        # 沒有標準答案的題目：不算進通過率
+        solver_run("C", "T3", V_HSV, V_DNN, ops=["strategy_switch"], results=[None, "fail"], final_ok=None),
+    ]
+    machine = build_teacher_state_machine(episodes, "category", SCHEMA)
+    states = {s["id"]: s for s in machine["states"]}
+    # 兩個狀態都在第 0 版出現；經過次數多的（HSV：4 次）排前面
+    assert states["S1"]["summary"] == ["io", "segment", "output"] and states["S1"]["visits"] == 4
+    assert states["S2"]["summary"] == ["io", "detect", "output"] and states["S2"]["column"] == 0
+    assert [e["path"] for e in machine["episodes"]] == [["S1", "S1", "S2"], ["S2", "S1"], ["S1", "S2"]]
+    # 平均在第幾版第一次走到：S1 是 A、C 的起點、B 的第 1 版 → 1/3；S2 是 A 第 2 版、B 起點、C 第 1 版 → 1
+    assert abs(states["S1"]["first_reach"] - 1 / 3) < 1e-9 and states["S2"]["first_reach"] == 1
+    # S1 的版本：A 兩版未通過、B 一版無法執行（算沒通過）；C 沒有判分不算 → 0%
+    assert states["S1"]["results"] == {"fail": 2, "error": 1, "unjudged": 1} and states["S1"]["pass_rate"] == 0
+    # S2 的版本：A 通過、B 未通過；C 的那一版不算 → 50%
+    assert states["S2"]["pass_rate"] == 0.5 and states["S2"]["results"] == {"pass": 1, "fail": 2}
+    # 走到這裡的演變過程最後通過的比例：A 通過、B 沒通過、C 沒有判分 → 50%
+    assert states["S1"]["reached_pass_rate"] == states["S2"]["reached_pass_rate"] == 0.5
+    assert (states["S1"]["starts"], states["S1"]["finals"], states["S2"]["starts"], states["S2"]["finals"]) == (2, 1, 1, 2)
+    assert states["S2"]["final_results"] == {"pass": 1, "fail": 1} and states["S1"]["tasks"] == ["T1", "T2", "T3"]
+    by_edge = {(t["source"], t["target"]): t for t in machine["transitions"]}
+    assert [t["id"] for t in machine["transitions"]] == ["T1", "T2", "T3"]
+    assert by_edge[("S1", "S1")]["probability"] == 1 / 3 and by_edge[("S1", "S2")]["probability"] == 2 / 3
+    # S1→S2：A 改完通過；C 改完的那一版沒有判分不算 → 修改後通過率 100%
+    assert by_edge[("S1", "S2")]["pass_rate"] == 1 and by_edge[("S1", "S2")]["tasks"] == 2
+    assert by_edge[("S2", "S1")]["pass_rate"] == 0 and by_edge[("S2", "S1")]["probability"] == 1
+    assert machine["stats"] == {"episodes": 3, "tasks": 3, "versions": 7, "steps": 4, "states": 2, "transitions": 3,
+                                "shared_states": 2, "self_loop_steps": 1, "revisits": 0,
+                                "judged_episodes": 2, "passed_episodes": 1}
+    with pytest.raises(KCoreError):
+        build_teacher_state_machine([], "category")
+    with pytest.raises(KCoreError):
+        build_teacher_state_machine(episodes, "everything")
+
+
+def test_teacher_state_machine_service_and_api(service, client):
+    from kcore.fsm import StateMachineService
+
+    from .conftest import spec_episode
+
+    def solver_episode(episode_id, prefix, teacher, task):
+        data = spec_episode(episode_id, prefix)
+        data["initial_context"] = {**data["initial_context"], "teacher": teacher}
+        data["work_order_id"] = task
+        return data
+
+    runs = (("EP-A", "A-", "opus", "WO-1"), ("EP-B", "B-", "opus", "WO-2"), ("EP-C", "C-", "haiku", "WO-1"))
+    service.create_case({"case_id": "AI", "domain_kind": "erp"})
+    for run in runs:
+        service.ingest_episode("AI", solver_episode(*run))
+    machine = StateMachineService(service).teacher("AI", "opus", "structure")
+    assert [e["episode_id"] for e in machine["episodes"]] == ["EP-A", "EP-B"] and machine["teacher"] == "opus"
+    # 兩題的流程完全相同：每個狀態都被兩題共用；沒有判分，所以沒有通過率
+    assert machine["stats"]["tasks"] == 2 and machine["stats"]["shared_states"] == machine["stats"]["states"]
+    assert machine["stats"]["judged_episodes"] == 0 and machine["hmm"] is None
+    assert all(s["pass_rate"] is None and s["reached_pass_rate"] is None for s in machine["states"])
+    with pytest.raises(KCoreError):
+        StateMachineService(service).teacher("AI", "nobody")
+
+    client.post("/api/v1/cases", json={"case_id": "AI", "domain_kind": "erp"})
+    for run in runs:
+        assert client.post("/api/v1/cases/AI/episodes", json=solver_episode(*run)).status_code in (200, 201)
+    result = client.get("/api/v1/cases/AI/teachers/haiku/state-machine").json()
+    assert result["granularity"] == "category" and [e["episode_id"] for e in result["episodes"]] == ["EP-C"]
+    assert client.get("/api/v1/cases/AI/teachers/nobody/state-machine").status_code == 404

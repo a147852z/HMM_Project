@@ -3,7 +3,7 @@ import {
   TableContainer, TableHead, TableRow, TextField, ToggleButton, ToggleButtonGroup, Typography,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api, errorText } from '../api'
 import { AoVGraph } from '../components/AoVGraph'
 import {
@@ -11,11 +11,29 @@ import {
 } from '../components/fsmShared'
 import { operationLabel, stateColor, tokenLabel } from '../labels'
 import { TaskStateMachineView } from './TaskStateMachineView'
+import { TeacherStateMachineView } from './TeacherStateMachineView'
 import type { EpisodeSummary, FsmState, FsmTransition, Granularity, StateMachine } from '../types'
 
 const STORE_KEY = (caseId: string) => `kcore.fsm.${caseId}`
 const SCOPE_KEY = (caseId: string) => `kcore.fsm.scope.${caseId}`
-type Scope = 'episode' | 'task'
+const TEACHER_KEY = (caseId: string) => `kcore.fsm.teacher.${caseId}`
+type Scope = 'episode' | 'task' | 'teacher'
+
+const SCOPE_TITLE: Record<Scope, string> = {
+  episode: '有限狀態機：一條演變過程',
+  task: '有限狀態機：同一題所有解題者',
+  teacher: '有限狀態機：同一個 AI 的所有題目',
+}
+const SCOPE_HELP: Record<Scope, string> = {
+  episode: '一條演變過程是一條馬可夫鏈：每個狀態是一張流程圖（AoV），每次修改是一次轉移。轉移機率是這條演變過程裡，從同一個狀態出去的修改中走這條轉移的比例。',
+  task: '把同一題所有解題者的演變過程合併成一個狀態機：每位解題者一列，相同的流程圖算同一個狀態，別人走到同一個狀態時就是路線交會。轉移機率用所有演變過程累計。',
+  teacher: '把同一個解題 AI 在所有題目的演變過程合併成一個狀態機：看它習慣從哪種流程開始、往哪裡改、停在哪裡，以及哪些狀態比較容易通過。不同題目的完整流程圖幾乎不會相同，所以預設用「節點類別」分狀態。',
+}
+
+function storedScope(caseId: string): Scope {
+  const value = readStored(SCOPE_KEY(caseId))
+  return value === 'task' || value === 'teacher' ? value : 'episode'
+}
 
 type Selection = { kind: 'state'; id: string; visit: number } | { kind: 'transition'; id: string; step: number }
 
@@ -33,10 +51,12 @@ function summaryLines(state: FsmState, granularity: Granularity): [string, strin
 
 export function StateMachinePage({ caseId }: { caseId: string }) {
   const [episodes, setEpisodes] = useState<EpisodeSummary[]>([])
-  const [scope, setScopeState] = useState<Scope>(() => (readStored(SCOPE_KEY(caseId)) === 'task' ? 'task' : 'episode'))
+  const [allEpisodes, setAllEpisodes] = useState<EpisodeSummary[]>([])
+  const [scope, setScopeState] = useState<Scope>(() => storedScope(caseId))
   const [episodeId, setEpisodeId] = useState('')
   const [taskId, setTaskId] = useState('')
-  const [granularity, setGranularity] = useState<Granularity>('structure')
+  const [teacher, setTeacher] = useState('')
+  const [granularity, setGranularity] = useState<Granularity>(() => (storedScope(caseId) === 'teacher' ? 'category' : 'structure'))
   const [showProb, setShowProb] = useState(true)
   const [showHidden, setShowHidden] = useState(true)
   const [machine, setMachine] = useState<StateMachine | null>(null)
@@ -47,11 +67,13 @@ export function StateMachinePage({ caseId }: { caseId: string }) {
 
   useEffect(() => {
     setEpisodes([])
+    setAllEpisodes([])
     setMachine(null)
     api.listEpisodes(caseId)
       .then((list) => {
         const usable = list.filter((e) => e.event_count > 0)
         setEpisodes(usable)
+        setAllEpisodes(list)
         const stored = readStored(STORE_KEY(caseId))
         const initial = usable.find((e) => e.episode_id === stored) ?? usable.find((e) => e.event_count >= 8) ?? usable[0]
         setEpisodeId(initial?.episode_id ?? '')
@@ -72,6 +94,32 @@ export function StateMachinePage({ caseId }: { caseId: string }) {
       .sort((a, b) => b.count - a.count || a.id.localeCompare(b.id))
   }, [episodes])
 
+  // 解題 AI（provenance.teacher）與各自的解題次數、題數；解題多的排前面
+  const teachers = useMemo(() => {
+    const groups = new Map<string, { count: number; tasks: Set<string> }>()
+    for (const e of allEpisodes) {
+      const name = e.provenance?.teacher
+      if (!name) continue
+      const group = groups.get(name) ?? { count: 0, tasks: new Set<string>() }
+      group.count += 1
+      if (e.work_order_id) group.tasks.add(e.work_order_id)
+      groups.set(name, group)
+    }
+    return [...groups.entries()].map(([id, g]) => ({ id, count: g.count, tasks: g.tasks.size }))
+      .sort((a, b) => b.count - a.count || a.id.localeCompare(b.id))
+  }, [allEpisodes])
+
+  useEffect(() => {
+    if (teachers.length === 0 || teachers.some((t) => t.id === teacher)) return
+    // 先用上次選的；沒有時預設 opus（先看 Opus 的狀態機），再沒有就用解題最多的
+    const stored = readStored(TEACHER_KEY(caseId))
+    setTeacher((teachers.find((t) => t.id === stored) ?? teachers.find((t) => t.id === 'opus') ?? teachers[0]).id)
+  }, [teachers, teacher, caseId])
+
+  useEffect(() => {
+    if (teacher) writeStored(TEACHER_KEY(caseId), teacher)
+  }, [teacher, caseId])
+
   useEffect(() => {
     if (scope !== 'episode' || !episodeId) return
     writeStored(STORE_KEY(caseId), episodeId)
@@ -89,33 +137,46 @@ export function StateMachinePage({ caseId }: { caseId: string }) {
 
   const selectedEpisode = episodes.find((e) => e.episode_id === episodeId) ?? null
   const selectedTask = tasks.find((t) => t.id === taskId) ?? null
+  const selectedTeacher = teachers.find((t) => t.id === teacher) ?? null
   const setScope = (value: Scope) => {
     setScopeState(value)
     writeStored(SCOPE_KEY(caseId), value)
     // 切到「同一題」時，預設用目前這條演變過程所屬的題目
     if (value === 'task' && selectedEpisode?.work_order_id) setTaskId(selectedEpisode.work_order_id)
+    // 跨題目合併時，完整流程圖與結構幾乎不會重複，預設改用節點類別
+    if (value === 'teacher') setGranularity('category')
   }
+  const openEpisode = useCallback((id: string) => {
+    setEpisodeId(id)
+    setScopeState('episode')
+    writeStored(SCOPE_KEY(caseId), 'episode')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [caseId])
   const hasModel = scope === 'episode' ? !!machine?.hmm : taskHasModel
   const hiddenOn = showHidden && !!machine?.hmm
 
   return (
     <Stack spacing={2.5}>
       <Paper sx={{ p: 2.5 }}>
-        <Typography variant="subtitle1" fontWeight={700}>
-          {scope === 'episode' ? '有限狀態機：一條演變過程' : '有限狀態機：同一題所有解題者'}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          {scope === 'episode'
-            ? '一條演變過程是一條馬可夫鏈：每個狀態是一張流程圖（AoV），每次修改是一次轉移。轉移機率是這條演變過程裡，從同一個狀態出去的修改中走這條轉移的比例。'
-            : '把同一題所有解題者的演變過程合併成一個狀態機：每位解題者一列，相同的流程圖算同一個狀態，別人走到同一個狀態時就是路線交會。轉移機率用所有演變過程累計。'}
-        </Typography>
+        <Typography variant="subtitle1" fontWeight={700}>{SCOPE_TITLE[scope]}</Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>{SCOPE_HELP[scope]}</Typography>
         <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} alignItems={{ lg: 'center' }} flexWrap="wrap">
           <ToggleButtonGroup size="small" exclusive value={scope}
             onChange={(_, value: Scope | null) => value && setScope(value)} aria-label="範圍">
             <ToggleButton value="episode" sx={{ px: 1.5 }}>單一演變過程</ToggleButton>
             <ToggleButton value="task" sx={{ px: 1.5 }}>同一題所有解題者</ToggleButton>
+            <ToggleButton value="teacher" sx={{ px: 1.5 }}>同一個 AI 的所有題目</ToggleButton>
           </ToggleButtonGroup>
-          {scope === 'episode' ? (
+          {scope === 'teacher' ? (
+            <Autocomplete
+              id="fsm-teacher" size="small" sx={{ flex: 1, minWidth: 260 }}
+              options={teachers} value={selectedTeacher}
+              onChange={(_, value) => value && setTeacher(value.id)}
+              getOptionLabel={(t) => `${t.id}（${t.count} 次解題・${t.tasks} 題）`}
+              isOptionEqualToValue={(a, b) => a.id === b.id}
+              renderInput={(params) => <TextField {...params} label={`解題 AI（${teachers.length} 個）`} />}
+            />
+          ) : scope === 'episode' ? (
             <Autocomplete
               id="fsm-episode" size="small" sx={{ flex: 1, minWidth: 320 }}
               options={episodes} value={selectedEpisode}
@@ -155,6 +216,11 @@ export function StateMachinePage({ caseId }: { caseId: string }) {
       {scope === 'task' && taskId && (
         <TaskStateMachineView caseId={caseId} taskId={taskId} granularity={granularity} showProb={showProb}
           showHidden={showHidden} onModel={setTaskHasModel} />
+      )}
+
+      {scope === 'teacher' && teacher && (
+        <TeacherStateMachineView caseId={caseId} teacher={teacher} granularity={granularity} showProb={showProb}
+          showHidden={showHidden} onModel={setTaskHasModel} onOpenEpisode={openEpisode} />
       )}
 
       {scope === 'episode' && error && <Alert severity="error">{error}</Alert>}
